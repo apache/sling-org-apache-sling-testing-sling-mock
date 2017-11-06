@@ -18,6 +18,8 @@
  */
 package org.apache.sling.testing.mock.sling.resource;
 
+import static org.apache.sling.jcr.resource.JcrResourceConstants.NT_SLING_ORDERED_FOLDER;
+import static org.apache.sling.jcr.resource.JcrResourceConstants.SLING_RESOURCE_TYPE_PROPERTY;
 import static org.junit.Assert.assertArrayEquals;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
@@ -151,7 +153,7 @@ public abstract class AbstractJcrResourceResolverTest {
         Resource parent = context.resourceResolver().getResource(getTestRootNode().getPath());
 
         Resource child = context.resourceResolver().create(parent, "nodeTypeResource", ImmutableMap.<String, Object> builder()
-                .put("sling:resourceType", JcrConstants.NT_UNSTRUCTURED).build());
+                .put(SLING_RESOURCE_TYPE_PROPERTY, JcrConstants.NT_UNSTRUCTURED).build());
         assertNotNull(child);
         assertEquals(JcrConstants.NT_UNSTRUCTURED, child.getResourceType());
         assertEquals(JcrConstants.NT_UNSTRUCTURED, child.adaptTo(Node.class).getPrimaryNodeType().getName());
@@ -164,7 +166,7 @@ public abstract class AbstractJcrResourceResolverTest {
         Resource child = ResourceUtil.getOrCreateResource(context.resourceResolver(), parent.getPath() + "/intermediate/child",
                 "sling/resource/type", JcrConstants.NT_UNSTRUCTURED, true);
         assertNotNull(child);
-        assertEquals("sling:OrderedFolder", parent.getResourceType());
+        assertEquals(NT_SLING_ORDERED_FOLDER, parent.getResourceType());
         assertEquals("sling/resource/type", child.getResourceType());
     }
 

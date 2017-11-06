@@ -19,7 +19,8 @@
 package org.apache.sling.testing.mock.sling.junit;
 
 import org.apache.sling.testing.mock.osgi.context.ContextCallback;
-import org.osgi.annotation.versioning.ConsumerType;
+
+import aQute.bnd.annotation.ConsumerType;
 
 /**
  * Callback interface for application-specific setup and teardown operations to

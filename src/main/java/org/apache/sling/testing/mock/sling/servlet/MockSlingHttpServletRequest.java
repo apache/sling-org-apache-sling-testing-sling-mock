@@ -23,6 +23,7 @@ import java.util.ResourceBundle;
 
 import org.apache.sling.api.resource.ResourceResolver;
 import org.apache.sling.i18n.ResourceBundleProvider;
+import org.apache.sling.testing.mock.osgi.MockOsgi;
 import org.apache.sling.testing.mock.sling.MockSling;
 import org.osgi.framework.BundleContext;
 import org.osgi.framework.ServiceReference;
@@ -36,10 +37,30 @@ public class MockSlingHttpServletRequest extends org.apache.sling.servlethelpers
 
     /**
      * Instantiate with default resource resolver
+     * @deprecated Please use {@link #MockSlingHttpServletRequest(BundleContext)}
+     *   and shutdown the bundle context after usage.
+     */
+    @Deprecated
+    public MockSlingHttpServletRequest() {
+        this(MockOsgi.newBundleContext());
+    }
+
+    /**
+     * Instantiate with default resource resolver
      * @param bundleContext Bundle context
      */
     public MockSlingHttpServletRequest(BundleContext bundleContext) {
         this(MockSling.newResourceResolver(bundleContext), bundleContext);
+    }
+
+    /**
+     * @param resourceResolver Resource resolver
+     * @deprecated Please use {@link #MockSlingHttpServletRequest(ResourceResolver, BundleContext)}
+     *   and shutdown the bundle context after usage.
+     */
+    @Deprecated
+    public MockSlingHttpServletRequest(ResourceResolver resourceResolver) {
+        this(resourceResolver, MockOsgi.newBundleContext());
     }
 
     /**
@@ -63,7 +84,7 @@ public class MockSlingHttpServletRequest extends org.apache.sling.servlethelpers
     public ResourceBundle getResourceBundle(String baseName, Locale locale) {
         // check of ResourceBundleProvider is registered in mock OSGI context
         ResourceBundle resourceBundle = null;
-        ServiceReference<ResourceBundleProvider> serviceReference = bundleContext.getServiceReference(ResourceBundleProvider.class);
+        ServiceReference serviceReference = bundleContext.getServiceReference(ResourceBundleProvider.class.getName());
         if (serviceReference != null) {
             ResourceBundleProvider provider = (ResourceBundleProvider)bundleContext.getService(serviceReference);
             resourceBundle = provider.getResourceBundle(baseName, locale);

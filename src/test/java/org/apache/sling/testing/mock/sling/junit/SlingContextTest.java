@@ -24,10 +24,9 @@ import static org.junit.Assert.assertNull;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
 
-import org.apache.sling.api.adapter.AdapterFactory;
-import org.apache.sling.api.adapter.SlingAdaptable;
 import org.apache.sling.api.resource.Resource;
 import org.apache.sling.api.resource.ResourceResolver;
+import org.apache.sling.api.resource.ResourceUtil;
 import org.apache.sling.testing.mock.sling.ResourceResolverType;
 import org.junit.Before;
 import org.junit.Rule;
@@ -47,16 +46,18 @@ public class SlingContextTest {
     private final SlingContextCallback contextAfterTeardown = mock(SlingContextCallback.class);
 
     // Run all unit tests for each resource resolver types listed here
+    @SuppressWarnings("unchecked")
     @Rule
     public SlingContext context = new SlingContextBuilder(ResourceResolverType.JCR_MOCK)
         .beforeSetUp(contextBeforeSetup)
         .afterSetUp(contextAfterSetup)
         .beforeTearDown(contextBeforeTeardown)
         .afterTearDown(contextAfterTeardown)
-        .resourceResolverFactoryActivatorProps(ImmutableMap.<String, Object>of(
-                "resource.resolver.searchpath", new String[] {"/apps","/libs","/testpath"},
-                "resource.resolver.mapping", new String[] {"/:/", "/content/test/</"}
-                ))
+        .resourceResolverFactoryActivatorProps(ImmutableMap.<String, Object>of("resource.resolver.searchpath", new String[] {
+            "/apps",
+            "/libs",
+            "/testpath",
+        }))
         .build();
 
     @Before
@@ -109,33 +110,6 @@ public class SlingContextTest {
     }
 
     @Test
-    public void testRegisterAdapterOverlayStatic() {
-        prepareInitialAdapterFactory();
-        
-        // register overlay adapter with static adaption
-        context.registerAdapter(TestAdaptable.class, String.class, "static-adaption");
-
-        // test overlay adapter with static adaption
-        assertEquals("static-adaption", new TestAdaptable("testMessage2").adaptTo(String.class));
-    }
-
-    @Test
-    public void testRegisterAdapterOverlayDynamic() {
-        prepareInitialAdapterFactory();
-        
-        // register overlay adapter with dynamic adaption
-        context.registerAdapter(TestAdaptable.class, String.class, new Function<TestAdaptable, String>() {
-            @Override
-            public String apply(TestAdaptable input) {
-                return input.getMessage() + "-dynamic";
-            }
-        });
-
-        // test overlay adapter with dynamic adaption
-        assertEquals("testMessage3-dynamic", new TestAdaptable("testMessage3").adaptTo(String.class));
-    }
-    
-    @Test
     public void testResourceBuilder() {
         
         context.build().resource("/test1", "prop1", "value1")
@@ -145,48 +119,9 @@ public class SlingContextTest {
         
         Resource test1 = context.resourceResolver().getResource("/test1");
         assertNotNull(test1);
-        assertEquals("value1", test1.getValueMap().get("prop1", String.class));
+        assertEquals("value1", ResourceUtil.getValueMap(test1).get("prop1", String.class));
         assertNotNull(test1.getChild("a"));
         assertNotNull(test1.getChild("b"));
     }
-    
-    @Test
-    public void testUrlMapping() {
-        assertEquals("/foo", context.resourceResolver().map("/content/test/foo"));
-    }
-    
-    
-    private void prepareInitialAdapterFactory() {
-        // register "traditional" adapter factory without specific service ranking
-        AdapterFactory adapterFactory = new AdapterFactory() {
-            @SuppressWarnings("unchecked")
-            @Override
-            public <AdapterType> AdapterType getAdapter(Object adaptable, Class<AdapterType> type) {
-                return (AdapterType)(((TestAdaptable)adaptable).getMessage() + "-initial");
-            }
-        };
-        context.registerService(AdapterFactory.class, adapterFactory, ImmutableMap.<String, Object>builder()
-                .put(AdapterFactory.ADAPTABLE_CLASSES, new String[] { TestAdaptable.class.getName() })
-                .put(AdapterFactory.ADAPTER_CLASSES, new String[] { String.class.getName() })
-                .build());
         
-        // test initial adapter factory
-        assertEquals("testMessage1-initial", new TestAdaptable("testMessage1").adaptTo(String.class));        
-    }
-
-
-    private static class TestAdaptable extends SlingAdaptable {
-        
-        private final String message;
-
-        public TestAdaptable(String message) {
-            this.message = message;
-        }
-
-        public String getMessage() {
-            return message;
-        }
-        
-    }
-
 }

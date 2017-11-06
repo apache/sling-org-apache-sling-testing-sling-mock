@@ -87,7 +87,7 @@ class ThreadsafeMockAdapterManagerWrapper implements AdapterManager {
             if (bundleContext == null) {
                 setBundleContext(MockOsgi.newBundleContext());
             }
-            ServiceReference<AdapterManager> serviceReference = bundleContext.getServiceReference(AdapterManager.class);
+            ServiceReference serviceReference = bundleContext.getServiceReference(AdapterManager.class.getName());
             if (serviceReference != null) {
                 return (AdapterManager)bundleContext.getService(serviceReference);
             }

@@ -25,7 +25,8 @@ import org.apache.sling.testing.mock.osgi.context.ContextPlugin;
 import org.apache.sling.testing.mock.osgi.context.ContextPlugins;
 import org.apache.sling.testing.mock.osgi.context.OsgiContextImpl;
 import org.apache.sling.testing.mock.sling.ResourceResolverType;
-import org.osgi.annotation.versioning.ProviderType;
+
+import aQute.bnd.annotation.ProviderType;
 
 /**
  * Builder class for creating {@link SlingContext} instances with different sets of parameters.

@@ -50,13 +50,13 @@ import org.apache.sling.testing.mock.sling.services.MockSlingSettingService;
 import org.apache.sling.testing.mock.sling.servlet.MockRequestPathInfo;
 import org.apache.sling.testing.mock.sling.servlet.MockSlingHttpServletRequest;
 import org.apache.sling.testing.mock.sling.servlet.MockSlingHttpServletResponse;
-import org.osgi.annotation.versioning.ConsumerType;
-import org.osgi.framework.Constants;
 import org.osgi.framework.ServiceReference;
 
 import com.google.common.base.Function;
 import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.ImmutableSet;
+
+import aQute.bnd.annotation.ConsumerType;
 
 /**
  * Defines Sling context objects with lazy initialization. Should not be used
@@ -108,12 +108,7 @@ public class SlingContextImpl extends OsgiContextImpl {
             MockOsgi.setConfigForPid(bundleContext(), RESOURCERESOLVERFACTORYACTIVATOR_PID, this.resourceResolverFactoryActivatorProps);
         }
         
-        // automatically register resource resolver factory when ResourceResolverType != NONE,
-        // so the ResourceResolverFactory is available as OSGi service immediately
-        if (resourceResolverType != ResourceResolverType.NONE) {
-            resourceResolverFactory();
-        }
-        
+        this.resourceResolverFactory = newResourceResolverFactory();
         registerDefaultServices();
     }
     
@@ -123,13 +118,6 @@ public class SlingContextImpl extends OsgiContextImpl {
      */
     protected ResourceResolverFactory newResourceResolverFactory() {
         return ContextResourceResolverFactory.get(this.resourceResolverType, bundleContext());
-    }
-    
-    private ResourceResolverFactory resourceResolverFactory() {
-        if (this.resourceResolverFactory == null) {
-            this.resourceResolverFactory = newResourceResolverFactory();
-        }
-        return this.resourceResolverFactory;
     }
 
     /**
@@ -173,7 +161,14 @@ public class SlingContextImpl extends OsgiContextImpl {
             try {
                 Class<?> clazz = Class.forName(className);
                 registerInjectActivateService(clazz.newInstance());
-            } catch (ClassNotFoundException | InstantiationException | IllegalAccessException e) {
+            }
+            catch (ClassNotFoundException ex) {
+                // ignore - probably not the latest sling models impl version
+            }
+            catch (InstantiationException e) {
+                // ignore - probably not the latest sling models impl version
+            }
+            catch (IllegalAccessException e) {
                 // ignore - probably not the latest sling models impl version
             }
         }
@@ -217,7 +212,6 @@ public class SlingContextImpl extends OsgiContextImpl {
         this.contentBuilder = null;
         this.resourceBuilder = null;
         this.uniqueRoot = null;
-        this.resourceResolverFactory = null;
         
         super.tearDown();
     }
@@ -228,16 +222,14 @@ public class SlingContextImpl extends OsgiContextImpl {
     public final ResourceResolverType resourceResolverType() {
         return this.resourceResolverType;
     }
-    
+
     /**
-     * Returns the singleton resource resolver bound to this context.
-     * It is automatically closed after the test.
      * @return Resource resolver
      */
     public final ResourceResolver resourceResolver() {
         if (this.resourceResolver == null) {
             try {
-                this.resourceResolver = this.resourceResolverFactory().getAdministrativeResourceResolver(null);
+                this.resourceResolver = this.resourceResolverFactory.getAdministrativeResourceResolver(null);
             } catch (LoginException ex) {
                 throw new RuntimeException("Creating resource resolver failed.", ex);
             }
@@ -317,9 +309,6 @@ public class SlingContextImpl extends OsgiContextImpl {
     }
 
     /**
-     * Creates a {@link ContentBuilder} object for easily creating test content.
-     * This API was part of Sling Mocks since version 1.x.
-     * You can use alternatively the {@link #build()} method and use the {@link ResourceBuilder} API.
      * @return Content builder for building test content
      */
     public ContentBuilder create() {
@@ -416,9 +405,9 @@ public class SlingContextImpl extends OsgiContextImpl {
      */
     public final void runMode(String... runModes) {
         Set<String> newRunModes = ImmutableSet.<String> builder().add(runModes).build();
-        ServiceReference<SlingSettingsService> ref = bundleContext().getServiceReference(SlingSettingsService.class);
+        ServiceReference ref = bundleContext().getServiceReference(SlingSettingsService.class.getName());
         if (ref != null) {
-            MockSlingSettingService slingSettings = (MockSlingSettingService)bundleContext().getService(ref);
+            MockSlingSettingService slingSettings = (MockSlingSettingService) bundleContext().getService(ref);
             slingSettings.setRunModes(newRunModes);
         }
     }
@@ -478,9 +467,6 @@ public class SlingContextImpl extends OsgiContextImpl {
                 .put(AdapterFactory.ADAPTER_CLASSES, new String[] {
                     adapterClass.getName()
                 })
-                // make sure this overlay has higher ranking than other adapter factories
-                // normally we should use Integer.MAX_VALUE for this - but due to SLING-7194 prefers lowest-ranking services first
-                .put(Constants.SERVICE_RANKING, Integer.MIN_VALUE)
                 .build());
     }
 

@@ -23,7 +23,6 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.net.MalformedURLException;
 import java.net.URL;
-import java.security.cert.X509Certificate;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Dictionary;
@@ -189,6 +188,7 @@ final class ModelAdapterFactoryUtil {
     }
 
 
+    @SuppressWarnings("unused")
     private static class RegisterModelsBundle implements Bundle {
         
         private static final String MAGIC_STRING = "MOCKS-YOU-KNOW-WHAT-TO-SCAN";
@@ -218,14 +218,14 @@ final class ModelAdapterFactoryUtil {
         }
 
         @Override
-        public Dictionary<String,String> getHeaders() {
+        public Dictionary getHeaders() {
             Dictionary<String, String> headers = new Hashtable<String, String>();
             headers.put(PACKAGE_HEADER, MAGIC_STRING);
             return headers;
         }
 
         @Override
-        public Enumeration<URL> findEntries(String path, String filePattern, boolean recurse) {
+        public Enumeration findEntries(String path, String filePattern, boolean recurse) {
             Vector<URL> urls = new Vector<URL>(); // NOPMD
             if (packageNames != null) {
                 urls.addAll(getModelClassUrlsForPackages(packageNames));
@@ -237,7 +237,7 @@ final class ModelAdapterFactoryUtil {
         }
         
         @Override
-        public Class<?> loadClass(String name) throws ClassNotFoundException {
+        public Class loadClass(String name) throws ClassNotFoundException {
             return getClass().getClassLoader().loadClass(name);
         }
 
@@ -292,12 +292,12 @@ final class ModelAdapterFactoryUtil {
         }
 
         @Override
-        public ServiceReference<?>[] getRegisteredServices() { // NOPMD
+        public ServiceReference[] getRegisteredServices() { // NOPMD
             return null;
         }
 
         @Override
-        public ServiceReference<?>[] getServicesInUse() { // NOPMD
+        public ServiceReference[] getServicesInUse() { // NOPMD
             return null;
         }
 
@@ -312,7 +312,7 @@ final class ModelAdapterFactoryUtil {
         }
 
         @Override
-        public Dictionary<String,String> getHeaders(String locale) {
+        public Dictionary getHeaders(String locale) {
             return null;
         }
 
@@ -322,12 +322,12 @@ final class ModelAdapterFactoryUtil {
         }
 
         @Override
-        public Enumeration<URL> getResources(String name) throws IOException {
+        public Enumeration getResources(String name) throws IOException {
             return null;
         }
 
         @Override
-        public Enumeration<String> getEntryPaths(String path) {
+        public Enumeration getEntryPaths(String path) {
             return null;
         }
 
@@ -341,31 +341,31 @@ final class ModelAdapterFactoryUtil {
             return 0;
         }
 
-        @Override
-        public Map<X509Certificate, List<X509Certificate>> getSignerCertificates(int signersType) {
+        // this is part of org.osgi 4.2.0
+        public Map getSignerCertificates(int signersType) {
             return null;
         }
 
-        @Override
+        // this is part of org.osgi 4.2.0
         public Version getVersion() {
             return null;
         }
 
-        @Override
+        // this is part of osgi 5/6
         public int compareTo(Bundle o) {
             return 0;
         }
 
-        @Override
+        // this is part of osgi 5/6
         public <A> A adapt(Class<A> type) {
             return null;
         }
 
-        @Override
+        // this is part of osgi 5/6
         public File getDataFile(String filename) {
             return null;
         }
-        
+
     }
 
 }

@@ -29,7 +29,8 @@ import org.junit.rules.ExternalResource;
 import org.junit.rules.TestRule;
 import org.junit.runner.Description;
 import org.junit.runners.model.Statement;
-import org.osgi.annotation.versioning.ProviderType;
+
+import aQute.bnd.annotation.ProviderType;
 
 /**
  * JUnit rule for setting up and tearing down Sling context objects for unit tests.

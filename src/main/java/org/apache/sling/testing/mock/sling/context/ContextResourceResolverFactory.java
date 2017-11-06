@@ -48,6 +48,9 @@ final class ContextResourceResolverFactory {
             case JCR_MOCK:
                 initializeJcrMock(factory);
                 break;
+            case JCR_JACKRABBIT:
+                initializeJcrJackrabbit(factory);
+                break;
             case JCR_OAK:
                 initializeJcrOak(factory);
                 break;
@@ -69,6 +72,10 @@ final class ContextResourceResolverFactory {
 
     private static void initializeJcrMock(ResourceResolverFactory factory) throws RepositoryException, LoginException {
         // nothing to do
+    }
+
+    private static void initializeJcrJackrabbit(ResourceResolverFactory factory) {
+        // register sling node types?
     }
 
     private static void initializeJcrOak(ResourceResolverFactory factory) {

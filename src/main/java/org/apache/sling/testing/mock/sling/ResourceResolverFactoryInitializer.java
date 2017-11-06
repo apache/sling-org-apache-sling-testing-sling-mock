@@ -23,16 +23,18 @@ import java.util.Hashtable;
 
 import javax.jcr.RepositoryException;
 import javax.jcr.Session;
+import javax.jcr.query.Query;
 
+import org.apache.sling.api.resource.QueriableResourceProvider;
+import org.apache.sling.api.resource.ResourceProvider;
+import org.apache.sling.api.resource.ResourceProviderFactory;
 import org.apache.sling.api.resource.ResourceResolverFactory;
-import org.apache.sling.commons.classloader.DynamicClassLoaderManager;
 import org.apache.sling.jcr.api.SlingRepository;
-import org.apache.sling.jcr.resource.internal.helper.jcr.JcrResourceProvider;
+import org.apache.sling.jcr.resource.internal.helper.jcr.JcrResourceProviderFactory;
 import org.apache.sling.resourceresolver.impl.ResourceAccessSecurityTracker;
 import org.apache.sling.resourceresolver.impl.ResourceResolverFactoryActivator;
 import org.apache.sling.serviceusermapping.ServiceUserMapper;
 import org.apache.sling.serviceusermapping.impl.ServiceUserMapperImpl;
-import org.apache.sling.spi.resource.provider.ResourceProvider;
 import org.apache.sling.testing.mock.osgi.MockEventAdmin;
 import org.apache.sling.testing.mock.osgi.MockOsgi;
 import org.osgi.framework.BundleContext;
@@ -63,16 +65,16 @@ class ResourceResolverFactoryInitializer {
             // register JCR node types found in classpath
             registerJcrNodeTypes(slingRepository, nodeTypeMode);
             
-            // initialize JCR resource provider
-            ensureJcrResourceProviderDependencies(bundleContext);
-            initializeJcrResourceProvider(bundleContext);
+            // initialize JCR resource provider factory
+            ensureJcrResourceProviderFactoryDependencies(bundleContext);
+            initializeJcrResourceProviderFactory(bundleContext);
         }
         
         // initialize resource resolver factory activator
         ensureResourceResolverFactoryActivatorDependencies(bundleContext);
         initializeResourceResolverFactoryActivator(bundleContext);
 
-        ServiceReference<ResourceResolverFactory> factoryRef = bundleContext.getServiceReference(ResourceResolverFactory.class);
+        ServiceReference factoryRef = bundleContext.getServiceReference(ResourceResolverFactory.class.getName());
         if (factoryRef == null) {
             throw new IllegalStateException("Unable to get ResourceResolverFactory.");
         }
@@ -80,34 +82,29 @@ class ResourceResolverFactoryInitializer {
     }
     
     /**
-     * Ensure dependencies for JcrResourceProvider are present.
+     * Ensure dependencies for JcrResourceProviderFactory are present.
      * @param bundleContext Bundle context
      */
-    @SuppressWarnings("unchecked")
-    private static void ensureJcrResourceProviderDependencies(BundleContext bundleContext) {
-        if (bundleContext.getServiceReference(DynamicClassLoaderManager.class) == null) {
-            bundleContext.registerService(DynamicClassLoaderManager.class, new MockDynamicClassLoaderManager(), null);
-        }
-        
-        try {
-            Class pathMapperClass = Class.forName("org.apache.sling.jcr.resource.internal.helper.jcr.PathMapper");
-            registerServiceIfNotPresent(bundleContext, pathMapperClass, pathMapperClass.newInstance());
-        }
-        catch (ClassNotFoundException | InstantiationException | IllegalAccessException ex) {
-            // ignore - service was removed in org.apache.sling.jcr.resource 3.0.0
-        }
+    private static void ensureJcrResourceProviderFactoryDependencies(BundleContext bundleContext) {
+        // setup PathMapper which is a mandatory service for JcrProviderFactory (since org.apache.sling.jcr.resource 2.5.4)
+        // use reflection to not depend on it if running with older version of org.apache.sling.jcr.resource
+        registerServiceIfFoundInClasspath(bundleContext, "org.apache.sling.jcr.resource.internal.helper.jcr.PathMapper");
     }
  
     /**
-     * Initialize JCR resource provider.
+     * Initialize JCR resource provider factory.
      * @param bundleContext Bundle context
      */
-    private static void initializeJcrResourceProvider(BundleContext bundleContext) {
+    @SuppressWarnings("deprecation")
+    private static void initializeJcrResourceProviderFactory(BundleContext bundleContext) {
         Dictionary<String, Object> config = new Hashtable<String, Object>();
-        JcrResourceProvider provider = new JcrResourceProvider();
-        MockOsgi.injectServices(provider, bundleContext);
-        MockOsgi.activate(provider, bundleContext, config);
-        bundleContext.registerService(ResourceProvider.class, provider, config);
+        config.put(ResourceProvider.ROOTS, new String[] { "/" });
+        config.put(QueriableResourceProvider.LANGUAGES, new String[] { Query.XPATH, Query.SQL, Query.JCR_SQL2 });
+
+        JcrResourceProviderFactory factory = new JcrResourceProviderFactory();
+        MockOsgi.injectServices(factory, bundleContext);
+        MockOsgi.activate(factory, bundleContext, config);
+        bundleContext.registerService(ResourceProviderFactory.class.getName(), factory, config);
     }
     
     /**
@@ -129,9 +126,8 @@ class ResourceResolverFactoryInitializer {
      */
     private static void initializeResourceResolverFactoryActivator(BundleContext bundleContext) {
         Dictionary<String, Object> config = new Hashtable<String, Object>();
-        // do not required a specific resource provider (otherwise "NONE" will not work)
-        config.put("resource.resolver.required.providers", "");
-        config.put("resource.resolver.required.providernames", "");
+        config.put("resource.resolver.required.providers", new String[0]);
+
         ResourceResolverFactoryActivator activator = new ResourceResolverFactoryActivator();
         MockOsgi.injectServices(activator, bundleContext);
         MockOsgi.activate(activator, bundleContext, config);
@@ -145,11 +141,10 @@ class ResourceResolverFactoryInitializer {
      * @param serviceClass Service class
      * @param instance Service instance
      */
-    private static <T> void registerServiceIfNotPresent(BundleContext bundleContext, Class<T> serviceClass, 
-            T instance) {
+    private static void registerServiceIfNotPresent(BundleContext bundleContext, Class<?> serviceClass, 
+            Object instance) {
         registerServiceIfNotPresent(bundleContext, serviceClass, instance, new Hashtable<String, Object>());
     }
-    
     /**
      * Registers a service if the service class is found in classpath,
      * and if no service with this class is already registered.
@@ -158,12 +153,34 @@ class ResourceResolverFactoryInitializer {
      * @param instance Service instance
      * @param config OSGi config
      */
-    private static <T> void registerServiceIfNotPresent(BundleContext bundleContext, Class<T> serviceClass, 
-            T instance, Dictionary<String, Object> config) {
+    private static void registerServiceIfNotPresent(BundleContext bundleContext, Class<?> serviceClass, 
+            Object instance, Dictionary<String, Object> config) {
         if (bundleContext.getServiceReference(serviceClass.getName()) == null) {
             MockOsgi.injectServices(instance, bundleContext);
             MockOsgi.activate(instance, bundleContext, config);
-            bundleContext.registerService(serviceClass, instance, config);
+            bundleContext.registerService(serviceClass.getName(), instance, config);
+        }
+    }
+    
+    /**
+     * Registers a service if the service class is found in classpath,
+     * and if no service with this class is already registered.
+     * @param className Service class name
+     */
+    private static void registerServiceIfFoundInClasspath(BundleContext bundleContext, String className) {
+        try {
+            Class<?> serviceClass = Class.forName(className);
+            Object instance = serviceClass.newInstance();
+            registerServiceIfNotPresent(bundleContext, serviceClass, instance);
+        }
+        catch (ClassNotFoundException ex) {
+            // skip service registration
+        }
+        catch (InstantiationException e) {
+            // skip service registration
+        }
+        catch (IllegalAccessException e) {
+            // skip service registration
         }
     }
     
