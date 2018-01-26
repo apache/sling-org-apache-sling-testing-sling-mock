@@ -35,11 +35,12 @@ import org.osgi.framework.ServiceReference;
 /**
  * Mock {@link SlingScriptHelper} implementation.
  */
-class MockSlingScriptHelper implements SlingScriptHelper {
+public final class MockSlingScriptHelper implements SlingScriptHelper {
 
     private final SlingHttpServletRequest request;
     private final SlingHttpServletResponse response;
     private final BundleContext bundleContext;
+    private SlingScript script;
 
     public MockSlingScriptHelper(final SlingHttpServletRequest request, final SlingHttpServletResponse response,
             final BundleContext bundleContext) {
@@ -89,6 +90,15 @@ class MockSlingScriptHelper implements SlingScriptHelper {
         }
     }
 
+    @Override
+    public SlingScript getScript() {
+        return this.script;
+    }
+    
+    public void setScript(SlingScript script) {
+        this.script = script;
+    }
+    
     // --- unsupported operations ---
     @Override
     public void dispose() {
@@ -122,11 +132,6 @@ class MockSlingScriptHelper implements SlingScriptHelper {
 
     @Override
     public void forward(final Resource resource, final RequestDispatcherOptions requestDispatcherOptions) {
-        throw new UnsupportedOperationException();
-    }
-
-    @Override
-    public SlingScript getScript() {
         throw new UnsupportedOperationException();
     }
 
