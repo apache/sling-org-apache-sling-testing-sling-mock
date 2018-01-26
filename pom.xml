@@ -28,7 +28,7 @@
     </parent>
 
     <artifactId>org.apache.sling.testing.sling-mock</artifactId>
-    <version>1.9.11-SNAPSHOT</version>
+    <version>1.9.12</version>
     <packaging>bundle</packaging>
 
     <name>Apache Sling Testing Sling Mock</name>
@@ -38,7 +38,8 @@
         <connection>scm:git:https://gitbox.apache.org/repos/asf/sling-org-apache-sling-testing-sling-mock.git</connection>
         <developerConnection>scm:git:https://gitbox.apache.org/repos/asf/sling-org-apache-sling-testing-sling-mock.git</developerConnection>
         <url>https://gitbox.apache.org/repos/asf?p=sling-org-apache-sling-testing-sling-mock.git</url>
-    </scm>
+      <tag>org.apache.sling.testing.sling-mock-1.9.12</tag>
+  </scm>
 
     <dependencies>
   
