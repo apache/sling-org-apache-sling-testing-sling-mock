@@ -20,10 +20,15 @@ package org.apache.sling.testing.mock.sling.services;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
+import java.util.Map;
 
 import org.apache.sling.commons.mime.MimeTypeService;
 import org.apache.sling.commons.mime.internal.MimeTypeServiceImpl;
+import org.apache.sling.testing.mock.osgi.MapUtil;
 import org.apache.sling.testing.mock.osgi.MockOsgi;
+import org.osgi.framework.BundleContext;
 import org.osgi.service.component.ComponentContext;
 import org.osgi.service.component.annotations.Component;
 
@@ -45,7 +50,28 @@ public final class MockMimeTypeService extends MimeTypeServiceImpl {
             // activate service in simulated OSGi environment
             ComponentContext componentContext = MockOsgi.newComponentContext();
             this.bindLogService(MockOsgi.newLogService(getClass()));
-            activate(componentContext);
+            
+            // call activate method of MimeTypeServiceImpl
+            // via reflection because the method signature changed between org.apache.sling.commons.mime 2.1.8 and 2.1.10
+            try {
+                Method activateMethod;
+                try {
+                    activateMethod = MimeTypeServiceImpl.class.getDeclaredMethod("activate", ComponentContext.class);
+                    activateMethod.invoke(this, componentContext);
+                }
+                catch (NoSuchMethodException ex) {
+                    try {
+                        activateMethod = MimeTypeServiceImpl.class.getDeclaredMethod("activate", BundleContext.class, Map.class);
+                        activateMethod.invoke(this, componentContext.getBundleContext(), MapUtil.toMap(componentContext.getProperties()));
+                    }
+                    catch (NoSuchMethodException ex1) {
+                        throw new RuntimeException("Did not found activate method of MimeTypeServiceImpl with any matching signature.");
+                    }
+                }
+            }
+            catch (SecurityException | InvocationTargetException | IllegalAccessException ex) {
+                throw new RuntimeException("Unable to activate MimeTypeServiceImpl.", ex);
+            }
         }
     }
 
