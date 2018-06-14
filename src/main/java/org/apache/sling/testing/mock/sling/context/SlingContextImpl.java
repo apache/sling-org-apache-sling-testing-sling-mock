@@ -194,6 +194,8 @@ public class SlingContextImpl extends OsgiContextImpl {
                     session.refresh(false);
                 } catch (RepositoryException ex) {
                     // ignore
+                } catch (UnsupportedOperationException ex){
+                    // ignore
                 }
             }
             
