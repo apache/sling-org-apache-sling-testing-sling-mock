@@ -187,7 +187,11 @@ public class SlingContextImpl extends OsgiContextImpl {
         if (this.resourceResolver != null) {
             
             // revert potential unsaved changes in resource resolver/JCR session
-            this.resourceResolver.revert();
+            try {
+                this.resourceResolver.revert();
+            } catch (UnsupportedOperationException ex){
+                // ignore - this may happen when jcr-mock is used
+            }
             Session session = this.resourceResolver.adaptTo(Session.class);
             if (session != null) {
                 try {
@@ -195,7 +199,7 @@ public class SlingContextImpl extends OsgiContextImpl {
                 } catch (RepositoryException ex) {
                     // ignore
                 } catch (UnsupportedOperationException ex){
-                    // ignore
+                    // ignore - this may happen when jcr-mock is used
                 }
             }
             
