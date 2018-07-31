@@ -34,6 +34,7 @@ import org.apache.sling.testing.mock.sling.ResourceResolverType;
 import org.apache.sling.testing.mock.sling.context.models.OsgiServiceModel;
 import org.apache.sling.testing.mock.sling.context.models.RequestAttributeModel;
 import org.apache.sling.testing.mock.sling.context.models.ServiceInterface;
+import org.apache.sling.testing.mock.sling.context.modelsautoreg.ClasspathRegisteredModel;
 import org.apache.sling.testing.mock.sling.junit.SlingContext;
 import org.apache.sling.testing.mock.sling.loader.ContentLoader;
 import org.apache.sling.testing.mock.sling.services.MockMimeTypeService;
@@ -119,6 +120,13 @@ public abstract class AbstractSlingContextImplTest {
     public void testSlingModelsInvalidAdapt() {
         OsgiServiceModel model = context.request().adaptTo(OsgiServiceModel.class);
         assertNull(model);
+    }
+
+    @Test
+    public void testSlnigModelClasspathRegistered() {
+        context.request().setAttribute("prop1", "myValue");
+        ClasspathRegisteredModel model = context.request().adaptTo(ClasspathRegisteredModel.class);
+        assertEquals("myValue", model.getProp1());
     }
 
     @Test

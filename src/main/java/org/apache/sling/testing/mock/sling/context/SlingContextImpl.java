@@ -84,6 +84,7 @@ public class SlingContextImpl extends OsgiContextImpl {
     protected UniqueRoot uniqueRoot;
     
     private Map<String, Object> resourceResolverFactoryActivatorProps;
+    private boolean registerSlingModelsFromClassPath = true;
 
     /**
      * @param resourceResolverType Resource resolver type
@@ -96,6 +97,10 @@ public class SlingContextImpl extends OsgiContextImpl {
         this.resourceResolverFactoryActivatorProps = props;
     }
     
+    protected void setRegisterSlingModelsFromClassPath(boolean registerSlingModelsFromClassPath) {
+        this.registerSlingModelsFromClassPath = registerSlingModelsFromClassPath;
+    }
+
     /**
      * Setup actions before test method execution
      */
@@ -165,7 +170,9 @@ public class SlingContextImpl extends OsgiContextImpl {
         registerInjectActivateService(new ResourceBuilderFactoryService());
         
         // scan for models defined via bundle headers in classpath
-        ModelAdapterFactoryUtil.addModelsForManifestEntries(this.bundleContext());
+        if (registerSlingModelsFromClassPath) {
+            ModelAdapterFactoryUtil.addModelsForManifestEntries(this.bundleContext());
+        }
     }
     
     private void registerInjectActivateServiceByClassName(String... classNames) {

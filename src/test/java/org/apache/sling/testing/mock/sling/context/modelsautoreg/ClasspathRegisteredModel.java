@@ -16,8 +16,21 @@
  * specific language governing permissions and limitations
  * under the License.
  */
+package org.apache.sling.testing.mock.sling.context.modelsautoreg;
+
+import javax.inject.Inject;
+
+import org.apache.sling.api.SlingHttpServletRequest;
+import org.apache.sling.models.annotations.Model;
+
 /**
- * Rule for providing easy access to Sling context in JUnit tests.
+ * For testing Sling Models support.
+ * This model is registered automatically via OSGi metadata (MANIFEST) in the classpath.
  */
-@org.osgi.annotation.versioning.Version("4.2")
-package org.apache.sling.testing.mock.sling.junit;
+@Model(adaptables = SlingHttpServletRequest.class)
+public interface ClasspathRegisteredModel {
+
+    @Inject
+    String getProp1();
+
+}

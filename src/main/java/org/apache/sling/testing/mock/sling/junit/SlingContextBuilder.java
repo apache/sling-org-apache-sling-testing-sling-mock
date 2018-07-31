@@ -36,6 +36,7 @@ public final class SlingContextBuilder {
     private final ContextPlugins plugins = new ContextPlugins();
     private ResourceResolverType resourceResolverType;
     private Map<String, Object> resourceResolverFactoryActivatorProps;
+    private boolean registerSlingModelsFromClassPath = true;
     
     /**
      * Create builder with default resource resolver type.
@@ -125,12 +126,23 @@ public final class SlingContextBuilder {
     }
 
     /**
+     * Automatic registering of all Sling Models found in the classpath on startup (active by default).
+     * @param registerSlingModelsFromClassPath If set to false Sling Models are not registered automatically from the classpath on startup.
+     * @return this
+     */
+    public SlingContextBuilder registerSlingModelsFromClassPath(boolean registerSlingModelsFromClassPath) {
+      this.registerSlingModelsFromClassPath = registerSlingModelsFromClassPath;
+      return this;
+    }
+
+    /**
      * @return Build {@link SlingContext} instance.
      */
     public SlingContext build() {
         return new SlingContext(this.plugins,
                 this.resourceResolverFactoryActivatorProps,
-                this.resourceResolverType);
+                this.resourceResolverType,
+                this.registerSlingModelsFromClassPath);
     }
     
 }

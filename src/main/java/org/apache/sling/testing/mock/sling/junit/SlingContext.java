@@ -112,9 +112,24 @@ public final class SlingContext extends SlingContextImpl implements TestRule {
     SlingContext(final ContextPlugins contextPlugins,
             final Map<String, Object> resourceResolverFactoryActivatorProps,
             final ResourceResolverType resourceResolverType) {
+        this(contextPlugins, resourceResolverFactoryActivatorProps, resourceResolverType, true);
+    }
+
+    /**
+     * Initialize Sling context with resource resolver type.
+     * @param contextPlugins Context plugins
+     * @param resourceResolverFactoryActivatorProps Allows to override OSGi configuration parameters for the Resource Resolver Factory Activator service.
+     * @param resourceResolverType Resource resolver type.
+     * @param registerSlingModelsFromClassPath Automatic registering of all Sling Models found in the classpath on startup.
+     */
+    SlingContext(final ContextPlugins contextPlugins,
+            final Map<String, Object> resourceResolverFactoryActivatorProps,
+            final ResourceResolverType resourceResolverType,
+            final boolean registerSlingModelsFromClassPath) {
 
         this.plugins = contextPlugins;
         setResourceResolverFactoryActivatorProps(resourceResolverFactoryActivatorProps);
+        setRegisterSlingModelsFromClassPath(registerSlingModelsFromClassPath);
 
         // set resource resolver type in parent context
         setResourceResolverType(resourceResolverType);
