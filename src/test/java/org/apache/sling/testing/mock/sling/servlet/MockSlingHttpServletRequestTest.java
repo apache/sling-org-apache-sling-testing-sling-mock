@@ -21,6 +21,7 @@ package org.apache.sling.testing.mock.sling.servlet;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertSame;
 import static org.junit.Assert.assertTrue;
 import static org.mockito.Mockito.mock;
@@ -36,6 +37,7 @@ import org.apache.sling.api.resource.Resource;
 import org.apache.sling.api.resource.ResourceResolver;
 import org.apache.sling.i18n.ResourceBundleProvider;
 import org.apache.sling.servlethelpers.MockHttpSession;
+import org.apache.sling.servlethelpers.MockRequestPathInfo;
 import org.apache.sling.testing.mock.osgi.MockOsgi;
 import org.junit.After;
 import org.junit.Before;
@@ -117,6 +119,17 @@ public class MockSlingHttpServletRequestTest {
         ResourceBundle bundle2 = request.getResourceBundle("base2", Locale.US);
         assertNotNull(bundle2);
         assertFalse(bundle2.getKeys().hasMoreElements());
+    }
+
+    @Test
+    public void testGetSuffixResource() {
+        assertNull(request.getRequestPathInfo().getSuffixResource());
+        
+        ((MockRequestPathInfo)request.getRequestPathInfo()).setSuffix("/suffix");
+        Resource resource = mock(Resource.class);
+        when(resourceResolver.getResource("/suffix")).thenReturn(resource);
+        
+        assertSame(resource, request.getRequestPathInfo().getSuffixResource());
     }
 
 }
