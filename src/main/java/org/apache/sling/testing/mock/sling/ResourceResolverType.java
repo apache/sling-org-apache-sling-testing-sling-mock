@@ -18,10 +18,13 @@
  */
 package org.apache.sling.testing.mock.sling;
 
+import org.jetbrains.annotations.NotNull;
+
 /**
  * The resource resolver mock implementation supports different underlying
  * repository implementations.
  */
+@SuppressWarnings("null")
 public enum ResourceResolverType {
 
     /**
@@ -79,30 +82,31 @@ public enum ResourceResolverType {
 
             
 
-    private final String resourceResolverTypeAdapterClass;
-    private final String artifactCoordinates;
-    private final NodeTypeMode nodeTypeMode;
+    private final @NotNull String resourceResolverTypeAdapterClass;
+    private final @NotNull String artifactCoordinates;
+    private final @NotNull NodeTypeMode nodeTypeMode;
     
 
-    private ResourceResolverType(final String resourceResolverTypeAdapterClass, final String artifactCoordinates,
-            final NodeTypeMode nodeTypeMode) {
+    private ResourceResolverType(@NotNull final String resourceResolverTypeAdapterClass,
+            @NotNull final String artifactCoordinates,
+            @NotNull final NodeTypeMode nodeTypeMode) {
         this.resourceResolverTypeAdapterClass = resourceResolverTypeAdapterClass;
         this.artifactCoordinates = artifactCoordinates;
         this.nodeTypeMode = nodeTypeMode;
     }
 
-    String getResourceResolverTypeAdapterClass() {
+    @NotNull String getResourceResolverTypeAdapterClass() {
         return this.resourceResolverTypeAdapterClass;
     }
 
-    String getArtifactCoordinates() {
+    @NotNull String getArtifactCoordinates() {
         return this.artifactCoordinates;
     }
 
     /**
      * @return How JCR namespaces and node types have to be handled.
      */
-    public NodeTypeMode getNodeTypeMode() {
+    public @NotNull NodeTypeMode getNodeTypeMode() {
         return nodeTypeMode;
     }
 

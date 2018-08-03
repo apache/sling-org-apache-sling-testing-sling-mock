@@ -38,6 +38,8 @@ import org.apache.sling.jcr.contentparser.ContentType;
 import org.apache.sling.jcr.contentparser.JsonParserFeature;
 import org.apache.sling.jcr.contentparser.ParseException;
 import org.apache.sling.jcr.contentparser.ParserOptions;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 import org.osgi.framework.BundleContext;
 import org.osgi.framework.ServiceReference;
 
@@ -77,7 +79,7 @@ public final class ContentLoader {
     /**
      * @param resourceResolver Resource resolver
      */
-    public ContentLoader(ResourceResolver resourceResolver) {
+    public ContentLoader(@NotNull ResourceResolver resourceResolver) {
         this(resourceResolver, null);
     }
 
@@ -85,7 +87,7 @@ public final class ContentLoader {
      * @param resourceResolver Resource resolver
      * @param bundleContext Bundle context
      */
-    public ContentLoader(ResourceResolver resourceResolver, BundleContext bundleContext) {
+    public ContentLoader(@NotNull ResourceResolver resourceResolver, @Nullable BundleContext bundleContext) {
         this (resourceResolver, bundleContext, true);
     }
 
@@ -94,7 +96,7 @@ public final class ContentLoader {
      * @param bundleContext Bundle context
      * @param autoCommit Automatically commit changes after loading content (default: true)
      */
-    public ContentLoader(ResourceResolver resourceResolver, BundleContext bundleContext, boolean autoCommit) {
+    public ContentLoader(@NotNull ResourceResolver resourceResolver, @Nullable BundleContext bundleContext, boolean autoCommit) {
         this.resourceResolver = resourceResolver;
         this.bundleContext = bundleContext;
         this.autoCommit = autoCommit;
@@ -107,7 +109,7 @@ public final class ContentLoader {
      * @param childName Name of child resource to create with JSON content
      * @return Resource
      */
-    public Resource json(String classpathResource, Resource parentResource, String childName) {
+    public @NotNull Resource json(@NotNull String classpathResource, @NotNull Resource parentResource, @NotNull String childName) {
         InputStream is = ContentLoader.class.getResourceAsStream(classpathResource);
         if (is == null) {
             throw new IllegalArgumentException("Classpath resource not found: " + classpathResource);
@@ -130,7 +132,7 @@ public final class ContentLoader {
      * @param destPath Path to import the JSON content to
      * @return Resource
      */
-    public Resource json(String classpathResource, String destPath) {
+    public @NotNull Resource json(@NotNull String classpathResource, @NotNull String destPath) {
         InputStream is = ContentLoader.class.getResourceAsStream(classpathResource);
         if (is == null) {
             throw new IllegalArgumentException("Classpath resource not found: " + classpathResource);
@@ -153,7 +155,7 @@ public final class ContentLoader {
      * @param childName Name of child resource to create with JSON content
      * @return Resource
      */
-    public Resource json(InputStream inputStream, Resource parentResource, String childName) {
+    public @NotNull Resource json(@NotNull InputStream inputStream, @NotNull Resource parentResource, @NotNull String childName) {
         return json(inputStream, parentResource.getPath() + "/" + childName);
     }
 
@@ -164,10 +166,15 @@ public final class ContentLoader {
      * @param destPath Path to import the JSON content to
      * @return Resource
      */
-    public Resource json(InputStream inputStream, String destPath) {
+    @SuppressWarnings("null")
+    public @NotNull Resource json(@NotNull InputStream inputStream, @NotNull String destPath) {
         try {
             String parentPath = ResourceUtil.getParent(destPath);
             String childName = ResourceUtil.getName(destPath);
+            
+            if (parentPath == null) {
+                throw new IllegalArgumentException("Path has no parent: " + destPath);
+            }
 
             Resource parentResource = resourceResolver.getResource(parentPath);
             if (parentResource == null) {
@@ -190,10 +197,10 @@ public final class ContentLoader {
         }
     }
 
-    private Resource createResourceHierarchy(String path) {
+    private @NotNull Resource createResourceHierarchy(@NotNull String path) {
         String parentPath = ResourceUtil.getParent(path);
         if (parentPath == null) {
-            return null;
+            throw new IllegalArgumentException("Path has no parent: " + path);
         }
         Resource parentResource = resourceResolver.getResource(parentPath);
         if (parentResource == null) {
@@ -217,7 +224,7 @@ public final class ContentLoader {
      *            automatically)
      * @return Resource with binary data
      */
-    public Resource binaryFile(String classpathResource, String path) {
+    public @NotNull Resource binaryFile(@NotNull String classpathResource, @NotNull String path) {
         InputStream is = ContentLoader.class.getResourceAsStream(classpathResource);
         if (is == null) {
             throw new IllegalArgumentException("Classpath resource not found: " + classpathResource);
@@ -242,7 +249,7 @@ public final class ContentLoader {
      * @param mimeType Mime type of binary data
      * @return Resource with binary data
      */
-    public Resource binaryFile(String classpathResource, String path, String mimeType) {
+    public @NotNull Resource binaryFile(@NotNull String classpathResource, @NotNull String path, @NotNull String mimeType) {
         InputStream is = ContentLoader.class.getResourceAsStream(classpathResource);
         if (is == null) {
             throw new IllegalArgumentException("Classpath resource not found: " + classpathResource);
@@ -267,7 +274,7 @@ public final class ContentLoader {
      *            automatically)
      * @return Resource with binary data
      */
-    public Resource binaryFile(InputStream inputStream, String path) {
+    public @NotNull Resource binaryFile(@NotNull InputStream inputStream, @NotNull String path) {
         return binaryFile(inputStream, path, detectMimeTypeFromNames(path));
     }
 
@@ -280,9 +287,12 @@ public final class ContentLoader {
      * @param mimeType Mime type of binary data
      * @return Resource with binary data
      */
-    public Resource binaryFile(InputStream inputStream, String path, String mimeType) {
+    public @NotNull Resource binaryFile(@NotNull InputStream inputStream, @NotNull String path, @NotNull String mimeType) {
         String parentPath = ResourceUtil.getParent(path, 1);
         String name = ResourceUtil.getName(path);
+        if (parentPath == null) {
+            throw new IllegalArgumentException("Path has no parent: " + path);
+        }
         Resource parentResource = resourceResolver.getResource(parentPath);
         if (parentResource == null) {
             parentResource = createResourceHierarchy(parentPath);
@@ -299,7 +309,7 @@ public final class ContentLoader {
      * @param name Resource name for nt:file
      * @return Resource with binary data
      */
-    public Resource binaryFile(InputStream inputStream, Resource parentResource, String name) {
+    public @NotNull Resource binaryFile(@NotNull InputStream inputStream, @NotNull Resource parentResource, @NotNull String name) {
         return binaryFile(inputStream, parentResource, name, detectMimeTypeFromNames(name));
     }
 
@@ -312,7 +322,8 @@ public final class ContentLoader {
      * @param mimeType Mime type of binary data
      * @return Resource with binary data
      */
-    public Resource binaryFile(InputStream inputStream, Resource parentResource, String name, String mimeType) {
+    @SuppressWarnings("null")
+    public @NotNull Resource binaryFile(@NotNull InputStream inputStream, @NotNull Resource parentResource, @NotNull String name, @NotNull String mimeType) {
         try {
             Resource file = resourceResolver.create(parentResource, name,
                     ImmutableMap.<String, Object> builder().put(JcrConstants.JCR_PRIMARYTYPE, JcrConstants.NT_FILE)
@@ -338,7 +349,7 @@ public final class ContentLoader {
      *            automatically)
      * @return Resource with binary data
      */
-    public Resource binaryResource(String classpathResource, String path) {
+    public @NotNull Resource binaryResource(@NotNull String classpathResource, @NotNull String path) {
         InputStream is = ContentLoader.class.getResourceAsStream(classpathResource);
         if (is == null) {
             throw new IllegalArgumentException("Classpath resource not found: " + classpathResource);
@@ -363,7 +374,7 @@ public final class ContentLoader {
      * @param mimeType Mime type of binary data
      * @return Resource with binary data
      */
-    public Resource binaryResource(String classpathResource, String path, String mimeType) {
+    public @NotNull Resource binaryResource(@NotNull String classpathResource, @NotNull String path, @NotNull String mimeType) {
         InputStream is = ContentLoader.class.getResourceAsStream(classpathResource);
         if (is == null) {
             throw new IllegalArgumentException("Classpath resource not found: " + classpathResource);
@@ -388,7 +399,7 @@ public final class ContentLoader {
      *            automatically)
      * @return Resource with binary data
      */
-    public Resource binaryResource(InputStream inputStream, String path) {
+    public @NotNull Resource binaryResource(@NotNull InputStream inputStream, @NotNull String path) {
         return binaryResource(inputStream, path, detectMimeTypeFromNames(path));
     }
 
@@ -401,9 +412,12 @@ public final class ContentLoader {
      * @param mimeType Mime type of binary data
      * @return Resource with binary data
      */
-    public Resource binaryResource(InputStream inputStream, String path, String mimeType) {
+    public @NotNull Resource binaryResource(@NotNull InputStream inputStream, @NotNull String path, @NotNull String mimeType) {
         String parentPath = ResourceUtil.getParent(path, 1);
         String name = ResourceUtil.getName(path);
+        if (parentPath == null) {
+            throw new IllegalArgumentException("Path has no parent: " + path);
+        }
         Resource parentResource = resourceResolver.getResource(parentPath);
         if (parentResource == null) {
             parentResource = createResourceHierarchy(parentPath);
@@ -420,7 +434,7 @@ public final class ContentLoader {
      * @param name Resource name for nt:resource
      * @return Resource with binary data
      */
-    public Resource binaryResource(InputStream inputStream, Resource parentResource, String name) {
+    public @NotNull Resource binaryResource(@NotNull InputStream inputStream, @NotNull Resource parentResource, @NotNull String name) {
         return binaryResource(inputStream, parentResource, name, detectMimeTypeFromNames(name));
     }
 
@@ -433,7 +447,7 @@ public final class ContentLoader {
      * @param mimeType Mime type of binary data
      * @return Resource with binary data
      */
-    public Resource binaryResource(InputStream inputStream, Resource parentResource, String name, String mimeType) {
+    public @NotNull Resource binaryResource(@NotNull InputStream inputStream, @NotNull Resource parentResource, @NotNull String name, @NotNull String mimeType) {
         try {
             Resource resource = resourceResolver.create(parentResource, name,
                     ImmutableMap.<String, Object> builder().put(JcrConstants.JCR_PRIMARYTYPE, JcrConstants.NT_RESOURCE)
@@ -453,7 +467,8 @@ public final class ContentLoader {
      * @param names The names from which to derive the mime type
      * @return Mime type (never null)
      */
-    private String detectMimeTypeFromNames(String... names) {
+    @SuppressWarnings("null")
+    private @NotNull String detectMimeTypeFromNames(@NotNull String... names) {
         String mimeType = null;
         for (String name : names) {
             String fileExtension = StringUtils.substringAfterLast(name, ".");

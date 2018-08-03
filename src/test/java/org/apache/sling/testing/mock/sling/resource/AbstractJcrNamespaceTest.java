@@ -38,6 +38,7 @@ import org.osgi.framework.BundleContext;
 /**
  * Validates correct registering and mapping of JCR namespaces, esp. the sling namespace. 
  */
+@SuppressWarnings("null")
 public abstract class AbstractJcrNamespaceTest {
     
     @Rule

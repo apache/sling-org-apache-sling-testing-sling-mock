@@ -19,5 +19,5 @@
 /**
  * Rule for providing easy access to Sling context in JUnit tests.
  */
-@org.osgi.annotation.versioning.Version("4.2")
+@org.osgi.annotation.versioning.Version("4.2.1")
 package org.apache.sling.testing.mock.sling.junit;

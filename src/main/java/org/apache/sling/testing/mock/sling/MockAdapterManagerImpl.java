@@ -40,6 +40,7 @@ import org.apache.sling.api.SlingConstants;
 import org.apache.sling.api.adapter.AdapterFactory;
 import org.apache.sling.api.adapter.AdapterManager;
 import org.apache.sling.commons.osgi.PropertiesUtil;
+import org.jetbrains.annotations.NotNull;
 import org.osgi.framework.Constants;
 import org.osgi.framework.ServiceReference;
 import org.osgi.framework.ServiceRegistration;
@@ -125,8 +126,9 @@ public class MockAdapterManagerImpl implements AdapterManager {
      *
      * @see org.apache.sling.api.adapter.AdapterManager#getAdapter(java.lang.Object, java.lang.Class)
      */
-    public <AdapterType> AdapterType getAdapter(final Object adaptable,
-            final Class<AdapterType> type) {
+    @Override
+    public <AdapterType> AdapterType getAdapter(@NotNull final Object adaptable,
+            @NotNull final Class<AdapterType> type) {
 
         // get the adapter factories for the type of adaptable object
         final Map<String, List<AdapterFactoryDescriptor>> factories = getAdapterFactories(adaptable.getClass());

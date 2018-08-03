@@ -25,6 +25,8 @@ import org.apache.sling.testing.mock.osgi.context.ContextPlugins;
 import org.apache.sling.testing.mock.osgi.context.OsgiContextImpl;
 import org.apache.sling.testing.mock.sling.ResourceResolverType;
 import org.apache.sling.testing.mock.sling.context.SlingContextImpl;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 import org.junit.rules.ExternalResource;
 import org.junit.rules.TestRule;
 import org.junit.runner.Description;
@@ -54,7 +56,7 @@ public final class SlingContext extends SlingContextImpl implements TestRule {
      * Initialize Sling context with resource resolver type.
      * @param resourceResolverType Resource resolver type.
      */
-    public SlingContext(final ResourceResolverType resourceResolverType) {
+    public SlingContext(@NotNull final ResourceResolverType resourceResolverType) {
         this(new ContextPlugins(), null, resourceResolverType);
     }
 
@@ -64,7 +66,7 @@ public final class SlingContext extends SlingContextImpl implements TestRule {
      * @param <T> context type
      * @param afterSetUpCallback Allows the application to register an own callback function that is called after the built-in setup rules are executed.
      */
-    public <T extends OsgiContextImpl> SlingContext(final ContextCallback<T> afterSetUpCallback) {
+    public <T extends OsgiContextImpl> SlingContext(@NotNull final ContextCallback<T> afterSetUpCallback) {
         this(new ContextPlugins(afterSetUpCallback), null, null);
     }
 
@@ -74,7 +76,7 @@ public final class SlingContext extends SlingContextImpl implements TestRule {
      * @param afterSetUpCallback Allows the application to register an own callback function that is called after the built-in setup rules are executed.
      * @param resourceResolverType Resource resolver type.
      */
-    public <T extends OsgiContextImpl> SlingContext(final ContextCallback<T> afterSetUpCallback, final ResourceResolverType resourceResolverType) {
+    public <T extends OsgiContextImpl> SlingContext(@NotNull final ContextCallback<T> afterSetUpCallback, @NotNull final ResourceResolverType resourceResolverType) {
         this(new ContextPlugins(afterSetUpCallback), null, resourceResolverType);
     }
 
@@ -86,7 +88,8 @@ public final class SlingContext extends SlingContextImpl implements TestRule {
      * @param afterSetUpCallback Allows the application to register an own callback function that is called after the built-in setup rules are executed.
      * @param beforeTearDownCallback Allows the application to register an own callback function that is called before the built-in teardown rules are executed.
      */
-    public <U extends OsgiContextImpl, V extends OsgiContextImpl> SlingContext(final ContextCallback<U> afterSetUpCallback, final ContextCallback<V> beforeTearDownCallback) {
+    public <U extends OsgiContextImpl, V extends OsgiContextImpl> SlingContext(@NotNull final ContextCallback<U> afterSetUpCallback,
+            @NotNull final ContextCallback<V> beforeTearDownCallback) {
         this(new ContextPlugins(afterSetUpCallback, beforeTearDownCallback), null, null);
     }
     
@@ -98,8 +101,9 @@ public final class SlingContext extends SlingContextImpl implements TestRule {
      * @param beforeTearDownCallback Allows the application to register an own callback function that is called before the built-in teardown rules are executed.
      * @param resourceResolverType Resource resolver type.
      */
-    public <U extends OsgiContextImpl, V extends OsgiContextImpl> SlingContext(final ContextCallback<U> afterSetUpCallback, final ContextCallback<V> beforeTearDownCallback,
-            final ResourceResolverType resourceResolverType) {
+    public <U extends OsgiContextImpl, V extends OsgiContextImpl> SlingContext(@NotNull final ContextCallback<U> afterSetUpCallback,
+            @NotNull final ContextCallback<V> beforeTearDownCallback,
+            @NotNull final ResourceResolverType resourceResolverType) {
         this(new ContextPlugins(afterSetUpCallback, beforeTearDownCallback), null, resourceResolverType);
     }
     
@@ -109,9 +113,9 @@ public final class SlingContext extends SlingContextImpl implements TestRule {
      * @param resourceResolverFactoryActivatorProps Allows to override OSGi configuration parameters for the Resource Resolver Factory Activator service.
      * @param resourceResolverType Resource resolver type.
      */
-    SlingContext(final ContextPlugins contextPlugins,
-            final Map<String, Object> resourceResolverFactoryActivatorProps,
-            final ResourceResolverType resourceResolverType) {
+    SlingContext(@NotNull final ContextPlugins contextPlugins,
+            @Nullable final Map<String, Object> resourceResolverFactoryActivatorProps,
+            @Nullable final ResourceResolverType resourceResolverType) {
         this(contextPlugins, resourceResolverFactoryActivatorProps, resourceResolverType, true);
     }
 
@@ -122,9 +126,9 @@ public final class SlingContext extends SlingContextImpl implements TestRule {
      * @param resourceResolverType Resource resolver type.
      * @param registerSlingModelsFromClassPath Automatic registering of all Sling Models found in the classpath on startup.
      */
-    SlingContext(final ContextPlugins contextPlugins,
-            final Map<String, Object> resourceResolverFactoryActivatorProps,
-            final ResourceResolverType resourceResolverType,
+    SlingContext(@NotNull final ContextPlugins contextPlugins,
+            @Nullable final Map<String, Object> resourceResolverFactoryActivatorProps,
+            @Nullable final ResourceResolverType resourceResolverType,
             final boolean registerSlingModelsFromClassPath) {
 
         this.plugins = contextPlugins;

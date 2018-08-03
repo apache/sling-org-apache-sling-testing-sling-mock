@@ -23,6 +23,7 @@ import java.util.Set;
 import java.util.UUID;
 
 import org.apache.sling.settings.SlingSettingsService;
+import org.jetbrains.annotations.NotNull;
 
 import com.google.common.collect.ImmutableSet;
 
@@ -37,6 +38,7 @@ public final class MockSlingSettingService implements SlingSettingsService {
     /**
      * Instantiate with no default run modes.
      */
+    @SuppressWarnings("null")
     public MockSlingSettingService() {
         this(ImmutableSet.<String> of());
     }
@@ -45,7 +47,7 @@ public final class MockSlingSettingService implements SlingSettingsService {
      * Instantiate with given run modes
      * @param defaultRunModes Run modes
      */
-    public MockSlingSettingService(Set<String> defaultRunModes) {
+    public MockSlingSettingService(@NotNull Set<String> defaultRunModes) {
         this.runModes = defaultRunModes;
         this.slingId = UUID.randomUUID().toString();
     }
@@ -55,7 +57,7 @@ public final class MockSlingSettingService implements SlingSettingsService {
         return ImmutableSet.copyOf(this.runModes);
     }
 
-    public void setRunModes(Set<String> runModes) {
+    public void setRunModes(@NotNull Set<String> runModes) {
         this.runModes = runModes;
     }
 

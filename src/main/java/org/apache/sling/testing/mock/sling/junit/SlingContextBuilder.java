@@ -25,6 +25,7 @@ import org.apache.sling.testing.mock.osgi.context.ContextPlugin;
 import org.apache.sling.testing.mock.osgi.context.ContextPlugins;
 import org.apache.sling.testing.mock.osgi.context.OsgiContextImpl;
 import org.apache.sling.testing.mock.sling.ResourceResolverType;
+import org.jetbrains.annotations.NotNull;
 import org.osgi.annotation.versioning.ProviderType;
 
 /**
@@ -33,7 +34,7 @@ import org.osgi.annotation.versioning.ProviderType;
 @ProviderType
 public final class SlingContextBuilder {
     
-    private final ContextPlugins plugins = new ContextPlugins();
+    private final @NotNull ContextPlugins plugins = new ContextPlugins();
     private ResourceResolverType resourceResolverType;
     private Map<String, Object> resourceResolverFactoryActivatorProps;
     private boolean registerSlingModelsFromClassPath = true;
@@ -47,7 +48,7 @@ public final class SlingContextBuilder {
      * Create builder with given resource resolver type.
      * @param resourceResolverType Resource resolver type.
      */
-    public SlingContextBuilder(ResourceResolverType resourceResolverType) {
+    public SlingContextBuilder(@NotNull ResourceResolverType resourceResolverType) {
         this.resourceResolverType(resourceResolverType);
     }
     
@@ -55,7 +56,7 @@ public final class SlingContextBuilder {
      * @param resourceResolverType Resource resolver type.
      * @return this
      */
-    public SlingContextBuilder resourceResolverType(ResourceResolverType resourceResolverType) {
+    public @NotNull SlingContextBuilder resourceResolverType(@NotNull ResourceResolverType resourceResolverType) {
         this.resourceResolverType = resourceResolverType;
         return this;
     }
@@ -66,7 +67,7 @@ public final class SlingContextBuilder {
      * @return this
      */
     @SafeVarargs
-    public final <T extends OsgiContextImpl> SlingContextBuilder plugin(ContextPlugin<T>... plugin) {
+    public final @NotNull <T extends OsgiContextImpl> SlingContextBuilder plugin(@NotNull ContextPlugin<T>... plugin) {
         plugins.addPlugin(plugin);
         return this;
     }
@@ -77,7 +78,7 @@ public final class SlingContextBuilder {
      * @return this
      */
     @SafeVarargs
-    public final <T extends OsgiContextImpl> SlingContextBuilder beforeSetUp(ContextCallback<T>... beforeSetUpCallback) {
+    public final @NotNull <T extends OsgiContextImpl> SlingContextBuilder beforeSetUp(@NotNull ContextCallback<T>... beforeSetUpCallback) {
         plugins.addBeforeSetUpCallback(beforeSetUpCallback);
         return this;
     }
@@ -88,7 +89,7 @@ public final class SlingContextBuilder {
      * @return this
      */
     @SafeVarargs
-    public final <T extends OsgiContextImpl> SlingContextBuilder afterSetUp(ContextCallback<T>... afterSetUpCallback) {
+    public final @NotNull <T extends OsgiContextImpl> SlingContextBuilder afterSetUp(@NotNull ContextCallback<T>... afterSetUpCallback) {
         plugins.addAfterSetUpCallback(afterSetUpCallback);
         return this;
     }
@@ -99,7 +100,7 @@ public final class SlingContextBuilder {
      * @return this
      */
     @SafeVarargs
-    public final <T extends OsgiContextImpl> SlingContextBuilder beforeTearDown(ContextCallback<T>... beforeTearDownCallback) {
+    public final @NotNull <T extends OsgiContextImpl> SlingContextBuilder beforeTearDown(@NotNull ContextCallback<T>... beforeTearDownCallback) {
         plugins.addBeforeTearDownCallback(beforeTearDownCallback);
         return this;
     }
@@ -110,7 +111,7 @@ public final class SlingContextBuilder {
      * @return this
      */
     @SafeVarargs
-    public final <T extends OsgiContextImpl> SlingContextBuilder afterTearDown(ContextCallback<T>... afterTearDownCallback) {
+    public final @NotNull <T extends OsgiContextImpl> SlingContextBuilder afterTearDown(@NotNull ContextCallback<T>... afterTearDownCallback) {
         plugins.addAfterTearDownCallback(afterTearDownCallback);
         return this;
     }
@@ -120,7 +121,7 @@ public final class SlingContextBuilder {
      * @param props Configuration properties
      * @return this
      */
-    public SlingContextBuilder resourceResolverFactoryActivatorProps(Map<String, Object> props) {
+    public @NotNull SlingContextBuilder resourceResolverFactoryActivatorProps(@NotNull Map<String, Object> props) {
       this.resourceResolverFactoryActivatorProps = props;
       return this;
     }
@@ -130,7 +131,7 @@ public final class SlingContextBuilder {
      * @param registerSlingModelsFromClassPath If set to false Sling Models are not registered automatically from the classpath on startup.
      * @return this
      */
-    public SlingContextBuilder registerSlingModelsFromClassPath(boolean registerSlingModelsFromClassPath) {
+    public @NotNull SlingContextBuilder registerSlingModelsFromClassPath(boolean registerSlingModelsFromClassPath) {
       this.registerSlingModelsFromClassPath = registerSlingModelsFromClassPath;
       return this;
     }
@@ -138,7 +139,7 @@ public final class SlingContextBuilder {
     /**
      * @return Build {@link SlingContext} instance.
      */
-    public SlingContext build() {
+    public @NotNull SlingContext build() {
         return new SlingContext(this.plugins,
                 this.resourceResolverFactoryActivatorProps,
                 this.resourceResolverType,

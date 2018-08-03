@@ -56,6 +56,7 @@ import com.google.common.collect.ImmutableMap;
  * Implements simple write and read resource and values test.
  * JCR API is used to create the test data.
  */
+@SuppressWarnings("null")
 public abstract class AbstractJcrResourceResolverTest {
 
     @Rule

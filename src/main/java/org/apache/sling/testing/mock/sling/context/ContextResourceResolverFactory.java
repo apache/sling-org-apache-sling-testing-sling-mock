@@ -24,6 +24,8 @@ import org.apache.sling.api.resource.LoginException;
 import org.apache.sling.api.resource.ResourceResolverFactory;
 import org.apache.sling.testing.mock.sling.MockSling;
 import org.apache.sling.testing.mock.sling.ResourceResolverType;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 import org.osgi.framework.BundleContext;
 
 /**
@@ -35,8 +37,8 @@ final class ContextResourceResolverFactory {
         // static methods only
     }
 
-    public static ResourceResolverFactory get(final ResourceResolverType resourceResolverType,
-            final BundleContext bundleContext) {
+    public static @NotNull ResourceResolverFactory get(@Nullable final ResourceResolverType resourceResolverType,
+            @NotNull final BundleContext bundleContext) {
         ResourceResolverType type = resourceResolverType;
         if (type == null) {
             type = MockSling.DEFAULT_RESOURCERESOLVER_TYPE;
@@ -67,19 +69,19 @@ final class ContextResourceResolverFactory {
         }
     }
 
-    private static void initializeJcrMock(ResourceResolverFactory factory) throws RepositoryException, LoginException {
+    private static void initializeJcrMock(@NotNull ResourceResolverFactory factory) throws RepositoryException, LoginException {
         // nothing to do
     }
 
-    private static void initializeJcrOak(ResourceResolverFactory factory) {
+    private static void initializeJcrOak(@NotNull ResourceResolverFactory factory) {
         // register sling node types?
     }
 
-    private static void initializeResourceResolverMock(ResourceResolverFactory factory) {
+    private static void initializeResourceResolverMock(@NotNull ResourceResolverFactory factory) {
         // nothing to do
     }
 
-    private static void initializeResourceResolverNone(ResourceResolverFactory factory) {
+    private static void initializeResourceResolverNone(@NotNull ResourceResolverFactory factory) {
         // nothing to do
     }
 

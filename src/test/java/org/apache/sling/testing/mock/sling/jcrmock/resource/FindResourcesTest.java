@@ -36,6 +36,7 @@ import org.junit.Test;
 
 import com.google.common.collect.ImmutableMap;
 
+@SuppressWarnings("null")
 public class FindResourcesTest {
 
 	@Rule
@@ -44,7 +45,7 @@ public class FindResourcesTest {
 	@Before
 	public void setUp() {
 		Resource resource = context.create().resource(
-				"test",
+				"/test",
 				ImmutableMap.<String, Object> builder().put("prop1", "value1")
 						.put("prop2", "value2").build());
 		Node node = resource.adaptTo(Node.class);

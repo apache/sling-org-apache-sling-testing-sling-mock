@@ -39,6 +39,7 @@ import org.junit.runner.RunWith;
 import org.mockito.runners.MockitoJUnitRunner;
 
 @RunWith(MockitoJUnitRunner.class)
+@SuppressWarnings("null")
 public abstract class AbstractContentLoaderBinaryTest {
 
     private static final int SAMPLE_IMAGE_FILESIZE = 62;
