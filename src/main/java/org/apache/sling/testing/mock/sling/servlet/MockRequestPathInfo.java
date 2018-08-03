@@ -18,11 +18,23 @@
  */
 package org.apache.sling.testing.mock.sling.servlet;
 
+import org.apache.sling.api.resource.ResourceResolver;
+
 /**
  * Mock {@link org.apache.sling.api.request.RequestPathInfo} implementation.
  */
 public final class MockRequestPathInfo extends org.apache.sling.servlethelpers.MockRequestPathInfo {
 
-    // inherit from superclass
+    /**
+     * @deprecated Use @link {@link #MockRequestPathInfo(ResourceResolver)} instead. 
+     */
+    @Deprecated
+    public MockRequestPathInfo() {
+        this(null);
+    }
+
+    public MockRequestPathInfo(ResourceResolver resourceResolver) {
+        super(resourceResolver);
+    }
 
 }

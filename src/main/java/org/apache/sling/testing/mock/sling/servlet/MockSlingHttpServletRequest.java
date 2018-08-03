@@ -52,7 +52,7 @@ public class MockSlingHttpServletRequest extends org.apache.sling.servlethelpers
     }
 
     protected MockRequestPathInfo newMockRequestPathInfo() {
-        return new MockRequestPathInfo();
+        return new MockRequestPathInfo(getResourceResolver());
     }
 
     protected MockHttpSession newMockHttpSession() {
