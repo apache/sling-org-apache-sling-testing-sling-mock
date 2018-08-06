@@ -25,7 +25,7 @@ import javax.jcr.Session;
 
 import org.apache.sling.jcr.api.SlingRepository;
 import org.apache.sling.testing.mock.jcr.MockJcr;
-import org.apache.sling.testing.mock.osgi.junit.OsgiContext;
+import org.apache.sling.testing.mock.sling.junit.SlingContext;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
@@ -33,7 +33,7 @@ import org.junit.Test;
 public class MockJcrSlingRepositoryTest {
 
     @Rule
-    public OsgiContext context = new OsgiContext();
+    public SlingContext context = new SlingContext();
     
     private SlingRepository repository;
 
