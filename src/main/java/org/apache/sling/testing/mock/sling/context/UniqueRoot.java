@@ -25,6 +25,7 @@ import org.apache.sling.api.resource.PersistenceException;
 import org.apache.sling.api.resource.Resource;
 import org.apache.sling.api.resource.ResourceUtil;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 import org.osgi.annotation.versioning.ConsumerType;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -121,7 +122,7 @@ public class UniqueRoot {
      * Deletes the given set of resources and commits afterwards.
      * @param resources Resources to be deleted
      */
-    protected final void deleteResources(@NotNull Resource... resources) {
+    protected final void deleteResources(@Nullable Resource @NotNull ... resources) {
         for (Resource resource : resources) {
             if (resource != null && context.resourceResolver.getResource(resource.getPath()) != null) {
                 try {

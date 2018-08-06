@@ -67,7 +67,7 @@ public final class SlingContextBuilder {
      * @return this
      */
     @SafeVarargs
-    public final @NotNull <T extends OsgiContextImpl> SlingContextBuilder plugin(@NotNull ContextPlugin<T>... plugin) {
+    public final @NotNull <T extends OsgiContextImpl> SlingContextBuilder plugin(@NotNull ContextPlugin<T> @NotNull ... plugin) {
         plugins.addPlugin(plugin);
         return this;
     }
@@ -78,7 +78,7 @@ public final class SlingContextBuilder {
      * @return this
      */
     @SafeVarargs
-    public final @NotNull <T extends OsgiContextImpl> SlingContextBuilder beforeSetUp(@NotNull ContextCallback<T>... beforeSetUpCallback) {
+    public final @NotNull <T extends OsgiContextImpl> SlingContextBuilder beforeSetUp(@NotNull ContextCallback<T> @NotNull ... beforeSetUpCallback) {
         plugins.addBeforeSetUpCallback(beforeSetUpCallback);
         return this;
     }
@@ -89,7 +89,7 @@ public final class SlingContextBuilder {
      * @return this
      */
     @SafeVarargs
-    public final @NotNull <T extends OsgiContextImpl> SlingContextBuilder afterSetUp(@NotNull ContextCallback<T>... afterSetUpCallback) {
+    public final @NotNull <T extends OsgiContextImpl> SlingContextBuilder afterSetUp(@NotNull ContextCallback<T> @NotNull ... afterSetUpCallback) {
         plugins.addAfterSetUpCallback(afterSetUpCallback);
         return this;
     }
@@ -100,7 +100,7 @@ public final class SlingContextBuilder {
      * @return this
      */
     @SafeVarargs
-    public final @NotNull <T extends OsgiContextImpl> SlingContextBuilder beforeTearDown(@NotNull ContextCallback<T>... beforeTearDownCallback) {
+    public final @NotNull <T extends OsgiContextImpl> SlingContextBuilder beforeTearDown(@NotNull ContextCallback<T> @NotNull ... beforeTearDownCallback) {
         plugins.addBeforeTearDownCallback(beforeTearDownCallback);
         return this;
     }
@@ -111,7 +111,7 @@ public final class SlingContextBuilder {
      * @return this
      */
     @SafeVarargs
-    public final @NotNull <T extends OsgiContextImpl> SlingContextBuilder afterTearDown(@NotNull ContextCallback<T>... afterTearDownCallback) {
+    public final @NotNull <T extends OsgiContextImpl> SlingContextBuilder afterTearDown(@NotNull ContextCallback<T> @NotNull ... afterTearDownCallback) {
         plugins.addAfterTearDownCallback(afterTearDownCallback);
         return this;
     }

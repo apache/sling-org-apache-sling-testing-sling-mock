@@ -89,7 +89,7 @@ public class ContentBuilder {
      * @return Resource object
      */
     @SuppressWarnings("null")
-    public final @NotNull Resource resource(@NotNull String path, @NotNull Object... properties) {
+    public final @NotNull Resource resource(@NotNull String path, @NotNull Object @NotNull ... properties) {
         return resource(path, MapUtil.toMap(properties));
     }
 

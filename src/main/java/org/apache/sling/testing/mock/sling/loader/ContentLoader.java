@@ -468,7 +468,7 @@ public final class ContentLoader {
      * @return Mime type (never null)
      */
     @SuppressWarnings("null")
-    private @NotNull String detectMimeTypeFromNames(@NotNull String... names) {
+    private @NotNull String detectMimeTypeFromNames(@NotNull String @NotNull ... names) {
         String mimeType = null;
         for (String name : names) {
             String fileExtension = StringUtils.substringAfterLast(name, ".");

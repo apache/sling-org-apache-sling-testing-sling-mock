@@ -185,7 +185,7 @@ public class SlingContextImpl extends OsgiContextImpl {
     }
     
     @SuppressWarnings("null")
-    private void registerInjectActivateServiceByClassName(@NotNull String... classNames) {
+    private void registerInjectActivateServiceByClassName(@NotNull String @NotNull ... classNames) {
         for (String className : classNames) {
             try {
                 Class<?> clazz = Class.forName(className);
@@ -422,7 +422,7 @@ public class SlingContextImpl extends OsgiContextImpl {
      * register all classes with @Model annotation.
      * @param packageNames Java package names
      */
-    public final void addModelsForPackage(@NotNull String... packageNames) {
+    public final void addModelsForPackage(@NotNull String @NotNull ... packageNames) {
         ModelAdapterFactoryUtil.addModelsForPackages(bundleContext(), packageNames);
     }
 
@@ -430,7 +430,7 @@ public class SlingContextImpl extends OsgiContextImpl {
      * Search classpath for given class names to scan for and register all classes with @Model annotation.
      * @param classNames Java class names
      */
-    public final void addModelsForClasses(@NotNull String... classNames) {
+    public final void addModelsForClasses(@NotNull String @NotNull ... classNames) {
         ModelAdapterFactoryUtil.addModelsForClasses(bundleContext(), classNames);
     }
 
@@ -438,7 +438,7 @@ public class SlingContextImpl extends OsgiContextImpl {
      * Search classpath for given class names to scan for and register all classes with @Model annotation.
      * @param classes Java classes
      */
-    public final void addModelsForClasses(@NotNull Class... classes) {
+    public final void addModelsForClasses(@NotNull Class @NotNull ... classes) {
         ModelAdapterFactoryUtil.addModelsForClasses(bundleContext(), classes);
     }
 
@@ -447,7 +447,7 @@ public class SlingContextImpl extends OsgiContextImpl {
      * @param runModes Run mode(s).
      */
     @SuppressWarnings("null")
-    public final void runMode(@NotNull String... runModes) {
+    public final void runMode(@NotNull String @NotNull ... runModes) {
         Set<String> newRunModes = ImmutableSet.<String> builder().add(runModes).build();
         ServiceReference<SlingSettingsService> ref = bundleContext().getServiceReference(SlingSettingsService.class);
         if (ref != null) {

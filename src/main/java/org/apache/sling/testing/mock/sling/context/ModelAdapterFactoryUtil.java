@@ -57,8 +57,8 @@ final class ModelAdapterFactoryUtil {
     private static final @NotNull String PACKAGE_HEADER = "Sling-Model-Packages";
     private static final @NotNull String CLASSES_HEADER = "Sling-Model-Classes";
     
-    private static final @NotNull String[] MODELS_PACKAGES_FROM_MANIFEST;
-    private static final @NotNull String[] MODELS_CLASSES_FROM_MANIFEST;
+    private static final @NotNull String @NotNull [] MODELS_PACKAGES_FROM_MANIFEST;
+    private static final @NotNull String @NotNull [] MODELS_CLASSES_FROM_MANIFEST;
     
     private static final @NotNull ConcurrentMap<String, List<URL>> MODEL_URLS_FOR_PACKAGES = new ConcurrentHashMap<String, List<URL>>();
     private static final @NotNull ConcurrentMap<String, List<URL>> MODEL_URLS_FOR_CLASSES = new ConcurrentHashMap<String, List<URL>>();
@@ -77,7 +77,7 @@ final class ModelAdapterFactoryUtil {
     }
 
     @SuppressWarnings("null")
-    private static @NotNull String[] toArray(@NotNull Collection<String> values) {
+    private static @NotNull String @NotNull [] toArray(@NotNull Collection<String> values) {
         return values.toArray(new String[values.size()]);
     }
         
@@ -87,7 +87,7 @@ final class ModelAdapterFactoryUtil {
      * @param bundleContext Bundle context
      * @param packageNames Java package names
      */
-    public static void addModelsForPackages(@NotNull BundleContext bundleContext, @NotNull String... packageNames) {
+    public static void addModelsForPackages(@NotNull BundleContext bundleContext, @NotNull String @NotNull ... packageNames) {
         Bundle bundle = new RegisterModelsBundle(bundleContext, Bundle.ACTIVE, packageNames, null);
         BundleEvent event = new BundleEvent(BundleEvent.STARTED, bundle);
         MockOsgi.sendBundleEvent(bundleContext, event);
@@ -98,7 +98,7 @@ final class ModelAdapterFactoryUtil {
      * @param bundleContext Bundle context
      * @param classNames Java class names
      */
-    public static void addModelsForClasses(@NotNull BundleContext bundleContext, @NotNull String... classNames) {
+    public static void addModelsForClasses(@NotNull BundleContext bundleContext, @NotNull String @NotNull ... classNames) {
         Bundle bundle = new RegisterModelsBundle(bundleContext, Bundle.ACTIVE, null, classNames);
         BundleEvent event = new BundleEvent(BundleEvent.STARTED, bundle);
         MockOsgi.sendBundleEvent(bundleContext, event);
@@ -109,7 +109,8 @@ final class ModelAdapterFactoryUtil {
      * @param bundleContext Bundle context
      * @param classNames Java class names
      */
-    public static void addModelsForClasses(@NotNull BundleContext bundleContext, @NotNull Class... classes) {
+    @SuppressWarnings("null")
+    public static void addModelsForClasses(@NotNull BundleContext bundleContext, @NotNull Class @NotNull ... classes) {
         String[] classNames = new String[classes.length];
         for (int i = 0; i < classes.length; i++) {
             classNames[i] = classes[i].getName();
