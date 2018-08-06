@@ -21,7 +21,7 @@ package org.apache.sling.testing.mock.sling.jcrmock.loader;
 import org.apache.sling.testing.mock.sling.ResourceResolverType;
 import org.apache.sling.testing.mock.sling.loader.AbstractContentLoaderBinaryTest;
 import org.junit.runner.RunWith;
-import org.mockito.runners.MockitoJUnitRunner;
+import org.mockito.junit.MockitoJUnitRunner;
 
 @RunWith(MockitoJUnitRunner.class)
 public class ContentLoaderBinaryTest extends AbstractContentLoaderBinaryTest {

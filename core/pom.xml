@@ -35,10 +35,20 @@
     <description>Mock implementation of selected Sling APIs.</description>
 
     <dependencies>
-  
+
         <dependency>
             <groupId>org.osgi</groupId>
             <artifactId>org.osgi.annotation.versioning</artifactId>
+            <scope>provided</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.osgi</groupId>
+            <artifactId>osgi.core</artifactId>
+            <scope>provided</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.osgi</groupId>
+            <artifactId>osgi.cmpn</artifactId>
             <scope>provided</scope>
         </dependency>
 
@@ -236,8 +246,8 @@
         </dependency>
         <dependency>
             <groupId>org.mockito</groupId>
-            <artifactId>mockito-all</artifactId>
-            <version>1.9.5</version>
+            <artifactId>mockito-core</artifactId>
+            <version>2.19.1</version>
             <scope>test</scope>
         </dependency>
         <dependency>
@@ -248,10 +258,10 @@
         </dependency>
 
     </dependencies>
-  
+
     <build>
         <plugins>
-    
+
             <!-- Publish test artifact -->
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
@@ -264,13 +274,13 @@
                     </execution>
                 </executions>
             </plugin>
-      
+
             <plugin>
                 <groupId>org.apache.felix</groupId>
                 <artifactId>maven-bundle-plugin</artifactId>
                 <extensions>true</extensions>
             </plugin>
-    
+
             <plugin>
                 <groupId>org.apache.rat</groupId>
                 <artifactId>apache-rat-plugin</artifactId>
@@ -283,7 +293,7 @@
 
         </plugins>
     </build>
-  
+
     <profiles>
         <profile>
             <id>latest-resource-bundles</id>
@@ -321,5 +331,5 @@
             </dependencies>
         </profile>
     </profiles>
-  
+
 </project>
