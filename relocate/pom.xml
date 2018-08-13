@@ -24,42 +24,19 @@
         <groupId>org.apache.sling</groupId>
         <artifactId>org.apache.sling.testing.sling-mock.parent</artifactId>
         <version>2.3.0-SNAPSHOT</version>
-        <relativePath>parent/pom.xml</relativePath>
+        <relativePath>../parent/pom.xml</relativePath>
     </parent>
 
-    <artifactId>org.apache.sling.testing.sling-mock.reactor</artifactId>
+    <artifactId>org.apache.sling.testing.sling-mock</artifactId>
     <packaging>pom</packaging>
 
-    <name>Apache Sling Testing Sling Mock</name>
+    <name>Apache Sling Testing Sling Mock Relocation</name>
+    <description>Please use artifact 'org.apache.sling.testing.sling-mock.junit4' instead.</description>
 
-    <scm>
-        <connection>scm:git:https://gitbox.apache.org/repos/asf/sling-org-apache-sling-testing-sling-mock.git</connection>
-        <developerConnection>scm:git:https://gitbox.apache.org/repos/asf/sling-org-apache-sling-testing-sling-mock.git</developerConnection>
-        <url>https://gitbox.apache.org/repos/asf?p=sling-org-apache-sling-testing-sling-mock.git</url>
-        <tag>HEAD</tag>
-    </scm>
-
-    <modules>
-        <module>parent</module>
-        <module>core</module>
-        <module>junit4</module>
-        <module>junit5</module>
-        <module>relocate</module>
-    </modules>
-
-    <build>
-        <plugins>
-
-            <!-- do not deploy this reactor pom into maven repository -->
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-deploy-plugin</artifactId>
-                <configuration>
-                    <skip>true</skip>
-                </configuration>
-            </plugin>
-
-        </plugins>
-    </build>
+    <distributionManagement>
+        <relocation>
+            <artifactId>org.apache.sling.testing.sling-mock.junit4</artifactId>
+        </relocation>
+    </distributionManagement>
 
 </project>
