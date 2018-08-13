@@ -23,6 +23,7 @@ import java.util.Hashtable;
 
 import org.apache.sling.api.adapter.AdapterManager;
 import org.apache.sling.testing.mock.osgi.MockOsgi;
+import org.jetbrains.annotations.NotNull;
 import org.osgi.framework.BundleContext;
 import org.osgi.framework.ServiceReference;
 
@@ -41,7 +42,7 @@ class ThreadsafeMockAdapterManagerWrapper implements AdapterManager {
     };
 
     @Override
-    public <AdapterType> AdapterType getAdapter(final Object adaptable, final Class<AdapterType> type) {
+    public <AdapterType> AdapterType getAdapter(@NotNull final Object adaptable, @NotNull final Class<AdapterType> type) {
         AdapterManager adapterManager = THREAD_LOCAL.get().getAdapterManager();
         return adapterManager.getAdapter(adaptable, type);
     }
@@ -50,7 +51,7 @@ class ThreadsafeMockAdapterManagerWrapper implements AdapterManager {
      * Sets bundle context.
      * @param bundleContext Bundle context
      */
-    public void setBundleContext(final BundleContext bundleContext) {
+    public void setBundleContext(@NotNull final BundleContext bundleContext) {
         AdapterManagerBundleContextFactory adapterManager = THREAD_LOCAL.get();
         adapterManager.setBundleContext(bundleContext);
     }
@@ -68,7 +69,7 @@ class ThreadsafeMockAdapterManagerWrapper implements AdapterManager {
         
         private BundleContext bundleContext;
         
-        public void setBundleContext(final BundleContext bundleContext) {
+        public void setBundleContext(@NotNull final BundleContext bundleContext) {
             this.bundleContext = bundleContext;
 
             // register adapter manager

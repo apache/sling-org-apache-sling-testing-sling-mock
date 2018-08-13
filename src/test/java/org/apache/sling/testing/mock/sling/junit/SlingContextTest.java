@@ -29,6 +29,7 @@ import org.apache.sling.api.adapter.SlingAdaptable;
 import org.apache.sling.api.resource.Resource;
 import org.apache.sling.api.resource.ResourceResolver;
 import org.apache.sling.testing.mock.sling.ResourceResolverType;
+import org.jetbrains.annotations.NotNull;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
@@ -39,6 +40,7 @@ import com.google.common.base.Function;
 import com.google.common.collect.ImmutableMap;
 
 @RunWith(MockitoJUnitRunner.class)
+@SuppressWarnings("null")
 public class SlingContextTest {
 
     private final SlingContextCallback contextBeforeSetup = mock(SlingContextCallback.class);
@@ -161,7 +163,7 @@ public class SlingContextTest {
         AdapterFactory adapterFactory = new AdapterFactory() {
             @SuppressWarnings("unchecked")
             @Override
-            public <AdapterType> AdapterType getAdapter(Object adaptable, Class<AdapterType> type) {
+            public <AdapterType> AdapterType getAdapter(@NotNull Object adaptable, @NotNull Class<AdapterType> type) {
                 return (AdapterType)(((TestAdaptable)adaptable).getMessage() + "-initial");
             }
         };

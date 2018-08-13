@@ -28,6 +28,7 @@ import org.apache.sling.api.resource.ResourceResolver;
 import org.apache.sling.api.resource.ResourceUtil;
 import org.apache.sling.api.resource.ValueMap;
 import org.apache.sling.testing.mock.osgi.MapUtil;
+import org.jetbrains.annotations.NotNull;
 
 import com.google.common.collect.ImmutableMap;
 
@@ -44,7 +45,7 @@ public class ContentBuilder {
     /**
      * @param resourceResolver Resource resolver
      */
-    public ContentBuilder(ResourceResolver resourceResolver) {
+    public ContentBuilder(@NotNull ResourceResolver resourceResolver) {
         this.resourceResolver = resourceResolver;
     }
 
@@ -54,7 +55,8 @@ public class ContentBuilder {
      * @param path Page path
      * @return Resource object
      */
-    public final Resource resource(String path) {
+    @SuppressWarnings("null")
+    public final @NotNull Resource resource(@NotNull String path) {
         return resource(path, ValueMap.EMPTY);
     }
 
@@ -65,8 +67,11 @@ public class ContentBuilder {
      * @param properties Properties for resource.
      * @return Resource object
      */
-    public final Resource resource(String path, Map<String, Object> properties) {
+    public final @NotNull Resource resource(@NotNull String path, @NotNull Map<String, Object> properties) {
         String parentPath = ResourceUtil.getParent(path);
+        if (parentPath == null) {
+            throw new IllegalArgumentException("Path has no parent: " + path);
+        }
         Resource parentResource = ensureResourceExists(parentPath);
         String name = ResourceUtil.getName(path);
         try {
@@ -83,7 +88,8 @@ public class ContentBuilder {
      * @param properties Properties for resource.
      * @return Resource object
      */
-    public final Resource resource(String path, Object... properties) {
+    @SuppressWarnings("null")
+    public final @NotNull Resource resource(@NotNull String path, @NotNull Object @NotNull ... properties) {
         return resource(path, MapUtil.toMap(properties));
     }
 
@@ -93,7 +99,8 @@ public class ContentBuilder {
      * @param path Resource path
      * @return Resource at path (existing or newly created)
      */
-    protected final Resource ensureResourceExists(String path) {
+    @SuppressWarnings("null")
+    protected final @NotNull Resource ensureResourceExists(@NotNull String path) {
         if (StringUtils.isEmpty(path) || StringUtils.equals(path, "/")) {
             return resourceResolver.getResource("/");
         }
@@ -102,6 +109,9 @@ public class ContentBuilder {
             return resource;
         }
         String parentPath = ResourceUtil.getParent(path);
+        if (parentPath == null) {
+            throw new IllegalArgumentException("Path has no parent: " + path);
+        }
         String name = ResourceUtil.getName(path);
         Resource parentResource = ensureResourceExists(parentPath);
         try {

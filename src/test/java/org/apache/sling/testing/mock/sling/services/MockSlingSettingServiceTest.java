@@ -29,6 +29,7 @@ import org.junit.Test;
 
 import com.google.common.collect.ImmutableSet;
 
+@SuppressWarnings("null")
 public class MockSlingSettingServiceTest {
 
     @Test

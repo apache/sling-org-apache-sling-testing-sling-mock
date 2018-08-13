@@ -50,6 +50,8 @@ import org.apache.sling.testing.mock.sling.services.MockSlingSettingService;
 import org.apache.sling.testing.mock.sling.servlet.MockRequestPathInfo;
 import org.apache.sling.testing.mock.sling.servlet.MockSlingHttpServletRequest;
 import org.apache.sling.testing.mock.sling.servlet.MockSlingHttpServletResponse;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 import org.osgi.annotation.versioning.ConsumerType;
 import org.osgi.framework.Constants;
 import org.osgi.framework.ServiceReference;
@@ -67,9 +69,10 @@ import com.google.common.collect.ImmutableSet;
 public class SlingContextImpl extends OsgiContextImpl {
 
     // default to publish instance run mode
-    static final Set<String> DEFAULT_RUN_MODES = ImmutableSet.<String> builder().add("publish").build();
+    @SuppressWarnings("null")
+    static final @NotNull Set<String> DEFAULT_RUN_MODES = ImmutableSet.<String> builder().add("publish").build();
 
-    private static final String RESOURCERESOLVERFACTORYACTIVATOR_PID = "org.apache.sling.jcr.resource.internal.JcrResourceResolverFactoryImpl";
+    private static final @NotNull String RESOURCERESOLVERFACTORYACTIVATOR_PID = "org.apache.sling.jcr.resource.internal.JcrResourceResolverFactoryImpl";
     
     protected ResourceResolverFactory resourceResolverFactory;
     protected ResourceResolverType resourceResolverType;
@@ -89,11 +92,16 @@ public class SlingContextImpl extends OsgiContextImpl {
     /**
      * @param resourceResolverType Resource resolver type
      */
-    protected void setResourceResolverType(final ResourceResolverType resourceResolverType) {
-        this.resourceResolverType = resourceResolverType;
+    protected void setResourceResolverType(@Nullable final ResourceResolverType resourceResolverType) {
+        if (resourceResolverType == null) {
+            this.resourceResolverType = MockSling.DEFAULT_RESOURCERESOLVER_TYPE;
+        }
+        else {
+            this.resourceResolverType = resourceResolverType;
+        }
     }
 
-    protected void setResourceResolverFactoryActivatorProps(Map<String, Object> props) {
+    protected void setResourceResolverFactoryActivatorProps(@Nullable Map<String, Object> props) {
         this.resourceResolverFactoryActivatorProps = props;
     }
     
@@ -126,11 +134,12 @@ public class SlingContextImpl extends OsgiContextImpl {
      * Initialize mocked resource resolver factory.
      * @return Resource resolver factory
      */
-    protected ResourceResolverFactory newResourceResolverFactory() {
+    protected @NotNull ResourceResolverFactory newResourceResolverFactory() {
         return ContextResourceResolverFactory.get(this.resourceResolverType, bundleContext());
     }
     
-    private ResourceResolverFactory resourceResolverFactory() {
+    @SuppressWarnings("null")
+    private @NotNull ResourceResolverFactory resourceResolverFactory() {
         if (this.resourceResolverFactory == null) {
             this.resourceResolverFactory = newResourceResolverFactory();
         }
@@ -175,7 +184,8 @@ public class SlingContextImpl extends OsgiContextImpl {
         }
     }
     
-    private void registerInjectActivateServiceByClassName(String... classNames) {
+    @SuppressWarnings("null")
+    private void registerInjectActivateServiceByClassName(@NotNull String @NotNull ... classNames) {
         for (String className : classNames) {
             try {
                 Class<?> clazz = Class.forName(className);
@@ -238,7 +248,8 @@ public class SlingContextImpl extends OsgiContextImpl {
     /**
      * @return Resource resolver type
      */
-    public final ResourceResolverType resourceResolverType() {
+    @SuppressWarnings("null")
+    public final @NotNull ResourceResolverType resourceResolverType() {
         return this.resourceResolverType;
     }
     
@@ -247,7 +258,8 @@ public class SlingContextImpl extends OsgiContextImpl {
      * It is automatically closed after the test.
      * @return Resource resolver
      */
-    public final ResourceResolver resourceResolver() {
+    @SuppressWarnings({ "deprecation", "null" })
+    public final @NotNull ResourceResolver resourceResolver() {
         if (this.resourceResolver == null) {
             try {
                 this.resourceResolver = this.resourceResolverFactory().getAdministrativeResourceResolver(null);
@@ -261,7 +273,8 @@ public class SlingContextImpl extends OsgiContextImpl {
     /**
      * @return Sling request
      */
-    public final MockSlingHttpServletRequest request() {
+    @SuppressWarnings("null")
+    public final @NotNull MockSlingHttpServletRequest request() {
         if (this.request == null) {
             this.request = new MockSlingHttpServletRequest(this.resourceResolver(), this.bundleContext());
 
@@ -278,14 +291,16 @@ public class SlingContextImpl extends OsgiContextImpl {
     /**
      * @return Request path info
      */
-    public final MockRequestPathInfo requestPathInfo() {
-        return (MockRequestPathInfo) request().getRequestPathInfo();
+    @SuppressWarnings("null")
+    public final @NotNull MockRequestPathInfo requestPathInfo() {
+        return (MockRequestPathInfo)request().getRequestPathInfo();
     }
 
     /**
      * @return Sling response
      */
-    public final MockSlingHttpServletResponse response() {
+    @SuppressWarnings("null")
+    public final @NotNull MockSlingHttpServletResponse response() {
         if (this.response == null) {
             this.response = new MockSlingHttpServletResponse();
         }
@@ -295,7 +310,8 @@ public class SlingContextImpl extends OsgiContextImpl {
     /**
      * @return Sling script helper
      */
-    public final SlingScriptHelper slingScriptHelper() {
+    @SuppressWarnings("null")
+    public final @NotNull SlingScriptHelper slingScriptHelper() {
         if (this.slingScriptHelper == null) {
             this.slingScriptHelper = MockSling.newSlingScriptHelper(this.request(), this.response(),
                     this.bundleContext());
@@ -306,7 +322,7 @@ public class SlingContextImpl extends OsgiContextImpl {
     /**
      * @return Content loader
      */
-    public ContentLoader load() {
+    public @NotNull ContentLoader load() {
         return load(true);
     }
 
@@ -314,7 +330,8 @@ public class SlingContextImpl extends OsgiContextImpl {
      * @param autoCommit Automatically commit changes after loading content (default: true)
      * @return Content loader
      */
-    public ContentLoader load(boolean autoCommit) {
+    @SuppressWarnings("null")
+    public @NotNull ContentLoader load(boolean autoCommit) {
         if (autoCommit) {
             if (this.contentLoaderAutoCommit == null) {
                 this.contentLoaderAutoCommit = new ContentLoader(resourceResolver(), bundleContext(), true);
@@ -335,7 +352,8 @@ public class SlingContextImpl extends OsgiContextImpl {
      * You can use alternatively the {@link #build()} method and use the {@link ResourceBuilder} API.
      * @return Content builder for building test content
      */
-    public ContentBuilder create() {
+    @SuppressWarnings("null")
+    public @NotNull ContentBuilder create() {
         if (this.contentBuilder == null) {
             this.contentBuilder = new ContentBuilder(resourceResolver());
         }
@@ -348,7 +366,8 @@ public class SlingContextImpl extends OsgiContextImpl {
      * You can use alternatively the {@link #create()} method to use the {@link ContentBuilder} API.
      * @return Resource builder for building test content.
      */
-    public ResourceBuilder build() {
+    @SuppressWarnings("null")
+    public @NotNull ResourceBuilder build() {
         if (this.resourceBuilder == null) {
             this.resourceBuilder = getService(ResourceBuilderFactory.class).forResolver(this.resourceResolver());
         }
@@ -358,7 +377,7 @@ public class SlingContextImpl extends OsgiContextImpl {
     /**
      * @return Current resource
      */
-    public final Resource currentResource() {
+    public final @Nullable Resource currentResource() {
         return request().getResource();
     }
 
@@ -367,7 +386,7 @@ public class SlingContextImpl extends OsgiContextImpl {
      * @param resourcePath Resource path
      * @return Current resource
      */
-    public final Resource currentResource(String resourcePath) {
+    public final @Nullable Resource currentResource(@Nullable String resourcePath) {
         if (resourcePath != null) {
             Resource resource = resourceResolver().getResource(resourcePath);
             if (resource == null) {
@@ -375,7 +394,7 @@ public class SlingContextImpl extends OsgiContextImpl {
             }
             return currentResource(resource);
         } else {
-            return currentResource((Resource) null);
+            return currentResource((Resource)null);
         }
     }
 
@@ -384,7 +403,7 @@ public class SlingContextImpl extends OsgiContextImpl {
      * @param resource Resource
      * @return Current resource
      */
-    public final Resource currentResource(Resource resource) {
+    public final @Nullable Resource currentResource(@Nullable Resource resource) {
         request().setResource(resource);
         return resource;
     }
@@ -394,7 +413,7 @@ public class SlingContextImpl extends OsgiContextImpl {
      * register all classes with @Model annotation.
      * @param packageName Java package name
      */
-    public final void addModelsForPackage(String packageName) {
+    public final void addModelsForPackage(@NotNull String packageName) {
         ModelAdapterFactoryUtil.addModelsForPackages(bundleContext(),  packageName);
     }
 
@@ -403,7 +422,7 @@ public class SlingContextImpl extends OsgiContextImpl {
      * register all classes with @Model annotation.
      * @param packageNames Java package names
      */
-    public final void addModelsForPackage(String... packageNames) {
+    public final void addModelsForPackage(@NotNull String @NotNull ... packageNames) {
         ModelAdapterFactoryUtil.addModelsForPackages(bundleContext(), packageNames);
     }
 
@@ -411,7 +430,7 @@ public class SlingContextImpl extends OsgiContextImpl {
      * Search classpath for given class names to scan for and register all classes with @Model annotation.
      * @param classNames Java class names
      */
-    public final void addModelsForClasses(String... classNames) {
+    public final void addModelsForClasses(@NotNull String @NotNull ... classNames) {
         ModelAdapterFactoryUtil.addModelsForClasses(bundleContext(), classNames);
     }
 
@@ -419,7 +438,7 @@ public class SlingContextImpl extends OsgiContextImpl {
      * Search classpath for given class names to scan for and register all classes with @Model annotation.
      * @param classes Java classes
      */
-    public final void addModelsForClasses(Class... classes) {
+    public final void addModelsForClasses(@NotNull Class @NotNull ... classes) {
         ModelAdapterFactoryUtil.addModelsForClasses(bundleContext(), classes);
     }
 
@@ -427,7 +446,8 @@ public class SlingContextImpl extends OsgiContextImpl {
      * Set current run mode(s).
      * @param runModes Run mode(s).
      */
-    public final void runMode(String... runModes) {
+    @SuppressWarnings("null")
+    public final void runMode(@NotNull String @NotNull ... runModes) {
         Set<String> newRunModes = ImmutableSet.<String> builder().add(runModes).build();
         ServiceReference<SlingSettingsService> ref = bundleContext().getServiceReference(SlingSettingsService.class);
         if (ref != null) {
@@ -440,7 +460,8 @@ public class SlingContextImpl extends OsgiContextImpl {
      * Create unique root paths for unit tests (and clean them up after the test run automatically).
      * @return Unique root path helper
      */
-    public UniqueRoot uniqueRoot() {
+    @SuppressWarnings("null")
+    public @NotNull UniqueRoot uniqueRoot() {
         if (uniqueRoot == null) {
             uniqueRoot = new UniqueRoot(this);
         }
@@ -456,11 +477,11 @@ public class SlingContextImpl extends OsgiContextImpl {
      * @param <T1> Adaptable type
      * @param <T2> Adapter type
      */
-    public final <T1, T2> void registerAdapter(final Class<T1> adaptableClass, final Class<T2> adapterClass,
-            final T2 adapter) {
+    public final <T1, T2> void registerAdapter(@NotNull final Class<T1> adaptableClass, @NotNull final Class<T2> adapterClass,
+            @NotNull final T2 adapter) {
         registerAdapter(adaptableClass, adapterClass, new Function<T1, T2>() {
             @Override
-            public T2 apply(T1 input) {
+            public T2 apply(@Nullable T1 input) {
                 return adapter;
             }
         });
@@ -475,12 +496,12 @@ public class SlingContextImpl extends OsgiContextImpl {
      * @param <T1> Adaptable type
      * @param <T2> Adapter type
      */
-    public final <T1, T2> void registerAdapter(final Class<T1> adaptableClass, final Class<T2> adapterClass,
-            final Function<T1,T2> adaptHandler) {
+    public final <T1, T2> void registerAdapter(@NotNull final Class<T1> adaptableClass, @NotNull final Class<T2> adapterClass,
+            @NotNull final Function<T1,T2> adaptHandler) {
         AdapterFactory adapterFactory = new AdapterFactory() {
             @SuppressWarnings("unchecked")
             @Override
-            public <AdapterType> AdapterType getAdapter(Object adaptable, Class<AdapterType> type) {
+            public <AdapterType> AdapterType getAdapter(@NotNull Object adaptable, @NotNull Class<AdapterType> type) {
                 return (AdapterType)adaptHandler.apply((T1)adaptable);
             }
         };

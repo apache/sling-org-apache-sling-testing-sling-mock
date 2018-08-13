@@ -35,6 +35,8 @@ import org.apache.sling.serviceusermapping.impl.ServiceUserMapperImpl;
 import org.apache.sling.spi.resource.provider.ResourceProvider;
 import org.apache.sling.testing.mock.osgi.MockEventAdmin;
 import org.apache.sling.testing.mock.osgi.MockOsgi;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 import org.osgi.framework.BundleContext;
 import org.osgi.framework.ServiceReference;
 import org.osgi.service.event.EventAdmin;
@@ -53,8 +55,9 @@ class ResourceResolverFactoryInitializer {
      * @param slingRepository Sling repository. If null resource resolver factory is setup without any resource provider.
      * @param bundleContext Bundle context
      */
-    public static ResourceResolverFactory setUp(SlingRepository slingRepository, 
-            BundleContext bundleContext, NodeTypeMode nodeTypeMode) {
+    @SuppressWarnings("null")
+    public static @NotNull ResourceResolverFactory setUp(@Nullable SlingRepository slingRepository, 
+            @NotNull BundleContext bundleContext, @NotNull NodeTypeMode nodeTypeMode) {
         
         if (slingRepository != null) {
             // register sling repository as OSGi service
@@ -83,8 +86,8 @@ class ResourceResolverFactoryInitializer {
      * Ensure dependencies for JcrResourceProvider are present.
      * @param bundleContext Bundle context
      */
-    @SuppressWarnings("unchecked")
-    private static void ensureJcrResourceProviderDependencies(BundleContext bundleContext) {
+    @SuppressWarnings({ "unchecked", "null" })
+    private static void ensureJcrResourceProviderDependencies(@NotNull BundleContext bundleContext) {
         if (bundleContext.getServiceReference(DynamicClassLoaderManager.class) == null) {
             bundleContext.registerService(DynamicClassLoaderManager.class, new MockDynamicClassLoaderManager(), null);
         }
@@ -102,7 +105,7 @@ class ResourceResolverFactoryInitializer {
      * Initialize JCR resource provider.
      * @param bundleContext Bundle context
      */
-    private static void initializeJcrResourceProvider(BundleContext bundleContext) {
+    private static void initializeJcrResourceProvider(@NotNull BundleContext bundleContext) {
         Dictionary<String, Object> config = new Hashtable<String, Object>();
         JcrResourceProvider provider = new JcrResourceProvider();
         MockOsgi.injectServices(provider, bundleContext);
@@ -114,7 +117,7 @@ class ResourceResolverFactoryInitializer {
      * Ensure dependencies for ResourceResolverFactoryActivator are present.
      * @param bundleContext Bundle context
      */
-    private static void ensureResourceResolverFactoryActivatorDependencies(BundleContext bundleContext) {
+    private static void ensureResourceResolverFactoryActivatorDependencies(@NotNull BundleContext bundleContext) {
         Dictionary<String, Object> config = new Hashtable<String, Object>();
         config.put("user.mapping", bundleContext.getBundle().getSymbolicName() + "=admin");
         registerServiceIfNotPresent(bundleContext, ServiceUserMapper.class, new ServiceUserMapperImpl(), config);
@@ -127,7 +130,7 @@ class ResourceResolverFactoryInitializer {
      * Initialize resource resolver factory activator.
      * @param bundleContext Bundle context
      */
-    private static void initializeResourceResolverFactoryActivator(BundleContext bundleContext) {
+    private static void initializeResourceResolverFactoryActivator(@NotNull BundleContext bundleContext) {
         Dictionary<String, Object> config = new Hashtable<String, Object>();
         // do not required a specific resource provider (otherwise "NONE" will not work)
         config.put("resource.resolver.required.providers", "");
@@ -145,8 +148,8 @@ class ResourceResolverFactoryInitializer {
      * @param serviceClass Service class
      * @param instance Service instance
      */
-    private static <T> void registerServiceIfNotPresent(BundleContext bundleContext, Class<T> serviceClass, 
-            T instance) {
+    private static <T> void registerServiceIfNotPresent(@NotNull BundleContext bundleContext, @NotNull Class<T> serviceClass, 
+            @NotNull T instance) {
         registerServiceIfNotPresent(bundleContext, serviceClass, instance, new Hashtable<String, Object>());
     }
     
@@ -158,8 +161,8 @@ class ResourceResolverFactoryInitializer {
      * @param instance Service instance
      * @param config OSGi config
      */
-    private static <T> void registerServiceIfNotPresent(BundleContext bundleContext, Class<T> serviceClass, 
-            T instance, Dictionary<String, Object> config) {
+    private static <T> void registerServiceIfNotPresent(@NotNull BundleContext bundleContext, @NotNull Class<T> serviceClass, 
+            @NotNull T instance, Dictionary<String, Object> config) {
         if (bundleContext.getServiceReference(serviceClass.getName()) == null) {
             MockOsgi.injectServices(instance, bundleContext);
             MockOsgi.activate(instance, bundleContext, config);

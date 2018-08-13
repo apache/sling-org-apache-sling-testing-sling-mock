@@ -30,6 +30,7 @@ import org.apache.sling.testing.mock.sling.junit.SlingContext;
 import org.junit.Rule;
 import org.junit.Test;
 
+@SuppressWarnings("null")
 public abstract class AbstractContentLoaderAutoCommitTest {
 
     private static String DEST_RES_NAME = "dest";

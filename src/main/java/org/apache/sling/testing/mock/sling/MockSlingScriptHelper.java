@@ -28,6 +28,7 @@ import org.apache.sling.api.resource.Resource;
 import org.apache.sling.api.scripting.InvalidServiceFilterSyntaxException;
 import org.apache.sling.api.scripting.SlingScript;
 import org.apache.sling.api.scripting.SlingScriptHelper;
+import org.jetbrains.annotations.NotNull;
 import org.osgi.framework.BundleContext;
 import org.osgi.framework.InvalidSyntaxException;
 import org.osgi.framework.ServiceReference;
@@ -37,31 +38,31 @@ import org.osgi.framework.ServiceReference;
  */
 public final class MockSlingScriptHelper implements SlingScriptHelper {
 
-    private final SlingHttpServletRequest request;
-    private final SlingHttpServletResponse response;
-    private final BundleContext bundleContext;
+    private final @NotNull SlingHttpServletRequest request;
+    private final @NotNull SlingHttpServletResponse response;
+    private final @NotNull BundleContext bundleContext;
     private SlingScript script;
 
-    public MockSlingScriptHelper(final SlingHttpServletRequest request, final SlingHttpServletResponse response,
-            final BundleContext bundleContext) {
+    public MockSlingScriptHelper(@NotNull final SlingHttpServletRequest request, @NotNull final SlingHttpServletResponse response,
+            @NotNull final BundleContext bundleContext) {
         this.request = request;
         this.response = response;
         this.bundleContext = bundleContext;
     }
 
     @Override
-    public SlingHttpServletRequest getRequest() {
+    public @NotNull SlingHttpServletRequest getRequest() {
         return this.request;
     }
 
     @Override
-    public SlingHttpServletResponse getResponse() {
+    public @NotNull SlingHttpServletResponse getResponse() {
         return this.response;
     }
 
     @Override
     @SuppressWarnings("unchecked")
-    public <ServiceType> ServiceType getService(final Class<ServiceType> serviceType) {
+    public <ServiceType> ServiceType getService(@NotNull final Class<ServiceType> serviceType) {
         ServiceReference serviceReference = this.bundleContext.getServiceReference(serviceType.getName());
         if (serviceReference != null) {
             return (ServiceType) this.bundleContext.getService(serviceReference);
@@ -72,7 +73,7 @@ public final class MockSlingScriptHelper implements SlingScriptHelper {
 
     @Override
     @SuppressWarnings("unchecked")
-    public <ServiceType> ServiceType[] getServices(final Class<ServiceType> serviceType, final String filter) {
+    public <ServiceType> ServiceType[] getServices(@NotNull final Class<ServiceType> serviceType, final String filter) {
         try {
             ServiceReference[] serviceReferences = this.bundleContext.getServiceReferences(serviceType.getName(),
                     filter);
@@ -90,12 +91,13 @@ public final class MockSlingScriptHelper implements SlingScriptHelper {
         }
     }
 
+    @SuppressWarnings("null")
     @Override
-    public SlingScript getScript() {
+    public @NotNull SlingScript getScript() {
         return this.script;
     }
     
-    public void setScript(SlingScript script) {
+    public void setScript(@NotNull SlingScript script) {
         this.script = script;
     }
     
@@ -106,62 +108,62 @@ public final class MockSlingScriptHelper implements SlingScriptHelper {
     }
 
     @Override
-    public void forward(final String path, final RequestDispatcherOptions requestDispatcherOptions) {
+    public void forward(@NotNull final String path, final RequestDispatcherOptions requestDispatcherOptions) {
         throw new UnsupportedOperationException();
     }
 
     @Override
-    public void forward(final String path, final String requestDispatcherOptions) {
+    public void forward(@NotNull final String path, final String requestDispatcherOptions) {
         throw new UnsupportedOperationException();
     }
 
     @Override
-    public void forward(final String path) {
+    public void forward(@NotNull final String path) {
         throw new UnsupportedOperationException();
     }
 
     @Override
-    public void forward(final Resource resource) {
+    public void forward(@NotNull final Resource resource) {
         throw new UnsupportedOperationException();
     }
 
     @Override
-    public void forward(final Resource resource, final String requestDispatcherOptions) {
+    public void forward(@NotNull final Resource resource, final String requestDispatcherOptions) {
         throw new UnsupportedOperationException();
     }
 
     @Override
-    public void forward(final Resource resource, final RequestDispatcherOptions requestDispatcherOptions) {
+    public void forward(@NotNull final Resource resource, final RequestDispatcherOptions requestDispatcherOptions) {
         throw new UnsupportedOperationException();
     }
 
     @Override
-    public void include(final String path, final RequestDispatcherOptions requestDispatcherOptions) {
+    public void include(@NotNull final String path, final RequestDispatcherOptions requestDispatcherOptions) {
         throw new UnsupportedOperationException();
     }
 
     @Override
-    public void include(final String path, final String requestDispatcherOptions) {
+    public void include(@NotNull final String path, final String requestDispatcherOptions) {
         throw new UnsupportedOperationException();
     }
 
     @Override
-    public void include(final String path) {
+    public void include(@NotNull final String path) {
         throw new UnsupportedOperationException();
     }
 
     @Override
-    public void include(final Resource resource) {
+    public void include(@NotNull final Resource resource) {
         throw new UnsupportedOperationException();
     }
 
     @Override
-    public void include(final Resource resource, final String requestDispatcherOptions) {
+    public void include(@NotNull final Resource resource, final String requestDispatcherOptions) {
         throw new UnsupportedOperationException();
     }
 
     @Override
-    public void include(final Resource resource, final RequestDispatcherOptions requestDispatcherOptions) {
+    public void include(@NotNull final Resource resource, final RequestDispatcherOptions requestDispatcherOptions) {
         throw new UnsupportedOperationException();
     }
 

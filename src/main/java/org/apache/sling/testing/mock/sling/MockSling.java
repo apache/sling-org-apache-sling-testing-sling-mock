@@ -29,6 +29,7 @@ import org.apache.sling.jcr.api.SlingRepository;
 import org.apache.sling.testing.mock.sling.servlet.MockSlingHttpServletRequest;
 import org.apache.sling.testing.mock.sling.servlet.MockSlingHttpServletResponse;
 import org.apache.sling.testing.mock.sling.spi.ResourceResolverTypeAdapter;
+import org.jetbrains.annotations.NotNull;
 import org.osgi.framework.BundleContext;
 
 /**
@@ -39,7 +40,7 @@ public final class MockSling {
     /**
      * Default resource resolver type is {@link ResourceResolverType#RESOURCERESOLVER_MOCK}.
      */
-    public static final ResourceResolverType DEFAULT_RESOURCERESOLVER_TYPE = ResourceResolverType.RESOURCERESOLVER_MOCK;
+    public static final @NotNull ResourceResolverType DEFAULT_RESOURCERESOLVER_TYPE = ResourceResolverType.RESOURCERESOLVER_MOCK;
 
     private static final ThreadsafeMockAdapterManagerWrapper ADAPTER_MANAGER = new ThreadsafeMockAdapterManagerWrapper();
     static {
@@ -56,7 +57,7 @@ public final class MockSling {
      * @param bundleContext Bundle context
      * @return Resource resolver factory instance
      */
-    public static ResourceResolverFactory newResourceResolverFactory(final BundleContext bundleContext) {
+    public static @NotNull ResourceResolverFactory newResourceResolverFactory(@NotNull final BundleContext bundleContext) {
         return newResourceResolverFactory(DEFAULT_RESOURCERESOLVER_TYPE, bundleContext);
     }
 
@@ -66,8 +67,8 @@ public final class MockSling {
      * @param bundleContext Bundle context
      * @return Resource resolver factory instance
      */
-    public static ResourceResolverFactory newResourceResolverFactory(final ResourceResolverType type,
-            final BundleContext bundleContext) {
+    public static @NotNull ResourceResolverFactory newResourceResolverFactory(@NotNull final ResourceResolverType type,
+            @NotNull final BundleContext bundleContext) {
         ResourceResolverTypeAdapter adapter = getResourceResolverTypeAdapter(type);
         ResourceResolverFactory factory = adapter.newResourceResolverFactory();
         if (factory == null) {
@@ -80,6 +81,7 @@ public final class MockSling {
         return factory;
     }
 
+    @SuppressWarnings("null")
     private static ResourceResolverTypeAdapter getResourceResolverTypeAdapter(final ResourceResolverType type) {
         try {
             Class clazz = Class.forName(type.getResourceResolverTypeAdapterClass());
@@ -111,7 +113,8 @@ public final class MockSling {
      * @param bundleContext Bundle context
      * @return Resource resolver instance
      */
-    public static ResourceResolver newResourceResolver(final ResourceResolverType type, BundleContext bundleContext) {
+    @SuppressWarnings("deprecation")
+    public static @NotNull ResourceResolver newResourceResolver(@NotNull final ResourceResolverType type, @NotNull BundleContext bundleContext) {
         ResourceResolverFactory factory = newResourceResolverFactory(type, bundleContext);
         try {
             return factory.getAdministrativeResourceResolver(null);
@@ -126,7 +129,7 @@ public final class MockSling {
      * @param bundleContext Bundle context
      * @return Resource resolver instance
      */
-    public static ResourceResolver newResourceResolver(BundleContext bundleContext) {
+    public static @NotNull ResourceResolver newResourceResolver(@NotNull BundleContext bundleContext) {
         return newResourceResolver(DEFAULT_RESOURCERESOLVER_TYPE, bundleContext);
     }
 
@@ -137,8 +140,8 @@ public final class MockSling {
      * @param bundleContext Bundle context
      * @return Sling script helper instance
      */
-    public static SlingScriptHelper newSlingScriptHelper(final SlingHttpServletRequest request,
-            final SlingHttpServletResponse response, final BundleContext bundleContext) {
+    public static @NotNull SlingScriptHelper newSlingScriptHelper(@NotNull final SlingHttpServletRequest request,
+            @NotNull final SlingHttpServletResponse response, @NotNull final BundleContext bundleContext) {
         return new MockSlingScriptHelper(request, response, bundleContext);
     }
 
@@ -148,7 +151,7 @@ public final class MockSling {
      * @param bundleContext Bundle context
      * @return Sling script helper instance
      */
-    public static SlingScriptHelper newSlingScriptHelper(BundleContext bundleContext) {
+    public static @NotNull SlingScriptHelper newSlingScriptHelper(@NotNull BundleContext bundleContext) {
         SlingHttpServletRequest request = new MockSlingHttpServletRequest(newResourceResolver(bundleContext), bundleContext);
         SlingHttpServletResponse response = new MockSlingHttpServletResponse();
         return newSlingScriptHelper(request, response, bundleContext);
@@ -159,7 +162,7 @@ public final class MockSling {
      * adapter factories are detected.
      * @param bundleContext OSGi bundle context
      */
-    public static void setAdapterManagerBundleContext(final BundleContext bundleContext) {
+    public static void setAdapterManagerBundleContext(@NotNull final BundleContext bundleContext) {
         ADAPTER_MANAGER.setBundleContext(bundleContext);
     }
 

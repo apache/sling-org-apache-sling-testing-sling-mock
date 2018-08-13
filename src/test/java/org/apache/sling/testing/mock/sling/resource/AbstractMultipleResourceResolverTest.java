@@ -36,6 +36,7 @@ import com.google.common.collect.ImmutableMap;
 /**
  * Tests content access accross multiple resource resolvers.
  */
+@SuppressWarnings("null")
 public abstract class AbstractMultipleResourceResolverTest {
 
     private final BundleContext bundleContext = MockOsgi.newBundleContext();
@@ -51,6 +52,7 @@ public abstract class AbstractMultipleResourceResolverTest {
         MockOsgi.shutdown(bundleContext);
     }
     
+    @SuppressWarnings("deprecation")
     @Test
     public void testMultipleResourceResolver() throws Exception {
         ResourceResolverFactory factory = newResourceResolerFactory();

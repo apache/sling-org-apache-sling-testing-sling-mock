@@ -24,6 +24,7 @@ import java.util.ResourceBundle;
 import org.apache.sling.api.resource.ResourceResolver;
 import org.apache.sling.i18n.ResourceBundleProvider;
 import org.apache.sling.testing.mock.sling.MockSling;
+import org.jetbrains.annotations.NotNull;
 import org.osgi.framework.BundleContext;
 import org.osgi.framework.ServiceReference;
 
@@ -38,7 +39,7 @@ public class MockSlingHttpServletRequest extends org.apache.sling.servlethelpers
      * Instantiate with default resource resolver
      * @param bundleContext Bundle context
      */
-    public MockSlingHttpServletRequest(BundleContext bundleContext) {
+    public MockSlingHttpServletRequest(@NotNull BundleContext bundleContext) {
         this(MockSling.newResourceResolver(bundleContext), bundleContext);
     }
 
@@ -46,16 +47,16 @@ public class MockSlingHttpServletRequest extends org.apache.sling.servlethelpers
      * @param resourceResolver Resource resolver
      * @param bundleContext Bundle context
      */
-    public MockSlingHttpServletRequest(ResourceResolver resourceResolver, BundleContext bundleContext) {
+    public MockSlingHttpServletRequest(@NotNull ResourceResolver resourceResolver, @NotNull BundleContext bundleContext) {
         super(resourceResolver);
         this.bundleContext = bundleContext;
     }
 
-    protected MockRequestPathInfo newMockRequestPathInfo() {
+    protected @NotNull MockRequestPathInfo newMockRequestPathInfo() {
         return new MockRequestPathInfo(getResourceResolver());
     }
 
-    protected MockHttpSession newMockHttpSession() {
+    protected @NotNull MockHttpSession newMockHttpSession() {
         return new MockHttpSession();
     }
     

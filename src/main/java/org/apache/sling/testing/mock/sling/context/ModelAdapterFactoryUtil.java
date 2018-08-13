@@ -40,6 +40,7 @@ import org.apache.commons.lang3.StringUtils;
 import org.apache.sling.models.annotations.Model;
 import org.apache.sling.testing.mock.osgi.ManifestScanner;
 import org.apache.sling.testing.mock.osgi.MockOsgi;
+import org.jetbrains.annotations.NotNull;
 import org.osgi.framework.Bundle;
 import org.osgi.framework.BundleContext;
 import org.osgi.framework.BundleEvent;
@@ -53,14 +54,14 @@ import org.reflections.Reflections;
  */
 final class ModelAdapterFactoryUtil {
     
-    private static final String PACKAGE_HEADER = "Sling-Model-Packages";
-    private static final String CLASSES_HEADER = "Sling-Model-Classes";
+    private static final @NotNull String PACKAGE_HEADER = "Sling-Model-Packages";
+    private static final @NotNull String CLASSES_HEADER = "Sling-Model-Classes";
     
-    private static final String[] MODELS_PACKAGES_FROM_MANIFEST;
-    private static final String[] MODELS_CLASSES_FROM_MANIFEST;
+    private static final @NotNull String @NotNull [] MODELS_PACKAGES_FROM_MANIFEST;
+    private static final @NotNull String @NotNull [] MODELS_CLASSES_FROM_MANIFEST;
     
-    private static final ConcurrentMap<String, List<URL>> MODEL_URLS_FOR_PACKAGES = new ConcurrentHashMap<String, List<URL>>();
-    private static final ConcurrentMap<String, List<URL>> MODEL_URLS_FOR_CLASSES = new ConcurrentHashMap<String, List<URL>>();
+    private static final @NotNull ConcurrentMap<String, List<URL>> MODEL_URLS_FOR_PACKAGES = new ConcurrentHashMap<String, List<URL>>();
+    private static final @NotNull ConcurrentMap<String, List<URL>> MODEL_URLS_FOR_CLASSES = new ConcurrentHashMap<String, List<URL>>();
     
     static {
         // suppress log entries from Reflections library
@@ -75,7 +76,8 @@ final class ModelAdapterFactoryUtil {
         // static methods only
     }
 
-    private static String[] toArray(Collection<String> values) {
+    @SuppressWarnings("null")
+    private static @NotNull String @NotNull [] toArray(@NotNull Collection<String> values) {
         return values.toArray(new String[values.size()]);
     }
         
@@ -85,7 +87,7 @@ final class ModelAdapterFactoryUtil {
      * @param bundleContext Bundle context
      * @param packageNames Java package names
      */
-    public static void addModelsForPackages(BundleContext bundleContext, String... packageNames) {
+    public static void addModelsForPackages(@NotNull BundleContext bundleContext, @NotNull String @NotNull ... packageNames) {
         Bundle bundle = new RegisterModelsBundle(bundleContext, Bundle.ACTIVE, packageNames, null);
         BundleEvent event = new BundleEvent(BundleEvent.STARTED, bundle);
         MockOsgi.sendBundleEvent(bundleContext, event);
@@ -96,7 +98,7 @@ final class ModelAdapterFactoryUtil {
      * @param bundleContext Bundle context
      * @param classNames Java class names
      */
-    public static void addModelsForClasses(BundleContext bundleContext, String... classNames) {
+    public static void addModelsForClasses(@NotNull BundleContext bundleContext, @NotNull String @NotNull ... classNames) {
         Bundle bundle = new RegisterModelsBundle(bundleContext, Bundle.ACTIVE, null, classNames);
         BundleEvent event = new BundleEvent(BundleEvent.STARTED, bundle);
         MockOsgi.sendBundleEvent(bundleContext, event);
@@ -107,7 +109,8 @@ final class ModelAdapterFactoryUtil {
      * @param bundleContext Bundle context
      * @param classNames Java class names
      */
-    public static void addModelsForClasses(BundleContext bundleContext, Class... classes) {
+    @SuppressWarnings("null")
+    public static void addModelsForClasses(@NotNull BundleContext bundleContext, @NotNull Class @NotNull ... classes) {
         String[] classNames = new String[classes.length];
         for (int i = 0; i < classes.length; i++) {
             classNames[i] = classes[i].getName();
@@ -119,7 +122,7 @@ final class ModelAdapterFactoryUtil {
      * Scan MANIFEST.MF in the classpath and automatically register all sling model classes found.
      * @param bundleContext Bundle context
      */
-    public static void addModelsForManifestEntries(BundleContext bundleContext) {
+    public static void addModelsForManifestEntries(@NotNull BundleContext bundleContext) {
         if (MODELS_PACKAGES_FROM_MANIFEST.length > 0) {
             addModelsForPackages(bundleContext, MODELS_PACKAGES_FROM_MANIFEST);
         }

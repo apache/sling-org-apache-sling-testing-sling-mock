@@ -24,6 +24,8 @@ import org.apache.jackrabbit.JcrConstants;
 import org.apache.sling.api.resource.PersistenceException;
 import org.apache.sling.api.resource.Resource;
 import org.apache.sling.api.resource.ResourceUtil;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 import org.osgi.annotation.versioning.ConsumerType;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -49,7 +51,7 @@ public class UniqueRoot {
     
     private static final Logger log = LoggerFactory.getLogger(UniqueRoot.class);
     
-    protected UniqueRoot(SlingContextImpl context) {
+    protected UniqueRoot(@NotNull SlingContextImpl context) {
         this.context = context;
         // generate unique path part by using a UUID
         uniquePathPart = UUID.randomUUID().toString();
@@ -61,7 +63,7 @@ public class UniqueRoot {
      * @param primaryType JCR primary type
      * @return Resource (never null)
      */
-    protected final Resource getOrCreateResource(String path, String primaryType) {
+    protected final Resource getOrCreateResource(@NotNull String path, @NotNull String primaryType) {
         try {
             return ResourceUtil.getOrCreateResource(context.resourceResolver(), path, 
                     ImmutableMap.<String,Object>of(JcrConstants.JCR_PRIMARYTYPE, primaryType),
@@ -77,7 +79,7 @@ public class UniqueRoot {
      * The path (incl. all children) is automatically removed when the unit test completes.
      * @return Unique content path
      */
-    public final String content() {
+    public final @NotNull String content() {
         if (contentRoot == null) {
             contentRoot = getOrCreateResource("/content/" + uniquePathPart, "sling:OrderedFolder");
         }
@@ -89,7 +91,7 @@ public class UniqueRoot {
      * The path (incl. all children) is automatically removed when the unit test completes.
      * @return Unique content path
      */
-    public final String apps() {
+    public final @NotNull String apps() {
         if (appsRoot == null) {
             appsRoot = getOrCreateResource("/apps/" + uniquePathPart, "sling:OrderedFolder");
         }
@@ -101,7 +103,7 @@ public class UniqueRoot {
      * The path (incl. all children) is automatically removed when the unit test completes.
      * @return Unique content path
      */
-    public final String libs() {
+    public final @NotNull String libs() {
         if (libsRoot == null) {
             libsRoot = getOrCreateResource("/libs/" + uniquePathPart, "sling:OrderedFolder");
         }
@@ -120,7 +122,7 @@ public class UniqueRoot {
      * Deletes the given set of resources and commits afterwards.
      * @param resources Resources to be deleted
      */
-    protected final void deleteResources(Resource... resources) {
+    protected final void deleteResources(@Nullable Resource @NotNull ... resources) {
         for (Resource resource : resources) {
             if (resource != null && context.resourceResolver.getResource(resource.getPath()) != null) {
                 try {
