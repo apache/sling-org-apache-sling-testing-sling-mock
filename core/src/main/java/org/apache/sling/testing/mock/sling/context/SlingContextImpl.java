@@ -61,9 +61,8 @@ import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.ImmutableSet;
 
 /**
- * Defines Sling context objects with lazy initialization. Should not be used
- * directly but via the {@link org.apache.sling.testing.mock.sling.junit.SlingContext} JUnit
- * rule.
+ * Defines Sling context objects with lazy initialization.
+ * Should not be used directly but via the SlingContext JUnit rule or extension.
  */
 @ConsumerType
 public class SlingContextImpl extends OsgiContextImpl {
