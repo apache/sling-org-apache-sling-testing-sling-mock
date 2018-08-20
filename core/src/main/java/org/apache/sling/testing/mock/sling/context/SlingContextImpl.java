@@ -333,13 +333,13 @@ public class SlingContextImpl extends OsgiContextImpl {
     public @NotNull ContentLoader load(boolean autoCommit) {
         if (autoCommit) {
             if (this.contentLoaderAutoCommit == null) {
-                this.contentLoaderAutoCommit = new ContentLoader(resourceResolver(), bundleContext(), true);
+                this.contentLoaderAutoCommit = new ContentLoader(resourceResolver(), bundleContext(), true, this.resourceResolverType());
             }
             return this.contentLoaderAutoCommit;
         }
         else {
             if (this.contentLoader == null) {
-                this.contentLoader = new ContentLoader(resourceResolver(), bundleContext(), false);
+                this.contentLoader = new ContentLoader(resourceResolver(), bundleContext(), false, this.resourceResolverType());
             }
             return this.contentLoader;
         }

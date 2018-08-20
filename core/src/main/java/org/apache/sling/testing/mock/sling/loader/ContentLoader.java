@@ -38,6 +38,7 @@ import org.apache.sling.jcr.contentparser.ContentType;
 import org.apache.sling.jcr.contentparser.JsonParserFeature;
 import org.apache.sling.jcr.contentparser.ParseException;
 import org.apache.sling.jcr.contentparser.ParserOptions;
+import org.apache.sling.testing.mock.sling.ResourceResolverType;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.osgi.framework.BundleContext;
@@ -54,27 +55,30 @@ public final class ContentLoader {
 
     private static final String CONTENTTYPE_OCTET_STREAM = "application/octet-stream";
 
-    private static final Set<String> IGNORED_NAMES = ImmutableSet.of(
-            JcrConstants.JCR_MIXINTYPES,
-            JcrConstants.JCR_UUID,
-            JcrConstants.JCR_BASEVERSION,
-            JcrConstants.JCR_PREDECESSORS,
-            JcrConstants.JCR_SUCCESSORS,
-            JcrConstants.JCR_CREATED,
-            JcrConstants.JCR_VERSIONHISTORY,
-            "jcr:checkedOut",
-            "jcr:isCheckedOut",
-            "rep:policy");
+    // set of resource or property names that is used when other resource resolver types than JCR_OAK are used
+    private static final Set<String> MOCK_IGNORED_NAMES = ImmutableSet.<String>builder()
+            .add(JcrConstants.JCR_MIXINTYPES)
+            .add(JcrConstants.JCR_BASEVERSION)
+            .add(JcrConstants.JCR_PREDECESSORS)
+            .add(JcrConstants.JCR_SUCCESSORS)
+            .add(JcrConstants.JCR_VERSIONHISTORY)
+            .add("jcr:checkedOut")
+            .add("jcr:isCheckedOut")
+            .add("rep:policy")
+            .build();
     
-    private static ContentParser JSON_PARSER = ContentParserFactory.create(ContentType.JSON, new ParserOptions()
-            .detectCalendarValues(true)
-            .ignorePropertyNames(IGNORED_NAMES)
-            .ignoreResourceNames(IGNORED_NAMES)
-            .jsonParserFeatures(EnumSet.of(JsonParserFeature.COMMENTS, JsonParserFeature.QUOTE_TICK)));
-
+    // set of resource or property names that is used when JCR_OAK resource resolver type (= a real repo impl) is used
+    private static final Set<String> OAK_IGNORED_NAMES = ImmutableSet.<String>builder()
+            .addAll(MOCK_IGNORED_NAMES)
+            .add(JcrConstants.JCR_UUID)
+            .add(JcrConstants.JCR_CREATED)
+            .build();
+    
     private final ResourceResolver resourceResolver;
     private final BundleContext bundleContext;
     private final boolean autoCommit;
+    private final Set<String> ignoredNames;
+    private final ContentParser jsonParser;
 
     /**
      * @param resourceResolver Resource resolver
@@ -88,7 +92,7 @@ public final class ContentLoader {
      * @param bundleContext Bundle context
      */
     public ContentLoader(@NotNull ResourceResolver resourceResolver, @Nullable BundleContext bundleContext) {
-        this (resourceResolver, bundleContext, true);
+        this(resourceResolver, bundleContext, true);
     }
 
     /**
@@ -97,9 +101,35 @@ public final class ContentLoader {
      * @param autoCommit Automatically commit changes after loading content (default: true)
      */
     public ContentLoader(@NotNull ResourceResolver resourceResolver, @Nullable BundleContext bundleContext, boolean autoCommit) {
+        this(resourceResolver, bundleContext, autoCommit, null);
+    }
+
+    /**
+     * @param resourceResolver Resource resolver
+     * @param bundleContext Bundle context
+     * @param autoCommit Automatically commit changes after loading content (default: true)
+     * @param ignoredNames Any resource or property with a name included in this set will be ignored when loading the content.
+     */
+    public ContentLoader(@NotNull ResourceResolver resourceResolver, @Nullable BundleContext bundleContext, boolean autoCommit,
+            @Nullable ResourceResolverType resourceResolverType) {
         this.resourceResolver = resourceResolver;
         this.bundleContext = bundleContext;
         this.autoCommit = autoCommit;
+        this.ignoredNames = getIgnoredNamesForResourceResolverType(resourceResolverType);
+        this.jsonParser = ContentParserFactory.create(ContentType.JSON, new ParserOptions()
+                .detectCalendarValues(true)
+                .ignorePropertyNames(this.ignoredNames)
+                .ignoreResourceNames(this.ignoredNames)
+                .jsonParserFeatures(EnumSet.of(JsonParserFeature.COMMENTS, JsonParserFeature.QUOTE_TICK)));
+    }
+    
+    private final Set<String> getIgnoredNamesForResourceResolverType(ResourceResolverType resourceResolverType) {
+        if (resourceResolverType == null || resourceResolverType == ResourceResolverType.JCR_OAK) {
+            return OAK_IGNORED_NAMES;
+        }
+        else {
+            return MOCK_IGNORED_NAMES;
+        }
     }
 
     /**
@@ -185,7 +215,7 @@ public final class ContentLoader {
             }
 
             LoaderContentHandler contentHandler = new LoaderContentHandler(destPath, resourceResolver);
-            JSON_PARSER.parse(contentHandler, inputStream);
+            jsonParser.parse(contentHandler, inputStream);
             if (autoCommit) {
                 resourceResolver.commit();
             }

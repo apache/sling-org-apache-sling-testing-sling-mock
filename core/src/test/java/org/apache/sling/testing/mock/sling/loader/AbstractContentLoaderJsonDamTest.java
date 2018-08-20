@@ -52,7 +52,7 @@ public abstract class AbstractContentLoaderJsonDamTest {
 
     protected abstract ResourceResolverType getResourceResolverType();
 
-    private String path;
+    protected String path;
     
     @Before
     public void setUp() {

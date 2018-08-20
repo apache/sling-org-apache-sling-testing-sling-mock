@@ -52,7 +52,7 @@ public abstract class AbstractContentLoaderJsonTest {
 
     protected abstract ResourceResolverType getResourceResolverType();
     
-    private String path;
+    protected String path;
 
     @Before
     public void setUp() {
@@ -188,6 +188,22 @@ public abstract class AbstractContentLoaderJsonTest {
         ValueMap props = ResourceUtil.getValueMap(resource);
         
         assertEquals("äöüß€", props.get("utf8Property"));
+    }
+    
+    @Test
+    public void testJcrUuid() {
+        Resource resource = context.resourceResolver().getResource(path + "/sample/en/jcr:content/par/image/file/jcr:content");
+        ValueMap props = ResourceUtil.getValueMap(resource);
+        
+        assertEquals("eda76d00-b2cd-4b59-878f-c33f71ceaddc", props.get(JcrConstants.JCR_UUID));
+    }
+    
+    @Test
+    public void testJcrCreated() {
+        Resource resource = context.resourceResolver().getResource(path + "/sample/en/jcr:content/par/image/file");
+        ValueMap props = ResourceUtil.getValueMap(resource);
+        
+        assertNotNull(props.get(JcrConstants.JCR_CREATED));
     }
     
 }
