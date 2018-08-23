@@ -39,6 +39,7 @@ final class SlingContextStore {
      * @param testInstance Test instance
      * @return SlingContext or null
      */
+    @SuppressWarnings("null")
     public static SlingContext getSlingContext(ExtensionContext extensionContext, Object testInstance) {
         return getStore(extensionContext).get(testInstance, SlingContext.class);
     }

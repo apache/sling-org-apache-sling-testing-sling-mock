@@ -38,7 +38,6 @@ public final class MockSlingSettingService implements SlingSettingsService {
     /**
      * Instantiate with no default run modes.
      */
-    @SuppressWarnings("null")
     public MockSlingSettingService() {
         this(ImmutableSet.<String> of());
     }

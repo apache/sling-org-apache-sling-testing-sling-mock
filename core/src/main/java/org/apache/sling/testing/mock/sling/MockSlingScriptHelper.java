@@ -61,7 +61,7 @@ public final class MockSlingScriptHelper implements SlingScriptHelper {
     }
 
     @Override
-    @SuppressWarnings("unchecked")
+    @SuppressWarnings({ "unchecked", "null" })
     public <ServiceType> ServiceType getService(@NotNull final Class<ServiceType> serviceType) {
         ServiceReference serviceReference = this.bundleContext.getServiceReference(serviceType.getName());
         if (serviceReference != null) {
@@ -91,7 +91,6 @@ public final class MockSlingScriptHelper implements SlingScriptHelper {
         }
     }
 
-    @SuppressWarnings("null")
     @Override
     public @NotNull SlingScript getScript() {
         return this.script;

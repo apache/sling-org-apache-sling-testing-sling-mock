@@ -68,7 +68,6 @@ import com.google.common.collect.ImmutableSet;
 public class SlingContextImpl extends OsgiContextImpl {
 
     // default to publish instance run mode
-    @SuppressWarnings("null")
     static final @NotNull Set<String> DEFAULT_RUN_MODES = ImmutableSet.<String> builder().add("publish").build();
 
     private static final @NotNull String RESOURCERESOLVERFACTORYACTIVATOR_PID = "org.apache.sling.jcr.resource.internal.JcrResourceResolverFactoryImpl";
@@ -137,7 +136,6 @@ public class SlingContextImpl extends OsgiContextImpl {
         return ContextResourceResolverFactory.get(this.resourceResolverType, bundleContext());
     }
     
-    @SuppressWarnings("null")
     private @NotNull ResourceResolverFactory resourceResolverFactory() {
         if (this.resourceResolverFactory == null) {
             this.resourceResolverFactory = newResourceResolverFactory();
@@ -247,7 +245,6 @@ public class SlingContextImpl extends OsgiContextImpl {
     /**
      * @return Resource resolver type
      */
-    @SuppressWarnings("null")
     public final @NotNull ResourceResolverType resourceResolverType() {
         return this.resourceResolverType;
     }
@@ -257,7 +254,7 @@ public class SlingContextImpl extends OsgiContextImpl {
      * It is automatically closed after the test.
      * @return Resource resolver
      */
-    @SuppressWarnings({ "deprecation", "null" })
+    @SuppressWarnings("deprecation")
     public final @NotNull ResourceResolver resourceResolver() {
         if (this.resourceResolver == null) {
             try {
@@ -272,7 +269,6 @@ public class SlingContextImpl extends OsgiContextImpl {
     /**
      * @return Sling request
      */
-    @SuppressWarnings("null")
     public final @NotNull MockSlingHttpServletRequest request() {
         if (this.request == null) {
             this.request = new MockSlingHttpServletRequest(this.resourceResolver(), this.bundleContext());
@@ -290,7 +286,6 @@ public class SlingContextImpl extends OsgiContextImpl {
     /**
      * @return Request path info
      */
-    @SuppressWarnings("null")
     public final @NotNull MockRequestPathInfo requestPathInfo() {
         return (MockRequestPathInfo)request().getRequestPathInfo();
     }
@@ -298,7 +293,6 @@ public class SlingContextImpl extends OsgiContextImpl {
     /**
      * @return Sling response
      */
-    @SuppressWarnings("null")
     public final @NotNull MockSlingHttpServletResponse response() {
         if (this.response == null) {
             this.response = new MockSlingHttpServletResponse();
@@ -309,7 +303,6 @@ public class SlingContextImpl extends OsgiContextImpl {
     /**
      * @return Sling script helper
      */
-    @SuppressWarnings("null")
     public final @NotNull SlingScriptHelper slingScriptHelper() {
         if (this.slingScriptHelper == null) {
             this.slingScriptHelper = MockSling.newSlingScriptHelper(this.request(), this.response(),
@@ -329,7 +322,6 @@ public class SlingContextImpl extends OsgiContextImpl {
      * @param autoCommit Automatically commit changes after loading content (default: true)
      * @return Content loader
      */
-    @SuppressWarnings("null")
     public @NotNull ContentLoader load(boolean autoCommit) {
         if (autoCommit) {
             if (this.contentLoaderAutoCommit == null) {
@@ -351,7 +343,6 @@ public class SlingContextImpl extends OsgiContextImpl {
      * You can use alternatively the {@link #build()} method and use the {@link ResourceBuilder} API.
      * @return Content builder for building test content
      */
-    @SuppressWarnings("null")
     public @NotNull ContentBuilder create() {
         if (this.contentBuilder == null) {
             this.contentBuilder = new ContentBuilder(resourceResolver());
@@ -445,7 +436,6 @@ public class SlingContextImpl extends OsgiContextImpl {
      * Set current run mode(s).
      * @param runModes Run mode(s).
      */
-    @SuppressWarnings("null")
     public final void runMode(@NotNull String @NotNull ... runModes) {
         Set<String> newRunModes = ImmutableSet.<String> builder().add(runModes).build();
         ServiceReference<SlingSettingsService> ref = bundleContext().getServiceReference(SlingSettingsService.class);
@@ -459,7 +449,6 @@ public class SlingContextImpl extends OsgiContextImpl {
      * Create unique root paths for unit tests (and clean them up after the test run automatically).
      * @return Unique root path helper
      */
-    @SuppressWarnings("null")
     public @NotNull UniqueRoot uniqueRoot() {
         if (uniqueRoot == null) {
             uniqueRoot = new UniqueRoot(this);

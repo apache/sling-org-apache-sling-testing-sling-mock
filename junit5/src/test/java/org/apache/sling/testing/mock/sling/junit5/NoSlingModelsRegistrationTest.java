@@ -36,6 +36,7 @@ class NoSlingModelsRegistrationTest {
             .build();
 
     @Test
+    @SuppressWarnings("null")
     public void testSlingModelClasspathRegistered() {
         context.request().setAttribute("prop1", "myValue");
         ClasspathRegisteredModel model = context.request().adaptTo(ClasspathRegisteredModel.class);

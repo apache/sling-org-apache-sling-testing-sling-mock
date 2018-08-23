@@ -26,6 +26,7 @@ import org.apache.sling.testing.mock.sling.junit.SlingContextBuilder;
 import org.junit.Rule;
 import org.junit.Test;
 
+@SuppressWarnings("null")
 public class NoSlingModelsRegistrationTest {
 
     @Rule

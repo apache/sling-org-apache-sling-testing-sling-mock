@@ -352,7 +352,6 @@ public final class ContentLoader {
      * @param mimeType Mime type of binary data
      * @return Resource with binary data
      */
-    @SuppressWarnings("null")
     public @NotNull Resource binaryFile(@NotNull InputStream inputStream, @NotNull Resource parentResource, @NotNull String name, @NotNull String mimeType) {
         try {
             Resource file = resourceResolver.create(parentResource, name,
@@ -497,7 +496,6 @@ public final class ContentLoader {
      * @param names The names from which to derive the mime type
      * @return Mime type (never null)
      */
-    @SuppressWarnings("null")
     private @NotNull String detectMimeTypeFromNames(@NotNull String @NotNull ... names) {
         String mimeType = null;
         for (String name : names) {

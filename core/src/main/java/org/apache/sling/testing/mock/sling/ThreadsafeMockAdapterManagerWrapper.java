@@ -42,6 +42,7 @@ class ThreadsafeMockAdapterManagerWrapper implements AdapterManager {
     };
 
     @Override
+    @SuppressWarnings("null")
     public <AdapterType> AdapterType getAdapter(@NotNull final Object adaptable, @NotNull final Class<AdapterType> type) {
         AdapterManager adapterManager = THREAD_LOCAL.get().getAdapterManager();
         return adapterManager.getAdapter(adaptable, type);

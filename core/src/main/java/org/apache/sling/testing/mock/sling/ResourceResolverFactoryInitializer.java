@@ -55,7 +55,6 @@ class ResourceResolverFactoryInitializer {
      * @param slingRepository Sling repository. If null resource resolver factory is setup without any resource provider.
      * @param bundleContext Bundle context
      */
-    @SuppressWarnings("null")
     public static @NotNull ResourceResolverFactory setUp(@Nullable SlingRepository slingRepository, 
             @NotNull BundleContext bundleContext, @NotNull NodeTypeMode nodeTypeMode) {
         
@@ -86,7 +85,7 @@ class ResourceResolverFactoryInitializer {
      * Ensure dependencies for JcrResourceProvider are present.
      * @param bundleContext Bundle context
      */
-    @SuppressWarnings({ "unchecked", "null" })
+    @SuppressWarnings("unchecked")
     private static void ensureJcrResourceProviderDependencies(@NotNull BundleContext bundleContext) {
         if (bundleContext.getServiceReference(DynamicClassLoaderManager.class) == null) {
             bundleContext.registerService(DynamicClassLoaderManager.class, new MockDynamicClassLoaderManager(), null);

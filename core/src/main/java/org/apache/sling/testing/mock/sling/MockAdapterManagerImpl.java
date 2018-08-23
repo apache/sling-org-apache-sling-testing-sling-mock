@@ -127,6 +127,7 @@ public class MockAdapterManagerImpl implements AdapterManager {
      * @see org.apache.sling.api.adapter.AdapterManager#getAdapter(java.lang.Object, java.lang.Class)
      */
     @Override
+    @SuppressWarnings("null")
     public <AdapterType> AdapterType getAdapter(@NotNull final Object adaptable,
             @NotNull final Class<AdapterType> type) {
 

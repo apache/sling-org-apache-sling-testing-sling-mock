@@ -76,7 +76,6 @@ final class ModelAdapterFactoryUtil {
         // static methods only
     }
 
-    @SuppressWarnings("null")
     private static @NotNull String @NotNull [] toArray(@NotNull Collection<String> values) {
         return values.toArray(new String[values.size()]);
     }
@@ -109,7 +108,6 @@ final class ModelAdapterFactoryUtil {
      * @param bundleContext Bundle context
      * @param classNames Java class names
      */
-    @SuppressWarnings("null")
     public static void addModelsForClasses(@NotNull BundleContext bundleContext, @NotNull Class @NotNull ... classes) {
         String[] classNames = new String[classes.length];
         for (int i = 0; i < classes.length; i++) {
@@ -360,6 +358,7 @@ final class ModelAdapterFactoryUtil {
         }
 
         @Override
+        @SuppressWarnings("null")
         public <A> A adapt(Class<A> type) {
             return null;
         }

@@ -30,6 +30,7 @@ import org.apache.sling.testing.mock.sling.junit.SlingContext;
 import org.apache.sling.testing.mock.sling.services.MockMimeTypeService;
 import org.junit.Test;
 
+@SuppressWarnings("null")
 public abstract class AbstractModelAdapterFactoryUtilTest {
     
     protected abstract SlingContext context();

@@ -35,7 +35,6 @@ public class ModelAdapterFactoryUtilClassesTest extends AbstractModelAdapterFact
         return context;
     }
 
-    @SuppressWarnings("null")
     @Before
     public void setUp() throws Exception {
         // add Model classes individually
