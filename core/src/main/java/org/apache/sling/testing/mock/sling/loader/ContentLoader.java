@@ -108,7 +108,7 @@ public final class ContentLoader {
      * @param resourceResolver Resource resolver
      * @param bundleContext Bundle context
      * @param autoCommit Automatically commit changes after loading content (default: true)
-     * @param ignoredNames Any resource or property with a name included in this set will be ignored when loading the content.
+     * @param resourceResolverType Resource resolver type.
      */
     public ContentLoader(@NotNull ResourceResolver resourceResolver, @Nullable BundleContext bundleContext, boolean autoCommit,
             @Nullable ResourceResolverType resourceResolverType) {
