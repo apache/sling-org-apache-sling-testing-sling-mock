@@ -43,8 +43,8 @@ public class NoResourceResolverTypeTest {
     
     @Test
     public void testRoot() {
-        // resgister dummy resource provider because otherwise ResourceResolverFactory get's not activated
-        // with lates sling resource resolver implementation
+        // register dummy resource provider because otherwise ResourceResolverFactory get's not activated
+        // with latest sling resource resolver implementation
         context.registerService(ResourceProvider.class, resourceProvider,
                 ResourceProvider.PROPERTY_ROOT, "/");
         
