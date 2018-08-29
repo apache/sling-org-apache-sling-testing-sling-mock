@@ -274,13 +274,19 @@ public class SlingContextImpl extends OsgiContextImpl {
             this.request = new MockSlingHttpServletRequest(this.resourceResolver(), this.bundleContext());
 
             // initialize sling bindings
-            SlingBindings bindings = new SlingBindings();
-            bindings.put(SlingBindings.REQUEST, this.request);
-            bindings.put(SlingBindings.RESPONSE, response());
-            bindings.put(SlingBindings.SLING, slingScriptHelper());
+            SlingBindings bindings = new MockSlingBindings(this);
             this.request.setAttribute(SlingBindings.class.getName(), bindings);
         }
         return this.request;
+    }
+    
+    /**
+     * Dynamically resolve property request for current request {@link SlingBindings}.
+     * @param property Property key
+     * @return Resolved object or null if no result found
+     */
+    protected @Nullable Object resolveSlingBindingProperty(@NotNull String property) {
+        return MockSlingBindings.resolveSlingBindingProperty(this, property);
     }
 
     /**
