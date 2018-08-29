@@ -393,7 +393,7 @@ public class SlingContextImpl extends OsgiContextImpl {
      * @param resource Resource
      * @return Current resource
      */
-    public final @Nullable Resource currentResource(@Nullable Resource resource) {
+    public @Nullable Resource currentResource(@Nullable Resource resource) {
         request().setResource(resource);
         return resource;
     }
