@@ -33,18 +33,20 @@
     <name>Apache Sling Testing Sling Mock Core</name>
 
     <dependencies>
-
+        <!-- transitive OSGi dependencies of referenced libraries are given as "provided" but they are 
+             actually necessary at test execution time also to a certain extend directly used, therefore
+             explicitly define with scope "compile" -->
         <dependency>
             <groupId>org.osgi</groupId>
             <artifactId>osgi.core</artifactId>
-            <scope>provided</scope>
+            <scope>compile</scope>
         </dependency>
         <dependency>
             <groupId>org.osgi</groupId>
             <artifactId>osgi.cmpn</artifactId>
-            <scope>provided</scope>
+            <scope>compile</scope>
         </dependency>
-
+        <!-- non OSGi dependencies -->
         <dependency>
             <groupId>org.apache.sling</groupId>
             <artifactId>org.apache.sling.testing.osgi-mock.core</artifactId>
