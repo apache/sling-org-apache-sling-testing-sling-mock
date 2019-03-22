@@ -81,6 +81,7 @@ public final class MockSling {
         return factory;
     }
 
+    @SuppressWarnings("null")
     private static ResourceResolverTypeAdapter getResourceResolverTypeAdapter(final ResourceResolverType type) {
         try {
             Class clazz = Class.forName(type.getResourceResolverTypeAdapterClass());
