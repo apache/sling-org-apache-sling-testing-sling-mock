@@ -92,6 +92,39 @@ public class ContentBuilder {
     }
 
     /**
+     * Create child resource below the given parent resource.
+     * @param resource Parent resource
+     * @param name Child resource name
+     * @return Resource object
+     */
+    public final @NotNull Resource resource(@NotNull Resource resource, @NotNull String name) {
+        return resource(resource, name, ValueMap.EMPTY);
+    }
+
+    /**
+     * Create child resource below the given parent resource.
+     * @param resource Parent resource
+     * @param name Child resource name
+     * @param properties Properties for resource.
+     * @return Resource object
+     */
+    public final @NotNull Resource resource(@NotNull Resource resource, @NotNull String name, @NotNull Map<String, Object> properties) {
+        String path = resource.getPath() + "/" + StringUtils.stripStart(name, "/");
+        return resource(path, properties);
+    }
+
+    /**
+     * Create child resource below the given parent resource.
+     * @param resource Parent resource
+     * @param name Child resource name
+     * @param properties Properties for resource.
+     * @return Resource object
+     */
+    public final @NotNull Resource resource(@NotNull Resource resource, @NotNull String name, @NotNull Object @NotNull ... properties) {
+        return resource(resource, name, MapUtil.toMap(properties));
+    }
+
+    /**
      * Ensure that a resource exists at the given path. If not, it is created
      * using <code>nt:unstructured</code> node type.
      * @param path Resource path

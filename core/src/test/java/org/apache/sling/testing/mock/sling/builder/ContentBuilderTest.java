@@ -70,4 +70,21 @@ public class ContentBuilderTest {
         assertEquals("value1", props.get("stringProp", String.class));
     }
 
+    @Test
+    public void testChildResource() {
+        Resource resource = context.create().resource("/content/test1/resource1");
+        
+        Resource child1 = context.create().resource(resource, "child1");
+        assertNotNull(child1);
+        assertEquals("child1", child1.getName());
+        assertTrue(ResourceUtil.getValueMap(child1).isEmpty());
+        
+        Resource child2 = context.create().resource(resource, "/child2",
+                "prop1", "value1");
+        assertNotNull(child2);
+        assertEquals("child2", child2.getName());
+        ValueMap props = ResourceUtil.getValueMap(child2);
+        assertEquals("value1", props.get("prop1", String.class));
+    }
+
 }
