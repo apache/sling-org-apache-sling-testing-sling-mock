@@ -26,7 +26,6 @@ import org.apache.sling.testing.mock.sling.context.modelsautoreg.ClasspathRegist
 import org.apache.sling.testing.resourceresolver.MockResourceResolver;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 
@@ -51,7 +50,6 @@ class SlingContextTest {
     }
 
     @Test
-    @Disabled  // test does not work on the command line as the customized META-INF/MANIFEST.mf is not contained in the sling-mock test jar
     public void testSlingModelClasspathRegistered(SlingContext context) {
         context.request().setAttribute("prop1", "myValue");
         ClasspathRegisteredModel model = context.request().adaptTo(ClasspathRegisteredModel.class);
