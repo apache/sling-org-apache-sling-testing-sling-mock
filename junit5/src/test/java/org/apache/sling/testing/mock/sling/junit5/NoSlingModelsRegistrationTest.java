@@ -18,7 +18,7 @@
  */
 package org.apache.sling.testing.mock.sling.junit5;
 
-import static org.junit.Assert.assertNull;
+import static org.junit.jupiter.api.Assertions.assertNull;
 
 import org.apache.sling.testing.mock.sling.context.modelsautoreg.ClasspathRegisteredModel;
 import org.junit.jupiter.api.Test;
