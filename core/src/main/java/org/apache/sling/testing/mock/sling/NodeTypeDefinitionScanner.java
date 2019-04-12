@@ -203,7 +203,7 @@ public final class NodeTypeDefinitionScanner {
             }
             try {
                 Reader reader = new InputStreamReader(is);
-                CndImporter.registerNodeTypes(reader, nodeTypeResource, nodeTypeManager, namespaceRegistry, valueFactory, false);
+                CndImporter.registerNodeTypes(reader, nodeTypeResource, nodeTypeManager, namespaceRegistry, valueFactory, true);
                 nodeTypeResourcesIterator.remove();
             }
             catch (Throwable ex) {
