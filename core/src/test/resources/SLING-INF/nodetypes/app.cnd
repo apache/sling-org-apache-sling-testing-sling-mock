@@ -24,3 +24,6 @@
 
 [dam:Asset] > nt:unstructured
 [dam:AssetContent] > nt:unstructured
+
+[app:TestMixin] mixin
+ - testMixinProp (string) copy

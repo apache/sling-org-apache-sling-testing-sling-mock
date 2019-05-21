@@ -69,7 +69,6 @@ public final class ContentLoader {
     
     // set of resource or property names that is used when JCR_OAK resource resolver type (= a real repo impl) is used
     private static final Set<String> OAK_IGNORED_NAMES = ImmutableSet.<String>builder()
-            .addAll(MOCK_IGNORED_NAMES)
             .add(JcrConstants.JCR_UUID)
             .add(JcrConstants.JCR_CREATED)
             .build();

@@ -42,12 +42,25 @@
           "jcr:created": "Thu Aug 07 2014 16:32:59 GMT+0200",
           "jcr:content": {
             "jcr:primaryType": "nt:resource",
+            "jcr:mixinTypes": ["mix:referenceable"],
             "jcr:lastModifiedBy": "anonymous",
             "jcr:mimeType": "image/jpeg",
             "jcr:lastModified": "Thu Aug 07 2014 16:32:59 GMT+0200",
             ":jcr:data": 24377,
             "jcr:uuid": "eda76d00-b2cd-4b59-878f-c33f71ceaddc"
           }
+        },
+        "ntLinkedFileTargetWithMixin": {
+          "jcr:primaryType": "nt:file",
+          "jcr:content": {
+            "jcr:primaryType": "nt:resource",
+            "jcr:mixinTypes": ["mix:referenceable"],
+            ":jcr:data": 24377
+          }
+        },
+        "ntLinkedFile": {
+          "jcr:primaryType": "nt:linkedFile",
+          ":jcr:content": "../ntLinkedFileTargetWithMixin/jcr:content"
         }
       },
       "title_1": {
