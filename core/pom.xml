@@ -247,6 +247,12 @@
             <artifactId>org.apache.sling.testing.logging-mock</artifactId>
             <scope>test</scope>
         </dependency>
+        <dependency>
+            <groupId>org.apache.geronimo.specs</groupId>
+            <artifactId>geronimo-annotation_1.3_spec</artifactId>
+             <version>1.0</version>
+            <scope>test</scope>
+        </dependency>
 
     </dependencies>
 

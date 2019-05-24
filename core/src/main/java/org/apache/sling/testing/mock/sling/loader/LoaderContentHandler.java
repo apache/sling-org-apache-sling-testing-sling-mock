@@ -18,6 +18,7 @@
  */
 package org.apache.sling.testing.mock.sling.loader;
 
+import javax.jcr.Node;
 import java.io.ByteArrayInputStream;
 import java.util.HashMap;
 import java.util.Map;
@@ -36,7 +37,8 @@ import org.jetbrains.annotations.Nullable;
 final class LoaderContentHandler implements ContentHandler {
 
     private static final String JCR_DATA_PLACEHOLDER = ":jcr:data";
-    
+    private static final String JCR_REFERENCE_PLACEHOLDER = ":jcr:content";
+
     private final @NotNull String rootPath;
     private final @NotNull ResourceResolver resourceResolver;
     
@@ -74,12 +76,16 @@ final class LoaderContentHandler implements ContentHandler {
         
         // collect all properties first
         boolean hasJcrData = false;
+        String referencedNodePath = null;
         Map<String, Object> props = new HashMap<String, Object>();
         if (content != null) {
             for (Map.Entry<String,Object> entry : content.entrySet()) {
                 final String name = entry.getKey();
                 if (StringUtils.equals(name, JCR_DATA_PLACEHOLDER)) {
                     hasJcrData = true;
+                }
+                else if (StringUtils.equals(name, JCR_REFERENCE_PLACEHOLDER)) {
+                    referencedNodePath = (String) entry.getValue();
                 }
                 else {
                     props.put(name, entry.getValue());
@@ -89,12 +95,18 @@ final class LoaderContentHandler implements ContentHandler {
         
         // create resource
         Resource resource = resourceResolver.create(parentResource, childName, props);
-        
-        if (hasJcrData) {
-            ModifiableValueMap valueMap = resource.adaptTo(ModifiableValueMap.class);
-            // we cannot import binary data here - but to avoid complaints by JCR we create it with empty binary data
-            if (valueMap != null) {
+
+        ModifiableValueMap valueMap = resource.adaptTo(ModifiableValueMap.class);
+        if (valueMap != null) {
+            if (hasJcrData) {
+                // we cannot import binary data here - but to avoid complaints by JCR we create it with empty binary data
                 valueMap.put(JcrConstants.JCR_DATA, new ByteArrayInputStream(new byte[0]));
+            } else if (StringUtils.isNotBlank(referencedNodePath)) {
+                // target reference has to be specified relative to linking node, as tests may apply a dynamic root directory
+                Resource referencedNodeResource = resourceResolver.getResource(resource.getPath() + "/" + referencedNodePath);
+                if (referencedNodeResource != null) {
+                    valueMap.put(JcrConstants.JCR_CONTENT, referencedNodeResource.adaptTo(Node.class));
+                }
             }
         }
 
