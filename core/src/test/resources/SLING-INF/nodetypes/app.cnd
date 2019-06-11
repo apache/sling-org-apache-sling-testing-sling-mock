@@ -23,10 +23,6 @@
 [app:PageContent] > nt:unstructured
 
 [dam:Asset] > nt:unstructured
- - jcr:versionHistory (string) copy
- - jcr:baseVersion (string) copy
- - jcr:predecessors (string) multiple
- - jcr:isCheckedOut (boolean) copy
 [dam:AssetContent] > nt:unstructured
 
 [app:Taggable] mixin

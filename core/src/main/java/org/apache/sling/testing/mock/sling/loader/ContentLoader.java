@@ -55,9 +55,8 @@ public final class ContentLoader {
 
     private static final String CONTENTTYPE_OCTET_STREAM = "application/octet-stream";
 
-    // set of resource or property names that is used when other resource resolver types than JCR_OAK are used
-    private static final Set<String> MOCK_IGNORED_NAMES = ImmutableSet.<String>builder()
-            .add(JcrConstants.JCR_MIXINTYPES)
+    // set of resource or property names that are ignored for all resource resolver types
+    private static final Set<String> SHARED_IGNORED_NAMES = ImmutableSet.<String>builder()
             .add(JcrConstants.JCR_BASEVERSION)
             .add(JcrConstants.JCR_PREDECESSORS)
             .add(JcrConstants.JCR_SUCCESSORS)
@@ -67,8 +66,15 @@ public final class ContentLoader {
             .add("rep:policy")
             .build();
     
-    // set of resource or property names that is used when JCR_OAK resource resolver type (= a real repo impl) is used
+    // set of resource or property names that are ignored when other resource resolver types than JCR_OAK are used
+    private static final Set<String> MOCK_IGNORED_NAMES = ImmutableSet.<String>builder()
+            .addAll(SHARED_IGNORED_NAMES)
+            .add(JcrConstants.JCR_MIXINTYPES)
+            .build();
+    
+    // set of resource or property names that are ignored when JCR_OAK resource resolver type (= a real repo impl) is used
     private static final Set<String> OAK_IGNORED_NAMES = ImmutableSet.<String>builder()
+            .addAll(SHARED_IGNORED_NAMES)
             .add(JcrConstants.JCR_UUID)
             .add(JcrConstants.JCR_CREATED)
             .build();
