@@ -32,12 +32,11 @@ import org.apache.sling.api.resource.Resource;
 import org.apache.sling.api.resource.ResourceResolver;
 import org.apache.sling.api.resource.ResourceUtil;
 import org.apache.sling.commons.mime.MimeTypeService;
-import org.apache.sling.jcr.contentparser.ContentParser;
-import org.apache.sling.jcr.contentparser.ContentParserFactory;
-import org.apache.sling.jcr.contentparser.ContentType;
-import org.apache.sling.jcr.contentparser.JsonParserFeature;
-import org.apache.sling.jcr.contentparser.ParseException;
-import org.apache.sling.jcr.contentparser.ParserOptions;
+import org.apache.sling.contentparser.api.ContentParser;
+import org.apache.sling.contentparser.api.ParserOptions;
+import org.apache.sling.contentparser.json.JSONParserFeature;
+import org.apache.sling.contentparser.json.JSONParserOptions;
+import org.apache.sling.contentparser.json.internal.JSONContentParser;
 import org.apache.sling.testing.mock.sling.ResourceResolverType;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -84,6 +83,7 @@ public final class ContentLoader {
     private final boolean autoCommit;
     private final Set<String> ignoredNames;
     private final ContentParser jsonParser;
+    private final ParserOptions jsonParserOptions;
 
     /**
      * @param resourceResolver Resource resolver
@@ -121,11 +121,13 @@ public final class ContentLoader {
         this.bundleContext = bundleContext;
         this.autoCommit = autoCommit;
         this.ignoredNames = getIgnoredNamesForResourceResolverType(resourceResolverType);
-        this.jsonParser = ContentParserFactory.create(ContentType.JSON, new ParserOptions()
-                .detectCalendarValues(true)
-                .ignorePropertyNames(this.ignoredNames)
-                .ignoreResourceNames(this.ignoredNames)
-                .jsonParserFeatures(EnumSet.of(JsonParserFeature.COMMENTS, JsonParserFeature.QUOTE_TICK)));
+        this.jsonParserOptions = new JSONParserOptions()
+            .withFeatures(EnumSet.of(JSONParserFeature.COMMENTS, JSONParserFeature.QUOTE_TICK))
+            .detectCalendarValues(true)
+            .ignorePropertyNames(this.ignoredNames)
+            .ignoreResourceNames(this.ignoredNames);
+        // JSONContentParser is an OSGi service - for sake of simplicity in this mock environment instantiate it directly
+        this.jsonParser = new JSONContentParser();
     }
     
     private final Set<String> getIgnoredNamesForResourceResolverType(ResourceResolverType resourceResolverType) {
@@ -220,13 +222,11 @@ public final class ContentLoader {
             }
 
             LoaderContentHandler contentHandler = new LoaderContentHandler(destPath, resourceResolver);
-            jsonParser.parse(contentHandler, inputStream);
+            jsonParser.parse(contentHandler, inputStream, jsonParserOptions);
             if (autoCommit) {
                 resourceResolver.commit();
             }
             return resourceResolver.getResource(destPath);
-        } catch (ParseException ex) {
-            throw new RuntimeException(ex);
         } catch (IOException ex) {
             throw new RuntimeException(ex);
         }
