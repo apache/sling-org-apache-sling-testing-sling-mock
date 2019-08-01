@@ -18,6 +18,7 @@
  */
 package org.apache.sling.testing.mock.sling.builder;
 
+import java.util.HashMap;
 import java.util.Map;
 
 import org.apache.commons.lang3.StringUtils;
@@ -71,13 +72,49 @@ public class ContentBuilder {
         if (parentPath == null) {
             throw new IllegalArgumentException("Path has no parent: " + path);
         }
+        
+        // check if properties map contains maps representing child resources
+        Map<String,Object> propertiesWihtoutChildren;
+        Map<String,Map<String,Object>> children = getChildMaps(properties);
+        if (!children.isEmpty()) {
+            propertiesWihtoutChildren = new HashMap<>();
+            for (Map.Entry<String, Object> entry : properties.entrySet()) {
+                if (!children.containsKey(entry.getKey())) {
+                    propertiesWihtoutChildren.put(entry.getKey(), entry.getValue());
+                }
+            }
+        }
+        else {
+            propertiesWihtoutChildren = properties;
+        }
+        
+        // create resource
         Resource parentResource = ensureResourceExists(parentPath);
         String name = ResourceUtil.getName(path);
+        Resource newResource;
         try {
-            return resourceResolver.create(parentResource, name, properties);
+            newResource = resourceResolver.create(parentResource, name, propertiesWihtoutChildren);
         } catch (PersistenceException ex) {
             throw new RuntimeException("Unable to create resource at " + path, ex);
         }
+        
+        // create child resources
+        for (Map.Entry<String,Map<String,Object>> entry : children.entrySet()) {
+            resource(newResource, entry.getKey(), entry.getValue());
+        }
+        
+        return newResource;
+    }
+    
+    @SuppressWarnings("unchecked")
+    private Map<String,Map<String,Object>> getChildMaps(Map<String,Object> properties) {
+        Map<String,Map<String,Object>> result = new HashMap<>();
+        for (Map.Entry<String, Object> entry : properties.entrySet()) {
+            if (entry.getValue() instanceof Map) {
+                result.put(entry.getKey(), (Map)entry.getValue());
+            }
+        }
+        return result;
     }
 
     /**

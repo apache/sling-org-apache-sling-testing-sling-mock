@@ -292,4 +292,28 @@ public abstract class AbstractSlingCrudResourceResolverTest {
         assertFalse(context.resourceResolver().hasChanges());
     }
 
+    @Test
+    public void testCreateNestedResources() throws IOException {
+        Resource nested = context.create().resource(getTestRootResource().getPath() + "/nested", 
+                ImmutableMap.<String,Object>of(
+                        "prop1", "value1",
+                        "child1", ImmutableMap.<String,Object>of(
+                            "prop2","value2",
+                            "child2", ImmutableMap.<String,Object>of(
+                                "prop3", "value3")
+                            )
+                        ));
+
+        assertNotNull(nested);
+        assertEquals("value1", nested.getValueMap().get("prop1", String.class));
+
+        Resource child1 = nested.getChild("child1");
+        assertNotNull(child1);
+        assertEquals("value2", child1.getValueMap().get("prop2", String.class));
+
+        Resource child2 = child1.getChild("child2");
+        assertNotNull(child2);
+        assertEquals("value3", child2.getValueMap().get("prop3", String.class));
+    }
+
 }
