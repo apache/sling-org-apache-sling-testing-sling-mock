@@ -299,21 +299,39 @@ public abstract class AbstractSlingCrudResourceResolverTest {
                         "prop1", "value1",
                         "child1", ImmutableMap.<String,Object>of(
                             "prop2","value2",
-                            "child2", ImmutableMap.<String,Object>of(
-                                "prop3", "value3")
-                            )
-                        ));
+                            "child1a", ImmutableMap.<String,Object>of(
+                                "prop3", "value3"),
+                            "child1b", ImmutableMap.<String,Object>of(
+                                "prop4", "value4")
+                        ),
+                        "child2", ImmutableMap.<String,Object>of(
+                            "prop5","value5"
+                        )));
 
         assertNotNull(nested);
         assertEquals("value1", nested.getValueMap().get("prop1", String.class));
 
-        Resource child1 = nested.getChild("child1");
-        assertNotNull(child1);
+        List<Resource> children = ImmutableList.copyOf(nested.getChildren());
+        assertEquals(2, children.size());
+
+        Resource child1 = children.get(0);
+        assertEquals("child1", child1.getName());
         assertEquals("value2", child1.getValueMap().get("prop2", String.class));
 
-        Resource child2 = child1.getChild("child2");
-        assertNotNull(child2);
-        assertEquals("value3", child2.getValueMap().get("prop3", String.class));
+        Resource child2 = children.get(1);
+        assertEquals("child2", child2.getName());
+        assertEquals("value5", child2.getValueMap().get("prop5", String.class));
+
+        List<Resource> child1children = ImmutableList.copyOf(child1.getChildren());
+        assertEquals(2, child1children.size());
+
+        Resource child1a = child1children.get(0);
+        assertEquals("child1a", child1a.getName());
+        assertEquals("value3", child1a.getValueMap().get("prop3", String.class));
+
+        Resource child1b = child1children.get(1);
+        assertEquals("child1b", child1b.getName());
+        assertEquals("value4", child1b.getValueMap().get("prop4", String.class));
     }
 
 }

@@ -19,6 +19,7 @@
 package org.apache.sling.testing.mock.sling.builder;
 
 import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.Map;
 
 import org.apache.commons.lang3.StringUtils;
@@ -108,7 +109,7 @@ public class ContentBuilder {
     
     @SuppressWarnings("unchecked")
     private Map<String,Map<String,Object>> getChildMaps(Map<String,Object> properties) {
-        Map<String,Map<String,Object>> result = new HashMap<>();
+        Map<String,Map<String,Object>> result = new LinkedHashMap<>();
         for (Map.Entry<String, Object> entry : properties.entrySet()) {
             if (entry.getValue() instanceof Map) {
                 result.put(entry.getKey(), (Map)entry.getValue());
