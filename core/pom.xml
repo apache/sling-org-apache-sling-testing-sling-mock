@@ -28,7 +28,7 @@
     </parent>
 
     <artifactId>org.apache.sling.testing.sling-mock.core</artifactId>
-    <packaging>bundle</packaging>
+    <packaging>jar</packaging>
 
     <name>Apache Sling Testing Sling Mock Core</name>
 
@@ -279,9 +279,12 @@
             </plugin>
 
             <plugin>
-                <groupId>org.apache.felix</groupId>
-                <artifactId>maven-bundle-plugin</artifactId>
-                <extensions>true</extensions>
+                <groupId>biz.aQute.bnd</groupId>
+                <artifactId>bnd-maven-plugin</artifactId>
+            </plugin>
+            <plugin>
+                <groupId>biz.aQute.bnd</groupId>
+                <artifactId>bnd-baseline-maven-plugin</artifactId>
             </plugin>
 
             <plugin>
