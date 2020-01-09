@@ -18,6 +18,8 @@
  */
 package org.apache.sling.testing.mock.sling;
 
+import java.lang.reflect.Field;
+import java.lang.reflect.Proxy;
 import java.util.Dictionary;
 import java.util.Hashtable;
 
@@ -40,6 +42,7 @@ import org.jetbrains.annotations.Nullable;
 import org.osgi.framework.BundleContext;
 import org.osgi.framework.ServiceReference;
 import org.osgi.service.event.EventAdmin;
+import org.slf4j.Logger;
 
 /**
  * Initializes Sling Resource Resolver factories with JCR-resource mapping.
@@ -90,10 +93,21 @@ class ResourceResolverFactoryInitializer {
         if (bundleContext.getServiceReference(DynamicClassLoaderManager.class) == null) {
             bundleContext.registerService(DynamicClassLoaderManager.class, new MockDynamicClassLoaderManager(), null);
         }
-        
+
         try {
             Class pathMapperClass = Class.forName("org.apache.sling.jcr.resource.internal.helper.jcr.PathMapper");
-            registerServiceIfNotPresent(bundleContext, pathMapperClass, pathMapperClass.newInstance());
+            Object pathMapper = pathMapperClass.newInstance();
+            // eliminate logger in class to suppress deprecation warnings
+            try {
+                Field pathMapperLoggerField = pathMapperClass.getDeclaredField("log");
+                pathMapperLoggerField.setAccessible(true);
+                pathMapperLoggerField.set(pathMapper, Proxy.newProxyInstance(Logger.class.getClassLoader(), 
+                        new Class[] { Logger.class },
+                        (proxy, method, methodArgs) -> { return null; }));
+            } catch (Exception ex) {
+                // ignore
+            } 
+            registerServiceIfNotPresent(bundleContext, pathMapperClass, pathMapper);
         }
         catch (ClassNotFoundException | InstantiationException | IllegalAccessException ex) {
             // ignore - service was removed in org.apache.sling.jcr.resource 3.0.0
