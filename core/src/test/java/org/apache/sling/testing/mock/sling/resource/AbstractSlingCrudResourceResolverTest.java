@@ -334,4 +334,10 @@ public abstract class AbstractSlingCrudResourceResolverTest {
         assertEquals("value4", child1b.getValueMap().get("prop4", String.class));
     }
 
+    @Test
+    public void testResourceWithoutResourceType() throws PersistenceException {
+        Resource noResourceType = context.create().resource(getTestRootResource().getPath() + "/noResourceType");
+        assertNotNull(noResourceType.getResourceType());
+    }
+
 }
