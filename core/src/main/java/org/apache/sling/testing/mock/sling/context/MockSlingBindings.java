@@ -47,7 +47,7 @@ class MockSlingBindings extends SlingBindings {
     @Override
     public Object get(Object key) {
         if (key instanceof String) {
-            Object result = context.resolveSlingBindingProperty((String)key);
+            Object result = context.resolveSlingBindingProperty((String)key, context.request());
             if (result != null) {
                 return result;
             }

@@ -24,6 +24,7 @@ import java.util.Set;
 import javax.jcr.RepositoryException;
 import javax.jcr.Session;
 
+import org.apache.sling.api.SlingHttpServletRequest;
 import org.apache.sling.api.adapter.AdapterFactory;
 import org.apache.sling.api.resource.LoginException;
 import org.apache.sling.api.resource.Resource;
@@ -286,8 +287,20 @@ public class SlingContextImpl extends OsgiContextImpl {
     /**
      * Dynamically resolve property request for current request {@link SlingBindings}.
      * @param property Property key
+     * @param request Context request
      * @return Resolved object or null if no result found
      */
+    protected @Nullable Object resolveSlingBindingProperty(@NotNull String property, @NotNull SlingHttpServletRequest request) {
+        return MockSlingBindings.resolveSlingBindingProperty(this, property);
+    }
+
+    /**
+     * Dynamically resolve property request for current request {@link SlingBindings}.
+     * @param property Property key
+     * @return Resolved object or null if no result found
+     * @deprecated Please use {@link #resolveSlingBindingProperty(String, SlingHttpServletRequest)}
+     */
+    @Deprecated
     protected @Nullable Object resolveSlingBindingProperty(@NotNull String property) {
         return MockSlingBindings.resolveSlingBindingProperty(this, property);
     }
