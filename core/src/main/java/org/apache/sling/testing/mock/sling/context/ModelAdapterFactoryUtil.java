@@ -35,6 +35,7 @@ import java.util.Set;
 import java.util.Vector;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;
+import java.util.stream.Stream;
 
 import org.apache.commons.lang3.StringUtils;
 import org.apache.sling.models.annotations.Model;
@@ -48,6 +49,8 @@ import org.osgi.framework.BundleException;
 import org.osgi.framework.ServiceReference;
 import org.osgi.framework.Version;
 import org.reflections.Reflections;
+import org.reflections.util.ClasspathHelper;
+import org.reflections.util.ConfigurationBuilder;
 
 /**
  * Helper methods for registering Sling Models from the classpath.
@@ -138,13 +141,11 @@ final class ModelAdapterFactoryUtil {
         List<URL> urls = MODEL_URLS_FOR_PACKAGES.get(packageNames);
         if (urls == null) {
             urls = new ArrayList<URL>();
-            String[] packageNameArray = StringUtils.split(packageNames, ",");
             // add "." to each package name because it's a prefix, not a package name
-            Object[] prefixArray = new Object[packageNameArray.length];
-            for (int i = 0; i < packageNameArray.length; i++) {
-                prefixArray[i] = packageNameArray[i] + ".";
-            }
-            Reflections reflections = new Reflections(prefixArray);
+            ConfigurationBuilder reflectionsConfig = new ConfigurationBuilder();
+            Stream.of(StringUtils.split(packageNames, ","))
+                .forEach(packageName -> reflectionsConfig.addUrls(ClasspathHelper.forPackage(packageName + ".")));
+            Reflections reflections = new Reflections(reflectionsConfig);
             Set<Class<?>> classes = reflections.getTypesAnnotatedWith(Model.class);
             for (Class<?> clazz : classes) {
                 urls.add(classToUrl(clazz));
