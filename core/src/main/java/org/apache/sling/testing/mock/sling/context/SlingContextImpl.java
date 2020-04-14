@@ -18,8 +18,13 @@
  */
 package org.apache.sling.testing.mock.sling.context;
 
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
+import java.util.function.Function;
 
 import javax.jcr.RepositoryException;
 import javax.jcr.Session;
@@ -57,10 +62,6 @@ import org.osgi.annotation.versioning.ConsumerType;
 import org.osgi.framework.Constants;
 import org.osgi.framework.ServiceReference;
 
-import com.google.common.base.Function;
-import com.google.common.collect.ImmutableMap;
-import com.google.common.collect.ImmutableSet;
-
 /**
  * Defines Sling context objects with lazy initialization.
  * Should not be used directly but via the SlingContext JUnit rule or extension.
@@ -69,7 +70,7 @@ import com.google.common.collect.ImmutableSet;
 public class SlingContextImpl extends OsgiContextImpl {
 
     // default to publish instance run mode
-    static final @NotNull Set<String> DEFAULT_RUN_MODES = ImmutableSet.<String> builder().add("publish").build();
+    static final @NotNull Set<String> DEFAULT_RUN_MODES = Collections.singleton("publish");
 
     private static final @NotNull String RESOURCERESOLVERFACTORYACTIVATOR_PID = "org.apache.sling.jcr.resource.internal.JcrResourceResolverFactoryImpl";
     
@@ -459,7 +460,7 @@ public class SlingContextImpl extends OsgiContextImpl {
      * @param runModes Run mode(s).
      */
     public final void runMode(@NotNull String @NotNull ... runModes) {
-        Set<String> newRunModes = ImmutableSet.<String> builder().add(runModes).build();
+        Set<String> newRunModes = new HashSet<>(Arrays.asList(runModes));
         ServiceReference<SlingSettingsService> ref = bundleContext().getServiceReference(SlingSettingsService.class);
         if (ref != null) {
             MockSlingSettingService slingSettings = (MockSlingSettingService)bundleContext().getService(ref);
@@ -515,17 +516,17 @@ public class SlingContextImpl extends OsgiContextImpl {
                 return (AdapterType)adaptHandler.apply((T1)adaptable);
             }
         };
-        registerService(AdapterFactory.class, adapterFactory, ImmutableMap.<String, Object>builder()
-                .put(AdapterFactory.ADAPTABLE_CLASSES, new String[] {
-                    adaptableClass.getName()
-                })
-                .put(AdapterFactory.ADAPTER_CLASSES, new String[] {
-                    adapterClass.getName()
-                })
-                // make sure this overlay has higher ranking than other adapter factories
-                // normally we should use Integer.MAX_VALUE for this - but due to SLING-7194 prefers lowest-ranking services first
-                .put(Constants.SERVICE_RANKING, Integer.MIN_VALUE)
-                .build());
+        Map<String,Object> props = new HashMap<>();
+        props.put(AdapterFactory.ADAPTABLE_CLASSES, new String[] {
+                adaptableClass.getName()
+            });
+        props.put(AdapterFactory.ADAPTER_CLASSES, new String[] {
+                adapterClass.getName()
+            });
+        // make sure this overlay has higher ranking than other adapter factories
+        // normally we should use Integer.MAX_VALUE for this - but due to SLING-7194 prefers lowest-ranking services first
+        props.put(Constants.SERVICE_RANKING, Integer.MIN_VALUE);
+        registerService(AdapterFactory.class, adapterFactory, props);
     }
 
 }

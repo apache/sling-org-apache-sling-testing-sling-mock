@@ -24,6 +24,8 @@ import java.util.EnumSet;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 import org.apache.commons.lang3.StringUtils;
 import org.apache.jackrabbit.JcrConstants;
@@ -38,13 +40,11 @@ import org.apache.sling.contentparser.json.JSONParserFeature;
 import org.apache.sling.contentparser.json.JSONParserOptions;
 import org.apache.sling.contentparser.json.internal.JSONContentParser;
 import org.apache.sling.testing.mock.sling.ResourceResolverType;
+import org.apache.sling.testing.mock.sling.builder.ImmutableValueMap;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.osgi.framework.BundleContext;
 import org.osgi.framework.ServiceReference;
-
-import com.google.common.collect.ImmutableMap;
-import com.google.common.collect.ImmutableSet;
 
 /**
  * Imports JSON data and binary data into Sling resource hierarchy.
@@ -55,28 +55,28 @@ public final class ContentLoader {
     private static final String CONTENTTYPE_OCTET_STREAM = "application/octet-stream";
 
     // set of resource or property names that are ignored for all resource resolver types
-    private static final Set<String> SHARED_IGNORED_NAMES = ImmutableSet.<String>builder()
-            .add(JcrConstants.JCR_BASEVERSION)
-            .add(JcrConstants.JCR_PREDECESSORS)
-            .add(JcrConstants.JCR_SUCCESSORS)
-            .add(JcrConstants.JCR_VERSIONHISTORY)
-            .add("jcr:checkedOut")
-            .add("jcr:isCheckedOut")
-            .add("rep:policy")
-            .build();
+    private static final Set<String> SHARED_IGNORED_NAMES = Stream.of(
+            JcrConstants.JCR_BASEVERSION,
+            JcrConstants.JCR_PREDECESSORS,
+            JcrConstants.JCR_SUCCESSORS,
+            JcrConstants.JCR_VERSIONHISTORY,
+            "jcr:checkedOut",
+            "jcr:isCheckedOut",
+            "rep:policy")
+            .collect(Collectors.toSet());
     
     // set of resource or property names that are ignored when other resource resolver types than JCR_OAK are used
-    private static final Set<String> MOCK_IGNORED_NAMES = ImmutableSet.<String>builder()
-            .addAll(SHARED_IGNORED_NAMES)
-            .add(JcrConstants.JCR_MIXINTYPES)
-            .build();
+    private static final Set<String> MOCK_IGNORED_NAMES = Stream.concat(
+            SHARED_IGNORED_NAMES.stream(), Stream.of(
+            JcrConstants.JCR_MIXINTYPES))
+            .collect(Collectors.toSet());
     
     // set of resource or property names that are ignored when JCR_OAK resource resolver type (= a real repo impl) is used
-    private static final Set<String> OAK_IGNORED_NAMES = ImmutableSet.<String>builder()
-            .addAll(SHARED_IGNORED_NAMES)
-            .add(JcrConstants.JCR_UUID)
-            .add(JcrConstants.JCR_CREATED)
-            .build();
+    private static final Set<String> OAK_IGNORED_NAMES = Stream.concat(
+            SHARED_IGNORED_NAMES.stream(), Stream.of(
+            JcrConstants.JCR_UUID,
+            JcrConstants.JCR_CREATED))
+            .collect(Collectors.toSet()); 
     
     private final ResourceResolver resourceResolver;
     private final BundleContext bundleContext;
@@ -360,11 +360,11 @@ public final class ContentLoader {
     public @NotNull Resource binaryFile(@NotNull InputStream inputStream, @NotNull Resource parentResource, @NotNull String name, @NotNull String mimeType) {
         try {
             Resource file = resourceResolver.create(parentResource, name,
-                    ImmutableMap.<String, Object> builder().put(JcrConstants.JCR_PRIMARYTYPE, JcrConstants.NT_FILE)
-                            .build());
+                    ImmutableValueMap.of(JcrConstants.JCR_PRIMARYTYPE, JcrConstants.NT_FILE));
             resourceResolver.create(file, JcrConstants.JCR_CONTENT,
-                    ImmutableMap.<String, Object> builder().put(JcrConstants.JCR_PRIMARYTYPE, JcrConstants.NT_RESOURCE)
-                            .put(JcrConstants.JCR_DATA, inputStream).put(JcrConstants.JCR_MIMETYPE, mimeType).build());
+                    ImmutableValueMap.of(JcrConstants.JCR_PRIMARYTYPE, JcrConstants.NT_RESOURCE,
+                            JcrConstants.JCR_DATA, inputStream,
+                            JcrConstants.JCR_MIMETYPE, mimeType));
             if (autoCommit) {
                 resourceResolver.commit();
             }
@@ -484,8 +484,9 @@ public final class ContentLoader {
     public @NotNull Resource binaryResource(@NotNull InputStream inputStream, @NotNull Resource parentResource, @NotNull String name, @NotNull String mimeType) {
         try {
             Resource resource = resourceResolver.create(parentResource, name,
-                    ImmutableMap.<String, Object> builder().put(JcrConstants.JCR_PRIMARYTYPE, JcrConstants.NT_RESOURCE)
-                            .put(JcrConstants.JCR_DATA, inputStream).put(JcrConstants.JCR_MIMETYPE, mimeType).build());
+                    ImmutableValueMap.of(JcrConstants.JCR_PRIMARYTYPE, JcrConstants.NT_RESOURCE,
+                            JcrConstants.JCR_DATA, inputStream,
+                            JcrConstants.JCR_MIMETYPE, mimeType));
             if (autoCommit) {
                 resourceResolver.commit();
             }

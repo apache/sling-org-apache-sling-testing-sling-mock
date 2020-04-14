@@ -24,20 +24,20 @@ import static org.junit.Assert.assertNull;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
 
+import java.util.function.Function;
+
 import org.apache.sling.api.adapter.AdapterFactory;
 import org.apache.sling.api.adapter.SlingAdaptable;
 import org.apache.sling.api.resource.Resource;
 import org.apache.sling.api.resource.ResourceResolver;
 import org.apache.sling.testing.mock.sling.ResourceResolverType;
+import org.apache.sling.testing.mock.sling.builder.ImmutableValueMap;
 import org.jetbrains.annotations.NotNull;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.junit.MockitoJUnitRunner;
-
-import com.google.common.base.Function;
-import com.google.common.collect.ImmutableMap;
 
 @RunWith(MockitoJUnitRunner.class)
 @SuppressWarnings("null")
@@ -55,7 +55,7 @@ public class SlingContextTest {
         .afterSetUp(contextAfterSetup)
         .beforeTearDown(contextBeforeTeardown)
         .afterTearDown(contextAfterTeardown)
-        .resourceResolverFactoryActivatorProps(ImmutableMap.<String, Object>of(
+        .resourceResolverFactoryActivatorProps(ImmutableValueMap.of(
                 "resource.resolver.searchpath", new String[] {"/apps","/libs","/testpath"},
                 "resource.resolver.mapping", new String[] {"/:/", "/content/test/</"}
                 ))
@@ -167,7 +167,7 @@ public class SlingContextTest {
                 return (AdapterType)(((TestAdaptable)adaptable).getMessage() + "-initial");
             }
         };
-        context.registerService(AdapterFactory.class, adapterFactory, ImmutableMap.<String, Object>builder()
+        context.registerService(AdapterFactory.class, adapterFactory, ImmutableValueMap.builder()
                 .put(AdapterFactory.ADAPTABLE_CLASSES, new String[] { TestAdaptable.class.getName() })
                 .put(AdapterFactory.ADAPTER_CLASSES, new String[] { String.class.getName() })
                 .build());

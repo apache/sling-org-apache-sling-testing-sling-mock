@@ -24,13 +24,12 @@ import org.apache.jackrabbit.JcrConstants;
 import org.apache.sling.api.resource.PersistenceException;
 import org.apache.sling.api.resource.Resource;
 import org.apache.sling.api.resource.ResourceUtil;
+import org.apache.sling.testing.mock.sling.builder.ImmutableValueMap;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.osgi.annotation.versioning.ConsumerType;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
-import com.google.common.collect.ImmutableMap;
 
 /**
  * Manages unique root paths in JCR repository.
@@ -66,7 +65,7 @@ public class UniqueRoot {
     protected final Resource getOrCreateResource(@NotNull String path, @NotNull String primaryType) {
         try {
             return ResourceUtil.getOrCreateResource(context.resourceResolver(), path, 
-                    ImmutableMap.<String,Object>of(JcrConstants.JCR_PRIMARYTYPE, primaryType),
+                    ImmutableValueMap.of(JcrConstants.JCR_PRIMARYTYPE, primaryType),
                     null, true);
         }
         catch (PersistenceException ex) {

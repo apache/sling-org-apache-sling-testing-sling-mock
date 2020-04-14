@@ -32,8 +32,6 @@ import org.apache.sling.api.resource.ValueMap;
 import org.apache.sling.testing.mock.osgi.MapUtil;
 import org.jetbrains.annotations.NotNull;
 
-import com.google.common.collect.ImmutableMap;
-
 /**
  * Helper class for building test content in the resource hierarchy with as less
  * boilerplate code as possible.
@@ -185,9 +183,7 @@ public class ContentBuilder {
         Resource parentResource = ensureResourceExists(parentPath);
         try {
             resource = resourceResolver.create(parentResource, name,
-                    ImmutableMap.<String, Object> builder()
-                            .put(JcrConstants.JCR_PRIMARYTYPE, JcrConstants.NT_UNSTRUCTURED)
-                            .build());
+                    ImmutableValueMap.of(JcrConstants.JCR_PRIMARYTYPE, JcrConstants.NT_UNSTRUCTURED));
             resourceResolver.commit();
             return resource;
         } catch (PersistenceException ex) {
