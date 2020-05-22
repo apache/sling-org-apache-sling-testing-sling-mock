@@ -49,6 +49,7 @@ import org.apache.sling.testing.mock.osgi.MockOsgi;
 import org.apache.sling.testing.mock.osgi.context.OsgiContextImpl;
 import org.apache.sling.testing.mock.sling.MockResourceBundleProvider;
 import org.apache.sling.testing.mock.sling.MockSling;
+import org.apache.sling.testing.mock.sling.MockXSSAPIImpl;
 import org.apache.sling.testing.mock.sling.ResourceResolverType;
 import org.apache.sling.testing.mock.sling.builder.ContentBuilder;
 import org.apache.sling.testing.mock.sling.loader.ContentLoader;
@@ -181,6 +182,7 @@ public class SlingContextImpl extends OsgiContextImpl {
         registerInjectActivateService(new ResourceBuilderFactoryService());
         registerInjectActivateService(new JcrObjectsBindingsValuesProvider());
         registerInjectActivateService(new MockResourceBundleProvider());
+        registerInjectActivateService(new MockXSSAPIImpl());
         
         // scan for models defined via bundle headers in classpath
         if (registerSlingModelsFromClassPath) {
