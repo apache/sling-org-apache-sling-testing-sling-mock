@@ -48,7 +48,7 @@ import org.slf4j.Logger;
  * Initializes Sling Resource Resolver factories with JCR-resource mapping.
  */
 class ResourceResolverFactoryInitializer {
-    
+
     private ResourceResolverFactoryInitializer() {
         // static methods only
     }
@@ -72,7 +72,7 @@ class ResourceResolverFactoryInitializer {
             ensureJcrResourceProviderDependencies(bundleContext);
             initializeJcrResourceProvider(bundleContext);
         }
-        
+
         // initialize resource resolver factory activator
         ensureResourceResolverFactoryActivatorDependencies(bundleContext);
         initializeResourceResolverFactoryActivator(bundleContext);
@@ -83,7 +83,7 @@ class ResourceResolverFactoryInitializer {
         }
         return (ResourceResolverFactory)bundleContext.getService(factoryRef);
     }
-    
+
     /**
      * Ensure dependencies for JcrResourceProvider are present.
      * @param bundleContext Bundle context
@@ -125,7 +125,7 @@ class ResourceResolverFactoryInitializer {
         MockOsgi.activate(provider, bundleContext, config);
         bundleContext.registerService(ResourceProvider.class, provider, config);
     }
-    
+
     /**
      * Ensure dependencies for ResourceResolverFactoryActivator are present.
      * @param bundleContext Bundle context
@@ -137,6 +137,9 @@ class ResourceResolverFactoryInitializer {
         
         registerServiceIfNotPresent(bundleContext, ResourceAccessSecurityTracker.class, new ResourceAccessSecurityTracker());
         registerServiceIfNotPresent(bundleContext, EventAdmin.class, new MockEventAdmin());
+        // dependency required since resourceresolver 1.7.0
+        registerServiceIfNotPresentByName(bundleContext, "org.apache.sling.resourceresolver.impl.mapping.StringInterpolationProvider",
+                "org.apache.sling.resourceresolver.impl.mapping.StringInterpolationProviderImpl");
     }
  
     /**
@@ -153,7 +156,19 @@ class ResourceResolverFactoryInitializer {
         MockOsgi.activate(activator, bundleContext, config);
         bundleContext.registerService(ResourceResolverFactoryActivator.class.getName(), activator, config);
     }
-    
+
+    @SuppressWarnings({ "unchecked", "null" })
+    private static void registerServiceIfNotPresentByName(@NotNull BundleContext bundleContext,
+            @NotNull String interfaceClassName, @NotNull String implClassName) {
+        try {
+            Class<?> interfaceClass = Class.forName(interfaceClassName);
+            Class<?> implClass = Class.forName(implClassName);
+            registerServiceIfNotPresent(bundleContext, (Class)interfaceClass, implClass.newInstance());
+        } catch (ClassNotFoundException | InstantiationException | IllegalAccessException e) {
+            // ignore - probably not the latest sling models impl version
+        }
+    }
+
     /**
      * Registers a service if the service class is found in classpath,
      * and if no service with this class is already registered.
@@ -165,7 +180,7 @@ class ResourceResolverFactoryInitializer {
             @NotNull T instance) {
         registerServiceIfNotPresent(bundleContext, serviceClass, instance, new Hashtable<String, Object>());
     }
-    
+
     /**
      * Registers a service if the service class is found in classpath,
      * and if no service with this class is already registered.
@@ -182,7 +197,7 @@ class ResourceResolverFactoryInitializer {
             bundleContext.registerService(serviceClass, instance, config);
         }
     }
-    
+
     /**
      * Registers all JCR node types found in classpath.
      * @param slingRepository Sling repository
@@ -204,5 +219,5 @@ class ResourceResolverFactoryInitializer {
           }
       }
     }
-    
+
 }
