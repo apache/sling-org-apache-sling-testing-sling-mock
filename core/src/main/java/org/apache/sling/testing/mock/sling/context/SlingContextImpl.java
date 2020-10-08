@@ -18,6 +18,9 @@
  */
 package org.apache.sling.testing.mock.sling.context;
 
+import static org.apache.sling.testing.mock.sling.context.MockSlingBindings.SERVICE_PROPERTY_MOCK_SLING_BINDINGS_IGNORE;
+import static org.osgi.service.event.EventConstants.EVENT_TOPIC;
+
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashMap;
@@ -63,6 +66,7 @@ import org.jetbrains.annotations.Nullable;
 import org.osgi.annotation.versioning.ConsumerType;
 import org.osgi.framework.Constants;
 import org.osgi.framework.ServiceReference;
+import org.osgi.service.event.EventHandler;
 
 /**
  * Defines Sling context objects with lazy initialization.
@@ -180,7 +184,8 @@ public class SlingContextImpl extends OsgiContextImpl {
         registerService(SlingSettingsService.class, new MockSlingSettingService(DEFAULT_RUN_MODES));
         registerService(MimeTypeService.class, new MockMimeTypeService());
         registerInjectActivateService(new ResourceBuilderFactoryService());
-        registerInjectActivateService(new JcrObjectsBindingsValuesProvider());
+        registerInjectActivateService(new JcrObjectsBindingsValuesProvider(),
+                SERVICE_PROPERTY_MOCK_SLING_BINDINGS_IGNORE, true);
         registerInjectActivateService(new MockResourceBundleProvider());
         registerInjectActivateService(new MockXSSAPIImpl());
         
@@ -283,7 +288,12 @@ public class SlingContextImpl extends OsgiContextImpl {
             this.request = new MockSlingHttpServletRequest(this.resourceResolver(), this.bundleContext());
 
             // initialize sling bindings
-            SlingBindings bindings = new MockSlingBindings(this);
+            MockSlingBindings bindings = new MockSlingBindings(this);
+            
+            // register as OSGi event handler to get notified on events fired by BindingsValuesProvidersByContextImpl
+            this.registerService(EventHandler.class, bindings,
+                    EVENT_TOPIC, "org/apache/sling/scripting/core/BindingsValuesProvider/*");
+            
             this.request.setAttribute(SlingBindings.class.getName(), bindings);
         }
         return this.request;

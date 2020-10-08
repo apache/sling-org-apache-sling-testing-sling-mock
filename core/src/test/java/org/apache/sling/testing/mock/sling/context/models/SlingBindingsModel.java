@@ -50,6 +50,16 @@ public interface SlingBindingsModel {
     Node getCurrentNode();
 
     @ScriptVariable(injectionStrategy = InjectionStrategy.OPTIONAL)
-    Session getcurrentSession();
+    Session getCurrentSession();
+
+    // -- Custom --
+    @ScriptVariable(name = "custom-param-1", injectionStrategy = InjectionStrategy.OPTIONAL)
+    String getCustomParam1();
+
+    @ScriptVariable(name = "custom-param-2", injectionStrategy = InjectionStrategy.OPTIONAL)
+    String getCustomParam2();
+
+    @ScriptVariable(name = "custom-param-3", injectionStrategy = InjectionStrategy.OPTIONAL)
+    String getCustomParam3();
 
 }
