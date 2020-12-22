@@ -41,6 +41,7 @@ import org.apache.sling.api.resource.ResourceResolverFactory;
 import org.apache.sling.api.scripting.SlingBindings;
 import org.apache.sling.api.scripting.SlingScriptHelper;
 import org.apache.sling.commons.mime.MimeTypeService;
+import org.apache.sling.featureflags.impl.FeatureManager;
 import org.apache.sling.jcr.resource.internal.scripting.JcrObjectsBindingsValuesProvider;
 import org.apache.sling.models.impl.ModelAdapterFactory;
 import org.apache.sling.resourcebuilder.api.ResourceBuilder;
@@ -188,6 +189,7 @@ public class SlingContextImpl extends OsgiContextImpl {
                 SERVICE_PROPERTY_MOCK_SLING_BINDINGS_IGNORE, true);
         registerInjectActivateService(new MockResourceBundleProvider());
         registerInjectActivateService(new MockXSSAPIImpl());
+        registerInjectActivateService(new FeatureManager());
         
         // scan for models defined via bundle headers in classpath
         if (registerSlingModelsFromClassPath) {
