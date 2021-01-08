@@ -82,7 +82,7 @@ public class MockAdapterManagerImpl implements AdapterManager {
      * the manager has been activated. These bound services will be accessed as
      * soon as the manager is being activated.
      */
-    private final List<ServiceReference> boundAdapterFactories = new LinkedList<ServiceReference>();
+    private final List<ServiceReference<AdapterFactory>> boundAdapterFactories = new LinkedList<ServiceReference<AdapterFactory>>();
 
     /**
      * A map of {@link AdapterFactoryDescriptorMap} instances. The map is
@@ -173,12 +173,12 @@ public class MockAdapterManagerImpl implements AdapterManager {
         this.context = context;
 
         // register all adapter factories bound before activation
-        final List<ServiceReference> refs;
+        final List<ServiceReference<AdapterFactory>> refs;
         synchronized ( this.boundAdapterFactories ) {
-            refs = new ArrayList<ServiceReference>(this.boundAdapterFactories);
+            refs = new ArrayList<ServiceReference<AdapterFactory>>(this.boundAdapterFactories);
             boundAdapterFactories.clear();
         }
-        for (final ServiceReference reference : refs) {
+        for (final ServiceReference<AdapterFactory> reference : refs) {
             registerAdapterFactory(context, reference);
         }
 
@@ -201,7 +201,7 @@ public class MockAdapterManagerImpl implements AdapterManager {
      * Bind a new adapter factory.
      * @param reference Service reference
      */
-    protected void bindAdapterFactory(final ServiceReference reference) {
+    protected void bindAdapterFactory(final ServiceReference<AdapterFactory> reference) {
         boolean create = true;
         if (context == null) {
             synchronized ( this.boundAdapterFactories ) {
@@ -250,8 +250,9 @@ public class MockAdapterManagerImpl implements AdapterManager {
      * Unregisters the {@link AdapterFactory} referred to by the service
      * <code>reference</code> from the registry.
      */
+    @SuppressWarnings("null")
     private void registerAdapterFactory(final ComponentContext context,
-            final ServiceReference reference) {
+            final ServiceReference<AdapterFactory> reference) {
         final String[] adaptables = PropertiesUtil.toStringArray(reference.getProperty(ADAPTABLE_CLASSES));
         final String[] adapters = PropertiesUtil.toStringArray(reference.getProperty(ADAPTER_CLASSES));
 
@@ -300,8 +301,7 @@ public class MockAdapterManagerImpl implements AdapterManager {
         props.put(SlingConstants.PROPERTY_ADAPTABLE_CLASSES, adaptables);
         props.put(SlingConstants.PROPERTY_ADAPTER_CLASSES, adapters);
 
-        ServiceRegistration adaptionRegistration = this.context.getBundleContext().registerService(
-                Adaption.class.getName(), AdaptionImpl.INSTANCE, props);
+        ServiceRegistration<Adaption> adaptionRegistration = this.context.getBundleContext().registerService(Adaption.class, AdaptionImpl.INSTANCE, props);
         if (log.isDebugEnabled()) {
             log.debug("Registered service {} with {} : {} and {} : {}", new Object[] { Adaption.class.getName(),
                     SlingConstants.PROPERTY_ADAPTABLE_CLASSES, Arrays.toString(adaptables),

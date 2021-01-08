@@ -475,6 +475,7 @@ public class SlingContextImpl extends OsgiContextImpl {
      * Set current run mode(s).
      * @param runModes Run mode(s).
      */
+    @SuppressWarnings("null")
     public final void runMode(@NotNull String @NotNull ... runModes) {
         Set<String> newRunModes = new HashSet<>(Arrays.asList(runModes));
         ServiceReference<SlingSettingsService> ref = bundleContext().getServiceReference(SlingSettingsService.class);

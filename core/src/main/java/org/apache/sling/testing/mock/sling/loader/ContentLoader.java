@@ -502,6 +502,7 @@ public final class ContentLoader {
      * @param names The names from which to derive the mime type
      * @return Mime type (never null)
      */
+    @SuppressWarnings("null")
     private @NotNull String detectMimeTypeFromNames(@NotNull String @NotNull ... names) {
         String mimeType = null;
         for (String name : names) {

@@ -66,7 +66,7 @@ public final class ImmutableValueMap implements ValueMap {
     }
 
     @Override
-    public <T> T get(@NotNull String name, T defaultValue) {
+    public @NotNull <T> T get(@NotNull String name, @NotNull T defaultValue) {
         return this.map.get(name, defaultValue);
     }
 
@@ -184,6 +184,7 @@ public final class ImmutableValueMap implements ValueMap {
      * @param v1 Value 1
      * @return ImmutableValueMap
      */
+    @SuppressWarnings("null")
     public static @NotNull ImmutableValueMap of(@NotNull String k1, @NotNull Object v1) {
         return new ImmutableValueMap(Collections.singletonMap(k1, v1));
     }

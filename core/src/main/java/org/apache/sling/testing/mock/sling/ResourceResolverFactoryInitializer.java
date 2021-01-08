@@ -58,6 +58,7 @@ class ResourceResolverFactoryInitializer {
      * @param slingRepository Sling repository. If null resource resolver factory is setup without any resource provider.
      * @param bundleContext Bundle context
      */
+    @SuppressWarnings("null")
     public static @NotNull ResourceResolverFactory setUp(@Nullable SlingRepository slingRepository, 
             @NotNull BundleContext bundleContext, @NotNull NodeTypeMode nodeTypeMode) {
         

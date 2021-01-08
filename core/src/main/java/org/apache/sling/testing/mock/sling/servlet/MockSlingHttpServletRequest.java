@@ -61,6 +61,7 @@ public class MockSlingHttpServletRequest extends org.apache.sling.servlethelpers
     }
     
     @Override
+    @SuppressWarnings("null")
     public ResourceBundle getResourceBundle(String baseName, Locale locale) {
         // check of ResourceBundleProvider is registered in mock OSGI context
         ResourceBundle resourceBundle = null;

@@ -28,7 +28,7 @@
     </parent>
 
     <artifactId>org.apache.sling.testing.sling-mock.parent</artifactId>
-    <version>2.7.1-SNAPSHOT</version>
+    <version>3.0.0-SNAPSHOT</version>
     <packaging>pom</packaging>
 
     <name>Apache Sling Testing Sling Mock Parent</name>
@@ -36,9 +36,9 @@
     
     <properties>
 
-        <osgi-mock.version>2.4.16</osgi-mock.version>
-        <jcr-mock.version>1.4.6</jcr-mock.version>
-        <resourceresolver-mock.version>1.1.26</resourceresolver-mock.version>
+        <osgi-mock.version>3.0.0-SNAPSHOT</osgi-mock.version>
+        <jcr-mock.version>1.5.0-SNAPSHOT</jcr-mock.version>
+        <resourceresolver-mock.version>1.2.0-SNAPSHOT</resourceresolver-mock.version>
         <logging-mock.version>2.0.0</logging-mock.version>
         <servlet-helpers.version>1.4.2</servlet-helpers.version>
         <resourcebuilder.version>1.0.4</resourcebuilder.version>
@@ -75,12 +75,12 @@
         <dependency>
             <groupId>org.mockito</groupId>
             <artifactId>mockito-core</artifactId>
-            <version>3.1.0</version>
+            <version>3.7.0</version>
         </dependency>
         <dependency>
             <groupId>org.mockito</groupId>
             <artifactId>mockito-junit-jupiter</artifactId>
-            <version>3.1.0</version>
+            <version>3.7.0</version>
         </dependency>
         <dependency>
             <groupId>org.apache.sling</groupId>

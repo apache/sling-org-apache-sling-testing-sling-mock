@@ -85,6 +85,7 @@ class ThreadsafeMockAdapterManagerWrapper implements AdapterManager {
             this.bundleContext = null;
         }
         
+        @SuppressWarnings("null")
         public synchronized AdapterManager getAdapterManager() {
             if (bundleContext == null) {
                 setBundleContext(MockOsgi.newBundleContext());
