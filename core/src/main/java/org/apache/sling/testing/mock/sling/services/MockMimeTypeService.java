@@ -49,7 +49,7 @@ public final class MockMimeTypeService extends MimeTypeServiceImpl {
     private void lazyInitialization() {
         if (!this.initialized) {
             this.initialized = true;
-            
+
             ComponentContext componentContext = MockOsgi.newComponentContext();
 
             // activate service in simulated OSGi environment (for MimeTypeService impl < 2.0.0)
@@ -63,7 +63,7 @@ public final class MockMimeTypeService extends MimeTypeServiceImpl {
             catch (IllegalAccessException | IllegalArgumentException | InvocationTargetException ex) {
                 throw new RuntimeException("Unableo to set log service.", ex);
             }
-            
+
             // call activate method of MimeTypeServiceImpl
             // via reflection because the method signature changed between org.apache.sling.commons.mime 2.1.8 and 2.1.10 and 2.2.0
             try {

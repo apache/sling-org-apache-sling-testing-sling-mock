@@ -51,7 +51,7 @@ public abstract class AbstractContentLoaderJsonTest {
     public SlingContext context = new SlingContext(getResourceResolverType());
 
     protected abstract ResourceResolverType getResourceResolverType();
-    
+
     protected String path;
 
     @Before
@@ -59,7 +59,7 @@ public abstract class AbstractContentLoaderJsonTest {
         path = context.uniqueRoot().content();
 
         try {
-            NodeTypeDefinitionScanner.get().register(context.resourceResolver().adaptTo(Session.class), 
+            NodeTypeDefinitionScanner.get().register(context.resourceResolver().adaptTo(Session.class),
                     ImmutableList.of("SLING-INF/nodetypes/app.cnd"),
                     getResourceResolverType().getNodeTypeMode());
         }
@@ -75,7 +75,7 @@ public abstract class AbstractContentLoaderJsonTest {
         // make sure all changes from ContentLoader are committed
         assertFalse(context.resourceResolver().hasChanges());
     }
-            
+
     @Test
     public void testPageResourceType() {
         Resource resource = context.resourceResolver().getResource(path + "/sample/en");
@@ -162,7 +162,7 @@ public abstract class AbstractContentLoaderJsonTest {
         assertEquals(11, calendar.get(Calendar.MINUTE));
         assertEquals(24, calendar.get(Calendar.SECOND));
     }
-    
+
     @Test
     public void testCalendarISO8601Format() {
         Resource resource = context.resourceResolver().getResource(path + "/sample/en/jcr:content");
@@ -172,7 +172,7 @@ public abstract class AbstractContentLoaderJsonTest {
         assertNotNull(calendar);
 
         calendar.setTimeZone(TimeZone.getTimeZone("GMT+2"));
-        
+
         assertEquals(2014, calendar.get(Calendar.YEAR));
         assertEquals(4, calendar.get(Calendar.MONTH) + 1);
         assertEquals(22, calendar.get(Calendar.DAY_OF_MONTH));
@@ -181,29 +181,29 @@ public abstract class AbstractContentLoaderJsonTest {
         assertEquals(11, calendar.get(Calendar.MINUTE));
         assertEquals(24, calendar.get(Calendar.SECOND));
     }
-    
+
     @Test
     public void testUTF8Chars() {
         Resource resource = context.resourceResolver().getResource(path + "/sample/en/jcr:content");
         ValueMap props = ResourceUtil.getValueMap(resource);
-        
+
         assertEquals("äöüß€", props.get("utf8Property"));
     }
-    
+
     @Test
     public void testJcrUuid() {
         Resource resource = context.resourceResolver().getResource(path + "/sample/en/jcr:content/par/image/file/jcr:content");
         ValueMap props = ResourceUtil.getValueMap(resource);
-        
+
         assertEquals("eda76d00-b2cd-4b59-878f-c33f71ceaddc", props.get(JcrConstants.JCR_UUID));
     }
-    
+
     @Test
     public void testJcrCreated() {
         Resource resource = context.resourceResolver().getResource(path + "/sample/en/jcr:content/par/image/file");
         ValueMap props = ResourceUtil.getValueMap(resource);
-        
+
         assertNotNull(props.get(JcrConstants.JCR_CREATED));
     }
-    
+
 }

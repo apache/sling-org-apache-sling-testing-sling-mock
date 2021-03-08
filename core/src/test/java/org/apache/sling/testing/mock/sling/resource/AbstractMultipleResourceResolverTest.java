@@ -40,38 +40,38 @@ import com.google.common.collect.ImmutableMap;
 public abstract class AbstractMultipleResourceResolverTest {
 
     private final BundleContext bundleContext = MockOsgi.newBundleContext();
-    
+
     protected abstract ResourceResolverType getResourceResolverType();
-    
+
     protected ResourceResolverFactory newResourceResolerFactory() {
         return MockSling.newResourceResolverFactory(getResourceResolverType(), bundleContext);
     }
-    
+
     @After
     public void tearDown() {
         MockOsgi.shutdown(bundleContext);
     }
-    
+
     @SuppressWarnings("deprecation")
     @Test
     public void testMultipleResourceResolver() throws Exception {
         ResourceResolverFactory factory = newResourceResolerFactory();
         ResourceResolver resolver1 = factory.getAdministrativeResourceResolver(null);
         ResourceResolver resolver2 = factory.getAdministrativeResourceResolver(null);
-        
+
         // add a resource in resolver 1
         Resource root = resolver1.getResource("/");
         resolver1.create(root, "test", ImmutableMap.<String, Object>of());
         resolver1.commit();
-        
+
         // try to get resource in resolver 2
         Resource testResource2 = resolver2.getResource("/test");
         assertNotNull(testResource2);
-        
+
         // delete resource and make sure it is removed in resolver 1 as well
         resolver2.delete(testResource2);
         resolver2.commit();
-        
+
         assertNull(resolver1.getResource("/test"));
     }
 

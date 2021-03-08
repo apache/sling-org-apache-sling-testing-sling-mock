@@ -36,19 +36,19 @@ public class NoResourceResolverTypeTest {
 
     @Rule
     public SlingContext context = new SlingContext(ResourceResolverType.NONE);
-    
+
     @Mock
     private ResourceProvider<?> resourceProvider;
-    
+
     @Test
     public void testRoot() {
         // register dummy resource provider because otherwise ResourceResolverFactory get's not activated
         // with latest sling resource resolver implementation
         context.registerService(ResourceProvider.class, resourceProvider,
                 ResourceProvider.PROPERTY_ROOT, "/");
-        
+
         Resource root = context.resourceResolver().getResource("/");
         assertTrue(root instanceof SyntheticResource);
     }
-    
+
 }

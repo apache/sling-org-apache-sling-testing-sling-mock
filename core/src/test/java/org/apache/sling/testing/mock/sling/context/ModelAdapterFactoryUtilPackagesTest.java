@@ -26,7 +26,7 @@ public class ModelAdapterFactoryUtilPackagesTest extends AbstractModelAdapterFac
 
     @Rule
     public SlingContext context = new SlingContext();
-    
+
     @Override
     protected SlingContext context() {
         return context;

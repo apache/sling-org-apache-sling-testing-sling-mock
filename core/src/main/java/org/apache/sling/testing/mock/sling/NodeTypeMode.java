@@ -27,15 +27,15 @@ public enum NodeTypeMode {
      * Neither registration of namespaces or node types required (no underlying JCR).
      */
     NOT_SUPPORTED,
-    
+
     /**
      * Namespaces have to be registered, but nodetypes are not supported.
      */
     NAMESPACES_ONLY,
-    
+
     /**
      * Nodetypes including namespaces have to be registered.
      */
     NODETYPES_REQUIRED
-    
+
 }

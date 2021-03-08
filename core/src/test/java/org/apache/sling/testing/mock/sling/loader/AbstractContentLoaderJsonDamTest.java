@@ -53,13 +53,13 @@ public abstract class AbstractContentLoaderJsonDamTest {
     protected abstract ResourceResolverType getResourceResolverType();
 
     protected String path;
-    
+
     @Before
     public void setUp() {
         path = context.uniqueRoot().content() + "/dam";
 
         try {
-            NodeTypeDefinitionScanner.get().register(context.resourceResolver().adaptTo(Session.class), 
+            NodeTypeDefinitionScanner.get().register(context.resourceResolver().adaptTo(Session.class),
                     ImmutableList.of("SLING-INF/nodetypes/app.cnd"),
                     getResourceResolverType().getNodeTypeMode());
         }
@@ -75,7 +75,7 @@ public abstract class AbstractContentLoaderJsonDamTest {
         // make sure all changes from ContentLoader are committed
         assertFalse(context.resourceResolver().hasChanges());
     }
-            
+
     @Test
     public void testDamAssetMetadata() throws IOException {
         Resource assetMetadata = context.resourceResolver()

@@ -59,16 +59,16 @@ class ResourceResolverFactoryInitializer {
      * @param bundleContext Bundle context
      */
     @SuppressWarnings("null")
-    public static @NotNull ResourceResolverFactory setUp(@Nullable SlingRepository slingRepository, 
+    public static @NotNull ResourceResolverFactory setUp(@Nullable SlingRepository slingRepository,
             @NotNull BundleContext bundleContext, @NotNull NodeTypeMode nodeTypeMode) {
-        
+
         if (slingRepository != null) {
             // register sling repository as OSGi service
             registerServiceIfNotPresent(bundleContext, SlingRepository.class, slingRepository);
-            
+
             // register JCR node types found in classpath
             registerJcrNodeTypes(slingRepository, nodeTypeMode);
-            
+
             // initialize JCR resource provider
             ensureJcrResourceProviderDependencies(bundleContext);
             initializeJcrResourceProvider(bundleContext);
@@ -102,19 +102,19 @@ class ResourceResolverFactoryInitializer {
             try {
                 Field pathMapperLoggerField = pathMapperClass.getDeclaredField("log");
                 pathMapperLoggerField.setAccessible(true);
-                pathMapperLoggerField.set(pathMapper, Proxy.newProxyInstance(Logger.class.getClassLoader(), 
+                pathMapperLoggerField.set(pathMapper, Proxy.newProxyInstance(Logger.class.getClassLoader(),
                         new Class[] { Logger.class },
                         (proxy, method, methodArgs) -> { return null; }));
             } catch (Exception ex) {
                 // ignore
-            } 
+            }
             registerServiceIfNotPresent(bundleContext, pathMapperClass, pathMapper);
         }
         catch (ClassNotFoundException | InstantiationException | IllegalAccessException ex) {
             // ignore - service was removed in org.apache.sling.jcr.resource 3.0.0
         }
     }
- 
+
     /**
      * Initialize JCR resource provider.
      * @param bundleContext Bundle context
@@ -135,14 +135,14 @@ class ResourceResolverFactoryInitializer {
         Dictionary<String, Object> config = new Hashtable<String, Object>();
         config.put("user.mapping", bundleContext.getBundle().getSymbolicName() + "=admin");
         registerServiceIfNotPresent(bundleContext, ServiceUserMapper.class, new ServiceUserMapperImpl(), config);
-        
+
         registerServiceIfNotPresent(bundleContext, ResourceAccessSecurityTracker.class, new ResourceAccessSecurityTracker());
         registerServiceIfNotPresent(bundleContext, EventAdmin.class, new MockEventAdmin());
         // dependency required since resourceresolver 1.7.0
         registerServiceIfNotPresentByName(bundleContext, "org.apache.sling.resourceresolver.impl.mapping.StringInterpolationProvider",
                 "org.apache.sling.resourceresolver.impl.mapping.StringInterpolationProviderImpl");
     }
- 
+
     /**
      * Initialize resource resolver factory activator.
      * @param bundleContext Bundle context
@@ -177,7 +177,7 @@ class ResourceResolverFactoryInitializer {
      * @param serviceClass Service class
      * @param instance Service instance
      */
-    private static <T> void registerServiceIfNotPresent(@NotNull BundleContext bundleContext, @NotNull Class<T> serviceClass, 
+    private static <T> void registerServiceIfNotPresent(@NotNull BundleContext bundleContext, @NotNull Class<T> serviceClass,
             @NotNull T instance) {
         registerServiceIfNotPresent(bundleContext, serviceClass, instance, new Hashtable<String, Object>());
     }
@@ -190,7 +190,7 @@ class ResourceResolverFactoryInitializer {
      * @param instance Service instance
      * @param config OSGi config
      */
-    private static <T> void registerServiceIfNotPresent(@NotNull BundleContext bundleContext, @NotNull Class<T> serviceClass, 
+    private static <T> void registerServiceIfNotPresent(@NotNull BundleContext bundleContext, @NotNull Class<T> serviceClass,
             @NotNull T instance, Dictionary<String, Object> config) {
         if (bundleContext.getServiceReference(serviceClass.getName()) == null) {
             MockOsgi.injectServices(instance, bundleContext);
@@ -204,7 +204,7 @@ class ResourceResolverFactoryInitializer {
      * @param slingRepository Sling repository
      */
     @SuppressWarnings("deprecation")
-    private static void registerJcrNodeTypes(final SlingRepository slingRepository, 
+    private static void registerJcrNodeTypes(final SlingRepository slingRepository,
             final NodeTypeMode nodeTypeMode) {
       Session session = null;
       try {

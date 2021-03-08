@@ -33,17 +33,17 @@ import org.osgi.annotation.versioning.ProviderType;
  */
 @ProviderType
 public final class SlingContextBuilder {
-    
+
     private final @NotNull ContextPlugins plugins = new ContextPlugins();
     private ResourceResolverType resourceResolverType;
     private Map<String, Object> resourceResolverFactoryActivatorProps;
     private boolean registerSlingModelsFromClassPath = true;
-    
+
     /**
      * Create builder with default resource resolver type.
      */
     public SlingContextBuilder() {}
-    
+
     /**
      * Create builder with given resource resolver type.
      * @param resourceResolverType Resource resolver type.
@@ -51,7 +51,7 @@ public final class SlingContextBuilder {
     public SlingContextBuilder(@NotNull ResourceResolverType resourceResolverType) {
         this.resourceResolverType(resourceResolverType);
     }
-    
+
     /**
      * @param resourceResolverType Resource resolver type.
      * @return this
@@ -60,7 +60,7 @@ public final class SlingContextBuilder {
         this.resourceResolverType = resourceResolverType;
         return this;
     }
-    
+
     /**
      * @param <T> context type
      * @param plugin Context plugin which listens to context lifecycle events.
@@ -145,5 +145,5 @@ public final class SlingContextBuilder {
                 this.resourceResolverType,
                 this.registerSlingModelsFromClassPath);
     }
-    
+
 }

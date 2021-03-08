@@ -61,7 +61,7 @@ public abstract class AbstractJcrResourceResolverTest {
 
     @Rule
     public SlingContext context = new SlingContext(getResourceResolverType());
-    
+
     private static final String STRING_VALUE = "value1";
     private static final String[] STRING_ARRAY_VALUE = new String[] { "value1", "value2" };
     private static final int INTEGER_VALUE = 25;
@@ -157,7 +157,7 @@ public abstract class AbstractJcrResourceResolverTest {
         assertEquals(JcrConstants.NT_UNSTRUCTURED, child.getResourceType());
         assertEquals(JcrConstants.NT_UNSTRUCTURED, child.adaptTo(Node.class).getPrimaryNodeType().getName());
     }
-    
+
     @Test
     public void testCreateNodeWithResourceType() throws RepositoryException, PersistenceException {
         Resource parent = context.resourceResolver().getResource(getTestRootNode().getPath());
@@ -171,16 +171,16 @@ public abstract class AbstractJcrResourceResolverTest {
 
     @Test
     public void testPendingChangesCommit() throws Exception {
-        
+
         // skip this test for JCR_MOCK because it does not track pending changes
         if (getResourceResolverType()==ResourceResolverType.JCR_MOCK) {
             return;
         }
-        
+
         Resource testRootResource = context.resourceResolver().getResource(getTestRootNode().getPath());
         context.resourceResolver().delete(testRootResource);
         assertTrue(session.hasPendingChanges());
-        
+
         context.resourceResolver().commit();
         assertFalse(session.hasPendingChanges());
     }

@@ -56,16 +56,16 @@ import org.reflections.util.ConfigurationBuilder;
  * Helper methods for registering Sling Models from the classpath.
  */
 final class ModelAdapterFactoryUtil {
-    
+
     private static final @NotNull String PACKAGE_HEADER = "Sling-Model-Packages";
     private static final @NotNull String CLASSES_HEADER = "Sling-Model-Classes";
-    
+
     private static final @NotNull String @NotNull [] MODELS_PACKAGES_FROM_MANIFEST;
     private static final @NotNull String @NotNull [] MODELS_CLASSES_FROM_MANIFEST;
-    
+
     private static final @NotNull ConcurrentMap<String, List<URL>> MODEL_URLS_FOR_PACKAGES = new ConcurrentHashMap<String, List<URL>>();
     private static final @NotNull ConcurrentMap<String, List<URL>> MODEL_URLS_FOR_CLASSES = new ConcurrentHashMap<String, List<URL>>();
-    
+
     static {
         // suppress log entries from Reflections library
         Reflections.log = null;
@@ -74,7 +74,7 @@ final class ModelAdapterFactoryUtil {
         MODELS_PACKAGES_FROM_MANIFEST = toArray(ManifestScanner.getValues(PACKAGE_HEADER));
         MODELS_CLASSES_FROM_MANIFEST = toArray(ManifestScanner.getValues(CLASSES_HEADER));
     }
-    
+
     private ModelAdapterFactoryUtil() {
         // static methods only
     }
@@ -82,7 +82,7 @@ final class ModelAdapterFactoryUtil {
     private static @NotNull String @NotNull [] toArray(@NotNull Collection<String> values) {
         return values.toArray(new String[values.size()]);
     }
-        
+
     /**
      * Search classpath for given java package names (and sub packages) to scan for and
      * register all classes with @Model annotation.
@@ -118,7 +118,7 @@ final class ModelAdapterFactoryUtil {
         }
         addModelsForClasses(bundleContext, classNames);
     }
-    
+
     /**
      * Scan MANIFEST.MF in the classpath and automatically register all sling model classes found.
      * @param bundleContext Bundle context
@@ -131,7 +131,7 @@ final class ModelAdapterFactoryUtil {
             addModelsForClasses(bundleContext, MODELS_CLASSES_FROM_MANIFEST);
         }
     }
-    
+
     /**
      * Get model classes in list of packages (and subpackages), and cache result in static map.
      * @param packageNames Package names
@@ -154,7 +154,7 @@ final class ModelAdapterFactoryUtil {
         }
         return urls;
     }
-    
+
     /**
      * Get model classes in list of class names, and cache result in static map.
      * @param packageNames Class names
@@ -180,7 +180,7 @@ final class ModelAdapterFactoryUtil {
         }
         return urls;
     }
-    
+
     private static URL classToUrl(Class clazz) {
         try {
             return new URL("file:/" + clazz.getName().replace('.', '/') + ".class");
@@ -192,7 +192,7 @@ final class ModelAdapterFactoryUtil {
 
 
     private static class RegisterModelsBundle implements Bundle {
-        
+
         private static final String MAGIC_STRING = "MOCKS-YOU-KNOW-WHAT-TO-SCAN";
 
         private final BundleContext bundleContext;
@@ -206,7 +206,7 @@ final class ModelAdapterFactoryUtil {
             this.packageNames = normalizeValueList(packageNames);
             this.classNames = normalizeValueList(classNames);
         }
-        
+
         private String normalizeValueList(String[] values) {
             if (values == null || values.length == 0) {
                 return null;
@@ -237,7 +237,7 @@ final class ModelAdapterFactoryUtil {
             }
             return urls.elements();
         }
-        
+
         @Override
         public Class<?> loadClass(String name) throws ClassNotFoundException {
             return getClass().getClassLoader().loadClass(name);
@@ -368,7 +368,7 @@ final class ModelAdapterFactoryUtil {
         public File getDataFile(String filename) {
             return null;
         }
-        
+
     }
 
 }

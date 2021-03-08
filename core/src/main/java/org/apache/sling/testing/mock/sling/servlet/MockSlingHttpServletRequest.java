@@ -59,7 +59,7 @@ public class MockSlingHttpServletRequest extends org.apache.sling.servlethelpers
     protected @NotNull MockHttpSession newMockHttpSession() {
         return new MockHttpSession();
     }
-    
+
     @Override
     @SuppressWarnings("null")
     public ResourceBundle getResourceBundle(String baseName, Locale locale) {
@@ -69,7 +69,7 @@ public class MockSlingHttpServletRequest extends org.apache.sling.servlethelpers
         if (serviceReference != null) {
             ResourceBundleProvider provider = (ResourceBundleProvider)bundleContext.getService(serviceReference);
             resourceBundle = provider.getResourceBundle(baseName, locale);
-        }       
+        }
         // if no ResourceBundleProvider exists return empty bundle
         if (resourceBundle == null) {
             resourceBundle = EMPTY_RESOURCE_BUNDLE;

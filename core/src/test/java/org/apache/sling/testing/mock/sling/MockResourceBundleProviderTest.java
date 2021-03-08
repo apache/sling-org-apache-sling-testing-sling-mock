@@ -33,7 +33,7 @@ import org.junit.Test;
 public class MockResourceBundleProviderTest {
 
     private static final String MY_NAME = "my-name";
-    
+
     @Rule
     public SlingContext context = new SlingContext();
 

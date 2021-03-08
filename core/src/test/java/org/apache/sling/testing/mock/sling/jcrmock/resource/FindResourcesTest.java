@@ -39,31 +39,31 @@ import com.google.common.collect.ImmutableMap;
 @SuppressWarnings("null")
 public class FindResourcesTest {
 
-	@Rule
-	public SlingContext context = new SlingContext(ResourceResolverType.JCR_MOCK);
+  @Rule
+  public SlingContext context = new SlingContext(ResourceResolverType.JCR_MOCK);
 
-	@Before
-	public void setUp() {
-		Resource resource = context.create().resource(
-				"/test",
-				ImmutableMap.<String, Object> builder().put("prop1", "value1")
-						.put("prop2", "value2").build());
-		Node node = resource.adaptTo(Node.class);
-		Session session = context.resourceResolver().adaptTo(Session.class);
-		
-		MockJcr.setQueryResult(session, Collections.singletonList(node));
-	}
+  @Before
+  public void setUp() {
+    Resource resource = context.create().resource(
+        "/test",
+        ImmutableMap.<String, Object> builder().put("prop1", "value1")
+            .put("prop2", "value2").build());
+    Node node = resource.adaptTo(Node.class);
+    Session session = context.resourceResolver().adaptTo(Session.class);
 
-	@Test
+    MockJcr.setQueryResult(session, Collections.singletonList(node));
+  }
+
+  @Test
     @SuppressWarnings("deprecation")
-	public void testFindResources() {
-		Resource resource = context.resourceResolver().getResource("/test");
-		Assert.assertNotNull("Resource with name 'test' should be there", resource);
-		
+  public void testFindResources() {
+    Resource resource = context.resourceResolver().getResource("/test");
+    Assert.assertNotNull("Resource with name 'test' should be there", resource);
+
         Iterator<Resource> result = context.resourceResolver().findResources("/test", Query.XPATH);
-		Assert.assertTrue("At least one result expected", result.hasNext());
-		Assert.assertEquals("/test", result.next().getPath());
-		Assert.assertFalse("At most one result expected", result.hasNext());
-	}
+    Assert.assertTrue("At least one result expected", result.hasNext());
+    Assert.assertEquals("/test", result.next().getPath());
+    Assert.assertFalse("At most one result expected", result.hasNext());
+  }
 
 }

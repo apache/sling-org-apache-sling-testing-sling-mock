@@ -39,7 +39,7 @@ import org.osgi.service.component.annotations.Component;
 public final class MockJcrSlingRepository implements SlingRepository {
 
     private Repository repository;
-    
+
     @Activate
     protected void activate(ComponentContext componentContext) {
         repository = MockJcr.newRepository();

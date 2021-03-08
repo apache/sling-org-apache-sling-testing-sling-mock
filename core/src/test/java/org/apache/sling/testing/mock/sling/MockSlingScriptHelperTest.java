@@ -52,7 +52,7 @@ public class MockSlingScriptHelperTest {
         this.response = new MockSlingHttpServletResponse();
         this.scriptHelper = MockSling.newSlingScriptHelper(this.request, this.response, this.bundleContext);
     }
-    
+
     @After
     public void tearDown() {
         this.resourceResolver.close();

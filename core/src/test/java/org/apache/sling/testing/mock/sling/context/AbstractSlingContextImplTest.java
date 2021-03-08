@@ -54,13 +54,13 @@ public abstract class AbstractSlingContextImplTest {
         assertEquals(1, context.getServices(ResourceResolverFactory.class, null).length);
 
         context.addModelsForPackage("org.apache.sling.testing.mock.sling.context.models");
-        
+
         ContentLoader contentLoader = this.context.load();
         contentLoader.json("/json-import-samples/content.json", "/content/sample/en");
     }
 
     protected abstract ResourceResolverType getResourceResolverType();
-    
+
     @Test
     public void testContextObjects() {
         assertNotNull(context.componentContext());
@@ -149,5 +149,5 @@ public abstract class AbstractSlingContextImplTest {
         assertTrue(newRunModes.contains("mode1"));
         assertTrue(newRunModes.contains("mode2"));
     }
-    
+
 }

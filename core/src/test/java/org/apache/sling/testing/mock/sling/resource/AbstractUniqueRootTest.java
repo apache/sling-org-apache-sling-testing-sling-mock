@@ -27,7 +27,7 @@ import org.junit.Rule;
 import org.junit.Test;
 
 public abstract class AbstractUniqueRootTest {
-    
+
     @Rule
     public SlingContext context = new SlingContext(getResourceResolverType());
 

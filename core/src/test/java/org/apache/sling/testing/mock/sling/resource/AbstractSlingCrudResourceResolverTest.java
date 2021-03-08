@@ -58,7 +58,7 @@ import com.google.common.collect.Lists;
  */
 @SuppressWarnings("null")
 public abstract class AbstractSlingCrudResourceResolverTest {
-    
+
     @Rule
     public SlingContext context = new SlingContext(getResourceResolverType());
 
@@ -165,7 +165,7 @@ public abstract class AbstractSlingCrudResourceResolverTest {
         assertEquals(BOOLEAN_VALUE, props.get("node1/booleanProp", Boolean.class));
         assertEquals(STRING_VALUE, props.get("node1/node11/stringProp11", String.class));
     }
-    
+
     @Test
     public void testDateProperty() throws IOException {
         Resource resource1 = context.resourceResolver().getResource(getTestRootResource().getPath() + "/node1");
@@ -220,7 +220,7 @@ public abstract class AbstractSlingCrudResourceResolverTest {
         assertFalse(children.isEmpty());
         assertTrue(containsResource(children, getTestRootResource().getParent()));
     }
-    
+
     private boolean containsResource(List<Resource> children, Resource resource) {
         for (Resource child : children) {
             if (StringUtils.equals(child.getPath(), resource.getPath())) {
@@ -279,22 +279,22 @@ public abstract class AbstractSlingCrudResourceResolverTest {
 
     @Test
     public void testPendingChangesCommit() throws PersistenceException {
-        
+
         // skip this test for JCR_MOCK because it does not track pending changes
         if (getResourceResolverType()==ResourceResolverType.JCR_MOCK) {
             return;
         }
-        
+
         context.resourceResolver().delete(getTestRootResource());
         assertTrue(context.resourceResolver().hasChanges());
-        
+
         context.resourceResolver().commit();
         assertFalse(context.resourceResolver().hasChanges());
     }
 
     @Test
     public void testCreateNestedResources() throws IOException {
-        Resource nested = context.create().resource(getTestRootResource().getPath() + "/nested", 
+        Resource nested = context.create().resource(getTestRootResource().getPath() + "/nested",
                 ImmutableMap.<String,Object>of(
                         "prop1", "value1",
                         "child1", ImmutableMap.<String,Object>of(

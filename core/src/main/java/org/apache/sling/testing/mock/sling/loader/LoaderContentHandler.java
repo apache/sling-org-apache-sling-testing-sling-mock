@@ -41,7 +41,7 @@ final class LoaderContentHandler implements ContentHandler {
 
     private final @NotNull String rootPath;
     private final @NotNull ResourceResolver resourceResolver;
-    
+
     public LoaderContentHandler(@NotNull String rootPath, @NotNull ResourceResolver resourceResolver) {
         this.rootPath = rootPath;
         this.resourceResolver = resourceResolver;
@@ -55,25 +55,25 @@ final class LoaderContentHandler implements ContentHandler {
         }
         String parentPath = ResourceUtil.getParent(fullPath);
         String name = ResourceUtil.getName(fullPath);
-        
+
         if (parentPath == null) {
             throw new IllegalArgumentException("Path has no parent: " + fullPath);
         }
-        
+
         Resource parentResource = resourceResolver.getResource(parentPath);
         if (parentResource == null) {
             throw new RuntimeException("Parent resource '" + parentPath + "' not found.");
         }
         try {
             createResource(parentResource, name, properties);
-        } 
+        }
         catch (PersistenceException ex) {
             throw new RuntimeException("Unable to create resource at '" + fullPath + "'.", ex);
         }
     }
 
     private Resource createResource(@NotNull Resource parentResource, @NotNull String childName, @Nullable Map<String,Object> content) throws PersistenceException {
-        
+
         // collect all properties first
         boolean hasJcrData = false;
         String referencedNodePath = null;
@@ -92,7 +92,7 @@ final class LoaderContentHandler implements ContentHandler {
                 }
             }
         }
-        
+
         // create resource
         Resource resource = resourceResolver.create(parentResource, childName, props);
 

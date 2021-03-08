@@ -30,7 +30,7 @@ public class NodeTypeDefinitionScannerTest {
     @Test
     public void testGetNodeTypeDefinitions() throws Exception {
         List<String> definitions = NodeTypeDefinitionScanner.get().getNodeTypeDefinitions();
-        
+
         // ensure some node types from jcr.resource exist
         assertTrue(definitions.contains("SLING-INF/nodetypes/folder.cnd"));
         assertTrue(definitions.contains("SLING-INF/nodetypes/resource.cnd"));

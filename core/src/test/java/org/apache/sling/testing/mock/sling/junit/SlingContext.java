@@ -99,7 +99,7 @@ public final class SlingContext extends SlingContextImpl implements TestRule {
             @NotNull final ContextCallback<V> beforeTearDownCallback) {
         this(new ContextPlugins(afterSetUpCallback, beforeTearDownCallback), null, null);
     }
-    
+
     /**
      * Initialize Sling context with resource resolver type.
      * @param <U> context type
@@ -113,7 +113,7 @@ public final class SlingContext extends SlingContextImpl implements TestRule {
             @NotNull final ResourceResolverType resourceResolverType) {
         this(new ContextPlugins(afterSetUpCallback, beforeTearDownCallback), null, resourceResolverType);
     }
-    
+
     /**
      * Initialize Sling context with resource resolver type.
      * @param contextPlugins Context plugins

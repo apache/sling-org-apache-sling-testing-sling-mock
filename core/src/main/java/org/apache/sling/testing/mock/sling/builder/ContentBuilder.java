@@ -71,7 +71,7 @@ public class ContentBuilder {
         if (parentPath == null) {
             throw new IllegalArgumentException("Path has no parent: " + path);
         }
-        
+
         // check if properties map contains maps representing child resources
         Map<String,Object> propertiesWihtoutChildren;
         Map<String,Map<String,Object>> children = getChildMaps(properties);
@@ -86,7 +86,7 @@ public class ContentBuilder {
         else {
             propertiesWihtoutChildren = properties;
         }
-        
+
         // create resource
         Resource parentResource = ensureResourceExists(parentPath);
         String name = ResourceUtil.getName(path);
@@ -96,15 +96,15 @@ public class ContentBuilder {
         } catch (PersistenceException ex) {
             throw new RuntimeException("Unable to create resource at " + path, ex);
         }
-        
+
         // create child resources
         for (Map.Entry<String,Map<String,Object>> entry : children.entrySet()) {
             resource(newResource, entry.getKey(), entry.getValue());
         }
-        
+
         return newResource;
     }
-    
+
     @SuppressWarnings("unchecked")
     private Map<String,Map<String,Object>> getChildMaps(Map<String,Object> properties) {
         Map<String,Map<String,Object>> result = new LinkedHashMap<>();

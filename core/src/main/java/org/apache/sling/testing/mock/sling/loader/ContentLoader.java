@@ -64,20 +64,20 @@ public final class ContentLoader {
             "jcr:isCheckedOut",
             "rep:policy")
             .collect(Collectors.toSet());
-    
+
     // set of resource or property names that are ignored when other resource resolver types than JCR_OAK are used
     private static final Set<String> MOCK_IGNORED_NAMES = Stream.concat(
             SHARED_IGNORED_NAMES.stream(), Stream.of(
             JcrConstants.JCR_MIXINTYPES))
             .collect(Collectors.toSet());
-    
+
     // set of resource or property names that are ignored when JCR_OAK resource resolver type (= a real repo impl) is used
     private static final Set<String> OAK_IGNORED_NAMES = Stream.concat(
             SHARED_IGNORED_NAMES.stream(), Stream.of(
             JcrConstants.JCR_UUID,
             JcrConstants.JCR_CREATED))
-            .collect(Collectors.toSet()); 
-    
+            .collect(Collectors.toSet());
+
     private final ResourceResolver resourceResolver;
     private final BundleContext bundleContext;
     private final boolean autoCommit;
@@ -129,7 +129,7 @@ public final class ContentLoader {
         // JSONContentParser is an OSGi service - for sake of simplicity in this mock environment instantiate it directly
         this.jsonParser = new JSONContentParser();
     }
-    
+
     private final Set<String> getIgnoredNamesForResourceResolverType(ResourceResolverType resourceResolverType) {
         if (resourceResolverType == null || resourceResolverType == ResourceResolverType.JCR_OAK) {
             return OAK_IGNORED_NAMES;
@@ -208,7 +208,7 @@ public final class ContentLoader {
         try {
             String parentPath = ResourceUtil.getParent(destPath);
             String childName = ResourceUtil.getName(destPath);
-            
+
             if (parentPath == null) {
                 throw new IllegalArgumentException("Path has no parent: " + destPath);
             }

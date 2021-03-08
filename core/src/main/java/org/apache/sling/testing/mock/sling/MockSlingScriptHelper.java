@@ -95,11 +95,11 @@ public final class MockSlingScriptHelper implements SlingScriptHelper {
     public @NotNull SlingScript getScript() {
         return this.script;
     }
-    
+
     public void setScript(@NotNull SlingScript script) {
         this.script = script;
     }
-    
+
     // --- unsupported operations ---
     @Override
     public void dispose() {

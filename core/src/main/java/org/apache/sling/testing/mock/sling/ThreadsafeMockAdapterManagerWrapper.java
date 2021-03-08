@@ -64,12 +64,12 @@ class ThreadsafeMockAdapterManagerWrapper implements AdapterManager {
         AdapterManagerBundleContextFactory adapterManager = THREAD_LOCAL.get();
         adapterManager.clearBundleContext();
     }
-    
-    
+
+
     private static class AdapterManagerBundleContextFactory {
-        
+
         private BundleContext bundleContext;
-        
+
         public void setBundleContext(@NotNull final BundleContext bundleContext) {
             this.bundleContext = bundleContext;
 
@@ -84,7 +84,7 @@ class ThreadsafeMockAdapterManagerWrapper implements AdapterManager {
         public void clearBundleContext() {
             this.bundleContext = null;
         }
-        
+
         @SuppressWarnings("null")
         public synchronized AdapterManager getAdapterManager() {
             if (bundleContext == null) {
@@ -98,7 +98,7 @@ class ThreadsafeMockAdapterManagerWrapper implements AdapterManager {
                 throw new RuntimeException("AdapterManager not registered in bundle context.");
             }
         }
-        
+
     }
 
 }

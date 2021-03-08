@@ -91,10 +91,10 @@ public class SlingContextTest {
       assertEquals("/testpath/node3", context.resourceResolver().getResource("node3").getPath());
       assertNull(context.resourceResolver().getResource("node4"));
     }
-    
+
     @Test
     public void testRegisterAdapter() {
-        
+
         // prepare some adapter factories
         context.registerAdapter(ResourceResolver.class, Integer.class, 5);
         context.registerAdapter(ResourceResolver.class, String.class, new Function<ResourceResolver,String>() {
@@ -103,7 +103,7 @@ public class SlingContextTest {
                 return ">" + input.toString();
             }
         });
-        
+
         // test adaption
         assertEquals(Integer.valueOf(5), context.resourceResolver().adaptTo(Integer.class));
         assertEquals(">" + context.resourceResolver().toString(), context.resourceResolver().adaptTo(String.class));
@@ -113,7 +113,7 @@ public class SlingContextTest {
     @Test
     public void testRegisterAdapterOverlayStatic() {
         prepareInitialAdapterFactory();
-        
+
         // register overlay adapter with static adaption
         context.registerAdapter(TestAdaptable.class, String.class, "static-adaption");
 
@@ -124,7 +124,7 @@ public class SlingContextTest {
     @Test
     public void testRegisterAdapterOverlayDynamic() {
         prepareInitialAdapterFactory();
-        
+
         // register overlay adapter with dynamic adaption
         context.registerAdapter(TestAdaptable.class, String.class, new Function<TestAdaptable, String>() {
             @Override
@@ -136,28 +136,28 @@ public class SlingContextTest {
         // test overlay adapter with dynamic adaption
         assertEquals("testMessage3-dynamic", new TestAdaptable("testMessage3").adaptTo(String.class));
     }
-    
+
     @Test
     public void testResourceBuilder() {
-        
+
         context.build().resource("/test1", "prop1", "value1")
             .siblingsMode()
             .resource("a")
             .resource("b");
-        
+
         Resource test1 = context.resourceResolver().getResource("/test1");
         assertNotNull(test1);
         assertEquals("value1", test1.getValueMap().get("prop1", String.class));
         assertNotNull(test1.getChild("a"));
         assertNotNull(test1.getChild("b"));
     }
-    
+
     @Test
     public void testUrlMapping() {
         assertEquals("/foo", context.resourceResolver().map("/content/test/foo"));
     }
-    
-    
+
+
     private void prepareInitialAdapterFactory() {
         // register "traditional" adapter factory without specific service ranking
         AdapterFactory adapterFactory = new AdapterFactory() {
@@ -171,14 +171,14 @@ public class SlingContextTest {
                 .put(AdapterFactory.ADAPTABLE_CLASSES, new String[] { TestAdaptable.class.getName() })
                 .put(AdapterFactory.ADAPTER_CLASSES, new String[] { String.class.getName() })
                 .build());
-        
+
         // test initial adapter factory
-        assertEquals("testMessage1-initial", new TestAdaptable("testMessage1").adaptTo(String.class));        
+        assertEquals("testMessage1-initial", new TestAdaptable("testMessage1").adaptTo(String.class));
     }
 
 
     private static class TestAdaptable extends SlingAdaptable {
-        
+
         private final String message;
 
         public TestAdaptable(String message) {
@@ -188,7 +188,7 @@ public class SlingContextTest {
         public String getMessage() {
             return message;
         }
-        
+
     }
 
 }

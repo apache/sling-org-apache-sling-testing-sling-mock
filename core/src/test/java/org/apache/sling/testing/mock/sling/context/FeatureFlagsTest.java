@@ -52,7 +52,7 @@ public class FeatureFlagsTest {
                 "enabled", false);
         assertEnabled("feature.1", false);
     }
-    
+
     private void assertEnabled(String featureFlag, boolean enabled) {
         Features features = context.getService(Features.class);
         assertNotNull(features);

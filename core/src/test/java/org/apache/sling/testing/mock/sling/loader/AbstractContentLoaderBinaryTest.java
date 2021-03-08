@@ -43,14 +43,14 @@ import org.mockito.junit.MockitoJUnitRunner;
 public abstract class AbstractContentLoaderBinaryTest {
 
     private static final int SAMPLE_IMAGE_FILESIZE = 62;
-    
+
     @Rule
     public SlingContext context = new SlingContext(getResourceResolverType());
 
     protected abstract ResourceResolverType getResourceResolverType();
-    
+
     protected String path;
-    
+
     @Before
     public void setUp() {
         path = context.uniqueRoot().content();
@@ -61,7 +61,7 @@ public abstract class AbstractContentLoaderBinaryTest {
         // make sure all changes from ContentLoader are committed
         assertFalse(context.resourceResolver().hasChanges());
     }
-    
+
     @Test
     public void testBinaryFile() throws IOException {
         context.load().binaryFile("/sample-image.gif", path + "/sample-image.gif");

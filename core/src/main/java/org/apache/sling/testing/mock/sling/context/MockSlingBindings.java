@@ -34,20 +34,20 @@ import org.osgi.service.event.EventHandler;
 /**
  * Mock extension of {@link SlingBindings} that dynamically evaluates properties read from SlingBindings from the current mock context.
  * Normally the SlingBingings are set statically for each script execution, but in mocks where no script is really executed
- * it's easier to evaluate them from current context. 
+ * it's easier to evaluate them from current context.
  */
 class MockSlingBindings extends SlingBindings implements EventHandler {
     private static final long serialVersionUID = 1L;
 
     private static final String PROP_CURRENT_NODE = "currentNode";
     private static final String PROP_CURRENT_SESSION = "currentSession";
-    
+
     /**
      * OSGi service property to set to "true" on BindingsValuesProvider implementations that should be ignored
      * when populating the "non-dynamic" bindings properties.
      */
     static final String SERVICE_PROPERTY_MOCK_SLING_BINDINGS_IGNORE = "MockSlingBindings-ignore";
-    
+
     private final SlingContextImpl context;
 
     public MockSlingBindings(SlingContextImpl context) {

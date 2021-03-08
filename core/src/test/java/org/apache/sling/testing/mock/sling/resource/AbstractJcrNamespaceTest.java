@@ -36,42 +36,42 @@ import org.junit.Test;
 import org.osgi.framework.BundleContext;
 
 /**
- * Validates correct registering and mapping of JCR namespaces, esp. the sling namespace. 
+ * Validates correct registering and mapping of JCR namespaces, esp. the sling namespace.
  */
 @SuppressWarnings("null")
 public abstract class AbstractJcrNamespaceTest {
-    
+
     @Rule
     public SlingContext context = new SlingContext(getResourceResolverType());
 
     protected abstract ResourceResolverType getResourceResolverType();
-    
+
     @Test
     public void testSling4362() throws RepositoryException {
         BundleContext bundleContext = MockOsgi.newBundleContext();
         ResourceResolver resolver = MockSling.newResourceResolver(getResourceResolverType(), bundleContext);
-        
+
         ContentLoader contentLoader = new ContentLoader(resolver);
         contentLoader.json("/json-import-samples/SLING-4362.json", context.uniqueRoot().content() + "/foo");
 
         Resource resource = resolver.getResource(context.uniqueRoot().content() + "/foo");
-        
+
         ValueMap props = ResourceUtil.getValueMap(resource);
         assertEquals("fooType", props.get("sling:resourceType"));
         assertEquals("fooType", resource.getResourceType());
-        
+
         MockOsgi.shutdown(bundleContext);
     }
 
     @Test
     public void testSling4362_ViaContextRule() throws RepositoryException {
         ResourceResolver resolver = context.resourceResolver();
-        
+
         ContentLoader contentLoader = new ContentLoader(resolver);
         contentLoader.json("/json-import-samples/SLING-4362.json", context.uniqueRoot().content() + "/foo");
 
         Resource resource = resolver.getResource(context.uniqueRoot().content() + "/foo");
-        
+
         ValueMap props = ResourceUtil.getValueMap(resource);
         assertEquals("fooType", props.get("sling:resourceType"));
         assertEquals("fooType", resource.getResourceType());

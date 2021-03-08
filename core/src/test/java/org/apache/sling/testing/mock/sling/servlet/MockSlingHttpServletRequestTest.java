@@ -63,7 +63,7 @@ public class MockSlingHttpServletRequestTest {
     public void setUp() throws Exception {
         request = new MockSlingHttpServletRequest(resourceResolver, bundleContext);
     }
-    
+
     @After
     public void tearDown() {
         MockOsgi.shutdown(bundleContext);
@@ -110,8 +110,8 @@ public class MockSlingHttpServletRequestTest {
                         { "key1", "value1" }
                 };
             }
-        });        
-        
+        });
+
         ResourceBundle bundle = request.getResourceBundle("base1", Locale.US);
         assertNotNull(bundle);
         assertEquals("value1", bundle.getString("key1"));
@@ -124,11 +124,11 @@ public class MockSlingHttpServletRequestTest {
     @Test
     public void testGetSuffixResource() {
         assertNull(request.getRequestPathInfo().getSuffixResource());
-        
+
         ((MockRequestPathInfo)request.getRequestPathInfo()).setSuffix("/suffix");
         Resource resource = mock(Resource.class);
         when(resourceResolver.getResource("/suffix")).thenReturn(resource);
-        
+
         assertSame(resource, request.getRequestPathInfo().getSuffixResource());
     }
 

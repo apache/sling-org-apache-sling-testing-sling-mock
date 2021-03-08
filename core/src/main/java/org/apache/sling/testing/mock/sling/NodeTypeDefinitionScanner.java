@@ -53,22 +53,22 @@ import org.slf4j.LoggerFactory;
 /**
  * Singleton class that fetches all node type definitions from OSGi bundle MANIFEST.MF files
  * with "Sling-Nodetypes" definitions in the classpath.
- * Additionally it support registering them to a JCR repository. 
+ * Additionally it support registering them to a JCR repository.
  */
 public final class NodeTypeDefinitionScanner {
-    
+
     private static final NodeTypeDefinitionScanner SINGLETON = new NodeTypeDefinitionScanner();
-    
+
     private static final int MAX_ITERATIONS = 5;
 
     private static final Logger log = LoggerFactory.getLogger(NodeTypeDefinitionScanner.class);
-    
+
     private final List<String> nodeTypeDefinitions;
-        
+
     private NodeTypeDefinitionScanner() {
         nodeTypeDefinitions = findeNodeTypeDefinitions();
     }
-    
+
     /**
      * @return Node type definitions found in classpath as registered in OSGi bundle headers
      */
@@ -86,7 +86,7 @@ public final class NodeTypeDefinitionScanner {
       List<String> nodeTypeResources = getNodeTypeDefinitions();
       register(session, nodeTypeResources, nodeTypeMode);
     }
-    
+
     /**
      * Registers node types found in classpath in JCR repository.
      * @param session Session
@@ -109,7 +109,7 @@ public final class NodeTypeDefinitionScanner {
              throw new IllegalArgumentException("Node type mode not supported: " + nodeTypeMode);
       }
     }
-    
+
     /**
      * Registers only the namespaces found in node type definitions in classpath in JCR repository.
      * @param session Session
@@ -131,7 +131,7 @@ public final class NodeTypeDefinitionScanner {
           }
           try {
               Reader reader = new InputStreamReader(is);
-              CompactNodeTypeDefReader<NodeTypeTemplate, NamespaceRegistry> cndReader 
+              CompactNodeTypeDefReader<NodeTypeTemplate, NamespaceRegistry> cndReader
                       = new CompactNodeTypeDefReader<NodeTypeTemplate, NamespaceRegistry>(reader, nodeTypeResource, factory);
               NamespaceRegistry mapping = cndReader.getNamespaceMapping();
               for (int i=0; i<mapping.getURIs().length; i++) {
@@ -152,9 +152,9 @@ public final class NodeTypeDefinitionScanner {
               IOUtils.closeQuietly(is);
           }
       }
-      
+
     }
-    
+
     /**
      * Registers node types found in classpath in JCR repository.
      * @param session Session
@@ -181,7 +181,7 @@ public final class NodeTypeDefinitionScanner {
           registerNodeTypesAndRemoveSucceeds(remainingNodeTypeResources, classLoader, nodeTypeManager, namespaceRegistry, valueFactory, true);
       }
     }
-    
+
     /**
      * Register node types found in classpath in JCR repository, and remove those that succeeded to register from the list.
      * @param nodeTypeResources List of nodetype classpath resources
@@ -216,7 +216,7 @@ public final class NodeTypeDefinitionScanner {
             }
         }
     }
-    
+
     /**
      * Find all node type definition classpath paths by searching all MANIFEST.MF files in the classpath and reading
      * the paths from the "Sling-Nodetypes" entry.
@@ -227,12 +227,12 @@ public final class NodeTypeDefinitionScanner {
     private static List<String> findeNodeTypeDefinitions() {
         return new ArrayList<String>(ManifestScanner.getValues("Sling-Nodetypes"));
     }
-    
+
     public static NodeTypeDefinitionScanner get() {
         return SINGLETON;
     }
-    
-    
+
+
     /**
      * Some dummy classes to allow usage of CompactNodeTypeDefReader with underlying JCR mock
      */
@@ -288,7 +288,7 @@ public final class NodeTypeDefinitionScanner {
         public void unregisterNodeTypes(String[] names) {
         }
     }
-    
+
     private static class DummyNodeTypeTemplate implements NodeTypeTemplate {
         @Override
         public String getName() {
@@ -354,9 +354,9 @@ public final class NodeTypeDefinitionScanner {
         @Override
         public List getNodeDefinitionTemplates() {
             return new ArrayList();
-        }        
+        }
     }
-    
+
     private static class DummyNodeDefinitionTemplate implements NodeDefinitionTemplate {
         @Override
         public NodeType[] getRequiredPrimaryTypes() {
@@ -427,7 +427,7 @@ public final class NodeTypeDefinitionScanner {
         public void setSameNameSiblings(boolean allowSameNameSiblings) {
         }
     }
-    
+
     private static class DummyPropertyDefinitionTemplate implements PropertyDefinitionTemplate {
         @Override
         public int getRequiredType() {

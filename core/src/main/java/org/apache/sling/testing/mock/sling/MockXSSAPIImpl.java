@@ -34,7 +34,7 @@ import org.osgi.service.component.annotations.Component;
 public final class MockXSSAPIImpl implements XSSAPI {
 
     private static final Pattern PATTERN_AUTO_DIMENSION = Pattern.compile("['\"]?auto['\"]?");
-    
+
     @Override
     public @Nullable Integer getValidInteger(@Nullable String integer, int defaultValue) {
         if (StringUtils.isNotBlank(integer)) {

@@ -34,14 +34,14 @@ public class MockJcrSlingRepositoryTest {
 
     @Rule
     public SlingContext context = new SlingContext();
-    
+
     private SlingRepository repository;
 
     @Before
     public void setUp() {
         this.repository = context.registerInjectActivateService(new MockJcrSlingRepository());
     }
-    
+
     @SuppressWarnings("deprecation")
     @Test
     public void testLoginAdministrative() throws RepositoryException {

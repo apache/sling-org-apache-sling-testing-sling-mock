@@ -316,7 +316,7 @@ public class MockAdapterManagerImpl implements AdapterManager {
                     props));
         }
     }
-    
+
     static String getPackageName(String clazz) {
         final int lastDot = clazz.lastIndexOf('.');
         return lastDot <= 0 ? "" : clazz.substring(0, lastDot);
@@ -325,7 +325,7 @@ public class MockAdapterManagerImpl implements AdapterManager {
     /**
      * Check that the package containing the class is exported or is a java.*
      * class.
-     * 
+     *
      * @param packageAdmin the PackageAdmin service
      * @param clazz the class name
      * @return true if the package is exported
@@ -333,7 +333,7 @@ public class MockAdapterManagerImpl implements AdapterManager {
     // DISABLED IN THIS COPY OF CLASS
     /*
     static boolean checkPackage(PackageAdmin packageAdmin, String clazz) {
-        final String packageName = getPackageName(clazz); 
+        final String packageName = getPackageName(clazz);
         if (packageName.startsWith("java.")) {
             return true;
         }

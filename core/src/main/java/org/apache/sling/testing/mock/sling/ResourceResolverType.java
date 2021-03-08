@@ -63,13 +63,13 @@ public enum ResourceResolverType {
      * implementation.</li>
      * <li>The JCR repository is started on first access, this may take some
      * seconds.</li>
-     * <li>The <code>MemoryNodeStore</code> implementation is used, with no 
+     * <li>The <code>MemoryNodeStore</code> implementation is used, with no
      * customizations.</li>
      * </ul>
      */
     JCR_OAK("org.apache.sling.testing.mock.sling.oak.OakMockResourceResolverAdapter",
             "org.apache.sling:org.apache.sling.testing.sling-mock-oak", NodeTypeMode.NODETYPES_REQUIRED),
-            
+
     /**
      * Provides resource resolver environment without any ResourceProvider.
      * You have to register one yourself to do anything useful with it.
@@ -80,12 +80,12 @@ public enum ResourceResolverType {
      */
     NONE(MockNoneResourceResolverAdapter.class.getName(), null, NodeTypeMode.NOT_SUPPORTED);
 
-            
+
 
     private final @NotNull String resourceResolverTypeAdapterClass;
     private final @NotNull String artifactCoordinates;
     private final @NotNull NodeTypeMode nodeTypeMode;
-    
+
 
     private ResourceResolverType(@NotNull final String resourceResolverTypeAdapterClass,
             @NotNull final String artifactCoordinates,

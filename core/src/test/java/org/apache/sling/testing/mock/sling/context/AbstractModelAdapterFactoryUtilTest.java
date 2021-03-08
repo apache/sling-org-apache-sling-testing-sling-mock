@@ -32,7 +32,7 @@ import org.junit.Test;
 
 @SuppressWarnings("null")
 public abstract class AbstractModelAdapterFactoryUtilTest {
-    
+
     protected abstract SlingContext context();
 
     @Test

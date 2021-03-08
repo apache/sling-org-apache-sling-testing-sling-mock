@@ -33,29 +33,29 @@ import org.slf4j.LoggerFactory;
 
 /**
  * Manages unique root paths in JCR repository.
- * This is important for resource resolver types like JCR_JACKRABBIT  
+ * This is important for resource resolver types like JCR_JACKRABBIT
  * where the repository is not cleaned for each test run. This class provides
  * unique root paths for each run, and cleans them up when done.
  */
 @ConsumerType
 public class UniqueRoot {
-    
+
     private final SlingContextImpl context;
-    
+
     protected final String uniquePathPart;
-    
+
     private Resource contentRoot;
     private Resource appsRoot;
     private Resource libsRoot;
-    
+
     private static final Logger log = LoggerFactory.getLogger(UniqueRoot.class);
-    
+
     protected UniqueRoot(@NotNull SlingContextImpl context) {
         this.context = context;
         // generate unique path part by using a UUID
         uniquePathPart = UUID.randomUUID().toString();
     }
-    
+
     /**
      * Get or create resource with given JCR primary type
      * @param path Path
@@ -64,7 +64,7 @@ public class UniqueRoot {
      */
     protected final Resource getOrCreateResource(@NotNull String path, @NotNull String primaryType) {
         try {
-            return ResourceUtil.getOrCreateResource(context.resourceResolver(), path, 
+            return ResourceUtil.getOrCreateResource(context.resourceResolver(), path,
                     ImmutableValueMap.of(JcrConstants.JCR_PRIMARYTYPE, primaryType),
                     null, true);
         }
@@ -72,7 +72,7 @@ public class UniqueRoot {
             throw new RuntimeException("Unable to create resource at " + path + ": " + ex.getMessage(), ex);
         }
     }
-    
+
     /**
      * Gets (and creates if required) a unique path at <code>/content/xxx</code>.
      * The path (incl. all children) is automatically removed when the unit test completes.
@@ -84,7 +84,7 @@ public class UniqueRoot {
         }
         return contentRoot.getPath();
     }
-        
+
     /**
      * Gets (and creates if required) a unique path at <code>/apps/xxx</code>.
      * The path (incl. all children) is automatically removed when the unit test completes.
@@ -96,7 +96,7 @@ public class UniqueRoot {
         }
         return appsRoot.getPath();
     }
-        
+
     /**
      * Gets (and creates if required) a unique path at <code>/libs/xxx</code>.
      * The path (incl. all children) is automatically removed when the unit test completes.
@@ -108,7 +108,7 @@ public class UniqueRoot {
         }
         return libsRoot.getPath();
     }
-    
+
     /**
      * Cleanup is called when the unit test rule completes a unit test run.
      * All resources created have to be removed.
@@ -116,7 +116,7 @@ public class UniqueRoot {
     protected void cleanUp() {
         deleteResources(contentRoot, appsRoot, libsRoot);
     }
-    
+
     /**
      * Deletes the given set of resources and commits afterwards.
      * @param resources Resources to be deleted
@@ -138,7 +138,7 @@ public class UniqueRoot {
         catch (PersistenceException ex) {
             log.warn("Unable to commit root path deletions.", ex);
         }
-            
+
     }
-    
+
 }

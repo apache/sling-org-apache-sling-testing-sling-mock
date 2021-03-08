@@ -22,9 +22,9 @@ package org.apache.sling.testing.mock.sling.servlet;
  * Mock {@link javax.servlet.http.HttpSession} implementation.
  */
 public final class MockHttpSession extends org.apache.sling.servlethelpers.MockHttpSession {
-    
+
     protected MockServletContext newMockServletContext() {
         return new MockServletContext();
     }
-    
+
 }

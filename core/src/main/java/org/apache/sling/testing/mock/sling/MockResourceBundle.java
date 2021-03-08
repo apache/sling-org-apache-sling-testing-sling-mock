@@ -73,7 +73,7 @@ public final class MockResourceBundle extends ResourceBundle {
      */
     public String getBaseName() {
         return baseName;
-    }    
+    }
 
     /**
      * Add translation.

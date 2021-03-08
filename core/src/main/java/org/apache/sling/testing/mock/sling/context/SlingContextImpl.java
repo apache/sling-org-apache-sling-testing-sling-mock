@@ -80,7 +80,7 @@ public class SlingContextImpl extends OsgiContextImpl {
     static final @NotNull Set<String> DEFAULT_RUN_MODES = Collections.singleton("publish");
 
     private static final @NotNull String RESOURCERESOLVERFACTORYACTIVATOR_PID = "org.apache.sling.jcr.resource.internal.JcrResourceResolverFactoryImpl";
-    
+
     protected ResourceResolverFactory resourceResolverFactory;
     protected ResourceResolverType resourceResolverType;
     protected ResourceResolver resourceResolver;
@@ -92,7 +92,7 @@ public class SlingContextImpl extends OsgiContextImpl {
     protected ContentBuilder contentBuilder;
     protected ResourceBuilder resourceBuilder;
     protected UniqueRoot uniqueRoot;
-    
+
     private Map<String, Object> resourceResolverFactoryActivatorProps;
     private boolean registerSlingModelsFromClassPath = true;
 
@@ -111,7 +111,7 @@ public class SlingContextImpl extends OsgiContextImpl {
     protected void setResourceResolverFactoryActivatorProps(@Nullable Map<String, Object> props) {
         this.resourceResolverFactoryActivatorProps = props;
     }
-    
+
     protected void setRegisterSlingModelsFromClassPath(boolean registerSlingModelsFromClassPath) {
         this.registerSlingModelsFromClassPath = registerSlingModelsFromClassPath;
     }
@@ -122,21 +122,21 @@ public class SlingContextImpl extends OsgiContextImpl {
     protected void setUp() {
         super.setUp();
         MockSling.setAdapterManagerBundleContext(bundleContext());
-        
+
         if (this.resourceResolverFactoryActivatorProps != null) {
             // use OSGi ConfigurationAdmin to pass over customized configuration to Resource Resolver Factory Activator service
             MockOsgi.setConfigForPid(bundleContext(), RESOURCERESOLVERFACTORYACTIVATOR_PID, this.resourceResolverFactoryActivatorProps);
         }
-        
+
         // automatically register resource resolver factory when ResourceResolverType != NONE,
         // so the ResourceResolverFactory is available as OSGi service immediately
         if (resourceResolverType != ResourceResolverType.NONE) {
             resourceResolverFactory();
         }
-        
+
         registerDefaultServices();
     }
-    
+
     /**
      * Initialize mocked resource resolver factory.
      * @return Resource resolver factory
@@ -144,7 +144,7 @@ public class SlingContextImpl extends OsgiContextImpl {
     protected @NotNull ResourceResolverFactory newResourceResolverFactory() {
         return ContextResourceResolverFactory.get(this.resourceResolverType, bundleContext());
     }
-    
+
     private @NotNull ResourceResolverFactory resourceResolverFactory() {
         if (this.resourceResolverFactory == null) {
             this.resourceResolverFactory = newResourceResolverFactory();
@@ -162,7 +162,7 @@ public class SlingContextImpl extends OsgiContextImpl {
                 "org.apache.sling.scripting.core.impl.ScriptEngineManagerFactory",
                 "org.apache.sling.scripting.core.impl.jsr223.SlingScriptEngineManager");
         registerInjectActivateService(new BindingsValuesProvidersByContextImpl());
-        
+
         // sling models
         registerInjectActivateService(new ModelAdapterFactory());
         registerInjectActivateServiceByClassName(
@@ -190,13 +190,13 @@ public class SlingContextImpl extends OsgiContextImpl {
         registerInjectActivateService(new MockResourceBundleProvider());
         registerInjectActivateService(new MockXSSAPIImpl());
         registerInjectActivateService(new FeatureManager());
-        
+
         // scan for models defined via bundle headers in classpath
         if (registerSlingModelsFromClassPath) {
             ModelAdapterFactoryUtil.addModelsForManifestEntries(this.bundleContext());
         }
     }
-    
+
     @SuppressWarnings("null")
     private void registerInjectActivateServiceByClassName(@NotNull String @NotNull ... classNames) {
         for (String className : classNames) {
@@ -213,9 +213,9 @@ public class SlingContextImpl extends OsgiContextImpl {
      * Teardown actions after test method execution
      */
     protected void tearDown() {
-        
+
         if (this.resourceResolver != null) {
-            
+
             // revert potential unsaved changes in resource resolver/JCR session
             try {
                 this.resourceResolver.revert();
@@ -232,12 +232,12 @@ public class SlingContextImpl extends OsgiContextImpl {
                     // ignore - this may happen when jcr-mock is used
                 }
             }
-            
+
             // remove unique roots
             if (this.uniqueRoot != null) {
                 this.uniqueRoot.cleanUp();
             }
-            
+
             // close resource resolver
             this.resourceResolver.close();
         }
@@ -252,10 +252,10 @@ public class SlingContextImpl extends OsgiContextImpl {
         this.resourceBuilder = null;
         this.uniqueRoot = null;
         this.resourceResolverFactory = null;
-        
+
         super.tearDown();
 
-        MockSling.clearAdapterManagerBundleContext();        
+        MockSling.clearAdapterManagerBundleContext();
     }
 
     /**
@@ -264,7 +264,7 @@ public class SlingContextImpl extends OsgiContextImpl {
     public final @NotNull ResourceResolverType resourceResolverType() {
         return this.resourceResolverType;
     }
-    
+
     /**
      * Returns the singleton resource resolver bound to this context.
      * It is automatically closed after the test.
@@ -281,7 +281,7 @@ public class SlingContextImpl extends OsgiContextImpl {
         }
         return this.resourceResolver;
     }
-    
+
     /**
      * @return Sling request
      */
@@ -291,16 +291,16 @@ public class SlingContextImpl extends OsgiContextImpl {
 
             // initialize sling bindings
             MockSlingBindings bindings = new MockSlingBindings(this);
-            
+
             // register as OSGi event handler to get notified on events fired by BindingsValuesProvidersByContextImpl
             this.registerService(EventHandler.class, bindings,
                     EVENT_TOPIC, "org/apache/sling/scripting/core/BindingsValuesProvider/*");
-            
+
             this.request.setAttribute(SlingBindings.class.getName(), bindings);
         }
         return this.request;
     }
-    
+
     /**
      * Dynamically resolve property request for current request {@link SlingBindings}.
      * @param property Property key
@@ -388,7 +388,7 @@ public class SlingContextImpl extends OsgiContextImpl {
         }
         return this.contentBuilder;
     }
-    
+
     /**
      * Creates a {@link ResourceBuilder} object for easily creating test content.
      * This is a separate API which can be used inside sling mocks or in a running instance.
@@ -484,7 +484,7 @@ public class SlingContextImpl extends OsgiContextImpl {
             slingSettings.setRunModes(newRunModes);
         }
     }
-    
+
     /**
      * Create unique root paths for unit tests (and clean them up after the test run automatically).
      * @return Unique root path helper
@@ -495,7 +495,7 @@ public class SlingContextImpl extends OsgiContextImpl {
         }
         return uniqueRoot;
     }
-    
+
     /**
      * Create a Sling AdapterFactory on the fly which can adapt from <code>adaptableClass</code>
      * to <code>adapterClass</code> and just returns the given value as result.

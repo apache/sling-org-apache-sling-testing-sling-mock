@@ -26,7 +26,7 @@ import org.apache.sling.api.resource.ResourceResolver;
 public final class MockRequestPathInfo extends org.apache.sling.servlethelpers.MockRequestPathInfo {
 
     /**
-     * @deprecated Use @link {@link #MockRequestPathInfo(ResourceResolver)} instead. 
+     * @deprecated Use @link {@link #MockRequestPathInfo(ResourceResolver)} instead.
      */
     @Deprecated
     public MockRequestPathInfo() {
