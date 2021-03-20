@@ -37,7 +37,7 @@
     <properties>
 
         <osgi-mock.version>3.1.1-SNAPSHOT</osgi-mock.version>
-        <jcr-mock.version>1.5.2</jcr-mock.version>
+        <jcr-mock.version>1.5.3-SNAPSHOT</jcr-mock.version>
         <resourceresolver-mock.version>1.2.0</resourceresolver-mock.version>
         <logging-mock.version>2.0.0</logging-mock.version>
         <servlet-helpers.version>1.4.2</servlet-helpers.version>
