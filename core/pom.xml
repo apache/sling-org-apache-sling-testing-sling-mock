@@ -312,7 +312,7 @@
                 <dependency>
                     <groupId>org.apache.sling</groupId>
                     <artifactId>org.apache.sling.resourceresolver</artifactId>
-                    <version>1.7.0</version>
+                    <version>1.7.4</version>
                     <scope>compile</scope>
                 </dependency>
                 <dependency>
