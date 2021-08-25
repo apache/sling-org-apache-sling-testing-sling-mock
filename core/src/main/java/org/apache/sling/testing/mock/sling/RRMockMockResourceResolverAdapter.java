@@ -23,26 +23,28 @@ import org.apache.sling.jcr.api.SlingRepository;
 import org.apache.sling.testing.mock.sling.spi.ResourceResolverTypeAdapter;
 import org.apache.sling.testing.resourceresolver.MockResourceResolverFactory;
 import org.apache.sling.testing.resourceresolver.MockResourceResolverFactoryOptions;
-import org.jetbrains.annotations.NotNull;
+import org.osgi.framework.BundleContext;
 
 /**
  * Resource resolver type adapter for Sling Resource Resolver Mock implementation.
  */
 class RRMockMockResourceResolverAdapter implements ResourceResolverTypeAdapter {
 
-    private final @NotNull MockResourceResolverFactoryOptions options;
+    private final MockResourceResolverFactoryOptions options;
+    private final BundleContext bundleContext;
 
     /**
      * Constructor
      */
-    public RRMockMockResourceResolverAdapter() {
-        options = new MockResourceResolverFactoryOptions();
-        options.setMangleNamespacePrefixes(true);
+    public RRMockMockResourceResolverAdapter(BundleContext bundleContext) {
+        this.options = new MockResourceResolverFactoryOptions();
+        this.options.setMangleNamespacePrefixes(true);
+        this.bundleContext = bundleContext;
     }
 
     @Override
     public ResourceResolverFactory newResourceResolverFactory() {
-        return new MockResourceResolverFactory(options);
+        return new RRMockResourceResolverFactoryWrapper(new MockResourceResolverFactory(options), bundleContext);
     }
 
     @Override

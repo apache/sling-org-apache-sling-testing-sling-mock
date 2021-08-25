@@ -18,6 +18,9 @@
  */
 package org.apache.sling.testing.mock.sling;
 
+import java.lang.reflect.Constructor;
+import java.lang.reflect.InvocationTargetException;
+
 import org.apache.sling.api.SlingHttpServletRequest;
 import org.apache.sling.api.SlingHttpServletResponse;
 import org.apache.sling.api.adapter.SlingAdaptable;
@@ -69,7 +72,7 @@ public final class MockSling {
      */
     public static @NotNull ResourceResolverFactory newResourceResolverFactory(@NotNull final ResourceResolverType type,
             @NotNull final BundleContext bundleContext) {
-        ResourceResolverTypeAdapter adapter = getResourceResolverTypeAdapter(type);
+        ResourceResolverTypeAdapter adapter = getResourceResolverTypeAdapter(type, bundleContext);
         ResourceResolverFactory factory = adapter.newResourceResolverFactory();
         if (factory == null) {
             SlingRepository repository = adapter.newSlingRepository();
@@ -81,24 +84,21 @@ public final class MockSling {
         return factory;
     }
 
-    private static ResourceResolverTypeAdapter getResourceResolverTypeAdapter(final ResourceResolverType type) {
+    private static ResourceResolverTypeAdapter getResourceResolverTypeAdapter(final ResourceResolverType type,
+            @NotNull final BundleContext bundleContext) {
         try {
             Class clazz = Class.forName(type.getResourceResolverTypeAdapterClass());
-            return (ResourceResolverTypeAdapter) clazz.newInstance();
+            try {
+                Constructor<ResourceResolverTypeAdapter> bundleContextConstructor = clazz.getConstructor(BundleContext.class);
+                // use constructor with bundle context
+                return bundleContextConstructor.newInstance(bundleContext);
+            }
+            catch (NoSuchMethodException ex) {
+                // fallback to default constructor
+                return (ResourceResolverTypeAdapter)clazz.newInstance();
+            }
         }
-        catch (ClassNotFoundException ex) {
-            throw new RuntimeException("Unable to instantiate resourcer resolver: "
-                    + type.getResourceResolverTypeAdapterClass()
-                    + (type.getArtifactCoordinates() != null ? ". Make sure this maven dependency is included: "
-                            + type.getArtifactCoordinates() : ""), ex);
-        }
-        catch (InstantiationException ex) {
-            throw new RuntimeException("Unable to instantiate resourcer resolver: "
-                    + type.getResourceResolverTypeAdapterClass()
-                    + (type.getArtifactCoordinates() != null ? ". Make sure this maven dependency is included: "
-                            + type.getArtifactCoordinates() : ""), ex);
-        }
-        catch (IllegalAccessException ex) {
+        catch (ClassNotFoundException | InstantiationException | IllegalAccessException | InvocationTargetException ex) {
             throw new RuntimeException("Unable to instantiate resourcer resolver: "
                     + type.getResourceResolverTypeAdapterClass()
                     + (type.getArtifactCoordinates() != null ? ". Make sure this maven dependency is included: "
