@@ -18,8 +18,12 @@
  */
 package org.apache.sling.testing.mock.sling.loader;
 
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.Dictionary;
 import java.util.EnumSet;
 import java.util.HashMap;
 import java.util.Map;
@@ -27,6 +31,7 @@ import java.util.Set;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
+import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.jackrabbit.JcrConstants;
 import org.apache.sling.api.resource.PersistenceException;
@@ -39,6 +44,11 @@ import org.apache.sling.contentparser.api.ParserOptions;
 import org.apache.sling.contentparser.json.JSONParserFeature;
 import org.apache.sling.contentparser.json.JSONParserOptions;
 import org.apache.sling.contentparser.json.internal.JSONContentParser;
+import org.apache.sling.contentparser.xml.jcr.internal.JCRXMLContentParser;
+import org.apache.sling.fsprovider.internal.FsResourceProvider;
+import org.apache.sling.spi.resource.provider.ResourceProvider;
+import org.apache.sling.testing.mock.osgi.MapUtil;
+import org.apache.sling.testing.mock.osgi.MockOsgi;
 import org.apache.sling.testing.mock.sling.ResourceResolverType;
 import org.apache.sling.testing.mock.sling.builder.ImmutableValueMap;
 import org.jetbrains.annotations.NotNull;
@@ -84,6 +94,8 @@ public final class ContentLoader {
     private final Set<String> ignoredNames;
     private final ContentParser jsonParser;
     private final ParserOptions jsonParserOptions;
+    private final ContentParser fileVaultXmlParser;
+    private final ParserOptions fileVaultXmlParserOptions;
 
     /**
      * @param resourceResolver Resource resolver
@@ -121,13 +133,19 @@ public final class ContentLoader {
         this.bundleContext = bundleContext;
         this.autoCommit = autoCommit;
         this.ignoredNames = getIgnoredNamesForResourceResolverType(resourceResolverType);
+
         this.jsonParserOptions = new JSONParserOptions()
             .withFeatures(EnumSet.of(JSONParserFeature.COMMENTS, JSONParserFeature.QUOTE_TICK))
             .detectCalendarValues(true)
             .ignorePropertyNames(this.ignoredNames)
             .ignoreResourceNames(this.ignoredNames);
-        // JSONContentParser is an OSGi service - for sake of simplicity in this mock environment instantiate it directly
         this.jsonParser = new JSONContentParser();
+
+        this.fileVaultXmlParserOptions = new ParserOptions()
+                .detectCalendarValues(true)
+                .ignorePropertyNames(this.ignoredNames)
+                .ignoreResourceNames(this.ignoredNames);
+        this.fileVaultXmlParser = new JCRXMLContentParser();
     }
 
     private final Set<String> getIgnoredNamesForResourceResolverType(ResourceResolverType resourceResolverType) {
@@ -147,19 +165,7 @@ public final class ContentLoader {
      * @return Resource
      */
     public @NotNull Resource json(@NotNull String classpathResource, @NotNull Resource parentResource, @NotNull String childName) {
-        InputStream is = ContentLoader.class.getResourceAsStream(classpathResource);
-        if (is == null) {
-            throw new IllegalArgumentException("Classpath resource not found: " + classpathResource);
-        }
-        try {
-            return json(is, parentResource, childName);
-        } finally {
-            try {
-                is.close();
-            } catch (IOException ex) {
-                // ignore
-            }
-        }
+        return json(classpathResource, parentResource.getPath() + "/" + childName);
     }
 
     /**
@@ -176,12 +182,9 @@ public final class ContentLoader {
         }
         try {
             return json(is, destPath);
-        } finally {
-            try {
-                is.close();
-            } catch (IOException ex) {
-                // ignore
-            }
+        }
+        finally {
+            IOUtils.closeQuietly(is);
         }
     }
 
@@ -203,8 +206,66 @@ public final class ContentLoader {
      * @param destPath Path to import the JSON content to
      * @return Resource
      */
-    @SuppressWarnings("null")
     public @NotNull Resource json(@NotNull InputStream inputStream, @NotNull String destPath) {
+        return mountParsedFile(inputStream, destPath, jsonParser, jsonParserOptions);
+    }
+
+    /**
+     * Import content of FileVault XML file into repository.
+     * @param filePath File path to single FileVault XML file (usually <code>.content.xml</code>)
+     * @param parentResource Parent resource
+     * @param childName Name of child resource to create with Filevault content
+     * @return Resource
+     */
+    public @NotNull Resource fileVaultXml(@NotNull String filePath, @NotNull Resource parentResource, @NotNull String childName) {
+        return fileVaultXml(filePath, parentResource.getPath() + "/" + childName);
+    }
+
+    /**
+     * Import content of FileVault XML file into repository. Auto-creates parent
+     * hierarchies as nt:unstrucured nodes if missing.
+     * @param filePath File path to single FileVault XML file (usually <code>.content.xml</code>)
+     * @param destPath Path to import the Filevault content to
+     * @return Resource
+     */
+    public @NotNull Resource fileVaultXml(@NotNull String filePath, @NotNull String destPath) {
+        File file = new File(filePath);
+        try (InputStream is = new FileInputStream(file)) {
+            return fileVaultXml(is, destPath);
+        }
+        catch (FileNotFoundException ex) {
+            throw new IllegalArgumentException("File not found: " + file.getAbsolutePath());
+        }
+        catch (IOException ex) {
+            throw new RuntimeException(ex);
+        }
+    }
+
+    /**
+     * Import content of FileVault XML file into repository.
+     * @param inputStream Input stream with Filevault content
+     * @param parentResource Parent resource
+     * @param childName Name of child resource to create with Filevault content
+     * @return Resource
+     */
+    public @NotNull Resource fileVaultXml(@NotNull InputStream inputStream, @NotNull Resource parentResource, @NotNull String childName) {
+        return fileVaultXml(inputStream, parentResource.getPath() + "/" + childName);
+    }
+
+    /**
+     * Import content of FileVault XML file into repository. Auto-creates parent
+     * hierarchies as nt:unstrucured nodes if missing.
+     * @param inputStream Input stream with Filevault content
+     * @param destPath Path to import the Filevault content to
+     * @return Resource
+     */
+    public @NotNull Resource fileVaultXml(@NotNull InputStream inputStream, @NotNull String destPath) {
+        return mountParsedFile(inputStream, destPath, fileVaultXmlParser, fileVaultXmlParserOptions);
+    }
+
+    @SuppressWarnings("null")
+    private @NotNull Resource mountParsedFile(@NotNull InputStream inputStream, @NotNull String destPath,
+            @NotNull ContentParser contentParser, @NotNull ParserOptions parserOptions) {
         try {
             String parentPath = ResourceUtil.getParent(destPath);
             String childName = ResourceUtil.getName(destPath);
@@ -222,12 +283,13 @@ public final class ContentLoader {
             }
 
             LoaderContentHandler contentHandler = new LoaderContentHandler(destPath, resourceResolver);
-            jsonParser.parse(contentHandler, inputStream, jsonParserOptions);
+            contentParser.parse(contentHandler, inputStream, parserOptions);
             if (autoCommit) {
                 resourceResolver.commit();
             }
             return resourceResolver.getResource(destPath);
-        } catch (IOException ex) {
+        }
+        catch (IOException ex) {
             throw new RuntimeException(ex);
         }
     }
@@ -510,13 +572,110 @@ public final class ContentLoader {
             if (bundleContext != null && StringUtils.isNotEmpty(fileExtension)) {
                 ServiceReference<MimeTypeService> ref = bundleContext.getServiceReference(MimeTypeService.class);
                 if (ref != null) {
-                    MimeTypeService mimeTypeService = (MimeTypeService)bundleContext.getService(ref);
+                    MimeTypeService mimeTypeService = bundleContext.getService(ref);
                     mimeType = mimeTypeService.getMimeType(fileExtension);
                     break;
                 }
             }
         }
         return StringUtils.defaultString(mimeType, CONTENTTYPE_OCTET_STREAM);
+    }
+
+    /**
+     * Mount a folder containing content in JSON (Sling-Inital-Content) format in repository.
+     * @param mountFolderPath Root folder path to mount
+     * @param parentResource Parent resource
+     * @param childName Name of child resource to mount folder into
+     */
+    public void folderJson(@NotNull String mountFolderPath, @NotNull Resource parentResource, @NotNull String childName) {
+        folderJson(new File(mountFolderPath), parentResource, childName);
+    }
+
+    /**
+     * Mount a folder containing content in JSON (Sling-Inital-Content) format in repository.
+     * @param mountFolder Root folder path to mount
+     * @param destPath Path to mount folder into
+     */
+    public void folderJson(@NotNull String mountFolderPath, @NotNull String destPath) {
+        folderJson(new File(mountFolderPath), destPath);
+    }
+
+    /**
+     * Mount a folder containing content in JSON (Sling-Inital-Content) format in repository.
+     * @param mountFolderPath Root folder to mount
+     * @param parentResource Parent resource
+     * @param childName Name of child resource to mount folder into
+     */
+    public void folderJson(@NotNull File mountFolder, @NotNull Resource parentResource, @NotNull String childName) {
+        folderJson(mountFolder, parentResource.getPath() + "/" + childName);
+    }
+
+    /**
+     * Mount a folder containing content in JSON (Sling-Inital-Content) format in repository.
+     * @param mountFolder Root folder to mount
+     * @param destPath Path to mount folder into
+     */
+    @SuppressWarnings("null")
+    public void folderJson(@NotNull File mountFolder, @NotNull String destPath) {
+        if (bundleContext == null) {
+            throw new IllegalArgumentException("No bundle context given for content loader.");
+        }
+        Dictionary<String, Object> serviceProperties = MapUtil.toDictionary(
+                "provider.file", mountFolder.getAbsolutePath(),
+                "provider.root", destPath,
+                "provider.fs.mode", "INITIAL_CONTENT",
+                "provider.initial.content.import.options", "overwrite:=true;ignoreImportProviders:=\"xml\"",
+                "provider.checkinterval", 0);
+        FsResourceProvider service = MockOsgi.activateInjectServices(FsResourceProvider.class, bundleContext, serviceProperties);
+        bundleContext.registerService(ResourceProvider.class, service, serviceProperties);
+    }
+
+    /**
+     * Mount a folder containing content in FileVault XML format in repository.
+     * @param mountFolderPath Root folder path to mount. Path needs to point to the root folder of the content package structure.
+     * @param parentResource Parent resource
+     * @param childName Name of child resource to mount folder into
+     */
+    public void folderFileVaultXml(@NotNull String mountFolderPath, @NotNull Resource parentResource, @NotNull String childName) {
+        folderFileVaultXml(new File(mountFolderPath), parentResource, childName);
+    }
+
+    /**
+     * Mount a folder containing content in FileVault XML format in repository.
+     * @param mountFolder Root folder path to mount. Path needs to point to the root folder of the content package structure.
+     * @param destPath Path to mount folder into
+     */
+    public void folderFileVaultXml(@NotNull String mountFolderPath, @NotNull String destPath) {
+        folderFileVaultXml(new File(mountFolderPath), destPath);
+    }
+
+    /**
+     * Mount a folder containing content in FileVault XML format in repository.
+     * @param mountFolderPath Root folder to mount. Path needs to point to the root folder of the content package structure.
+     * @param parentResource Parent resource
+     * @param childName Name of child resource to mount folder into
+     */
+    public void folderFileVaultXml(@NotNull File mountFolder, @NotNull Resource parentResource, @NotNull String childName) {
+        folderFileVaultXml(mountFolder, parentResource.getPath() + "/" + childName);
+    }
+
+    /**
+     * Mount a folder containing content in FileVault XML format in repository.
+     * @param mountFolder Root folder to mount. Path needs to point to the root folder of the content package structure.
+     * @param destPath Path to mount folder into
+     */
+    @SuppressWarnings("null")
+    public void folderFileVaultXml(@NotNull File mountFolder, @NotNull String destPath) {
+        if (bundleContext == null) {
+            throw new IllegalArgumentException("No bundle context given for content loader.");
+        }
+        Dictionary<String, Object> serviceProperties = MapUtil.toDictionary(
+                "provider.file", mountFolder.getAbsolutePath(),
+                "provider.root", destPath,
+                "provider.fs.mode", "FILEVAULT_XML",
+                "provider.checkinterval", 0);
+        FsResourceProvider service = MockOsgi.activateInjectServices(FsResourceProvider.class, bundleContext, serviceProperties);
+        bundleContext.registerService(ResourceProvider.class, service, serviceProperties);
     }
 
 }

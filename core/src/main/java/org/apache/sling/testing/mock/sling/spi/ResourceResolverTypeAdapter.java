@@ -25,6 +25,11 @@ import org.jetbrains.annotations.Nullable;
 /**
  * SPI interface for resource resolver type implementations to provide a mock
  * resource resolver factory.
+ * <p>Supported constructors for implementing classes:</p>
+ * <ul>
+ * <li>Empty constructor</li>
+ * <li>Constructor with {@link org.osgi.framework.BundleContext} parameter</li>
+ * </ul>
  */
 public interface ResourceResolverTypeAdapter {
 

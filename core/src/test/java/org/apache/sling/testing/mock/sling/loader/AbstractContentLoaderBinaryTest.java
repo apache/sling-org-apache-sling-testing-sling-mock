@@ -98,14 +98,15 @@ public abstract class AbstractContentLoaderBinaryTest {
         assertMimeType(fileResource, "mime/test");
     }
 
-    private void assertSampleImageFileSize(Resource resource) throws IOException {
-        InputStream is = resource.adaptTo(InputStream.class);
-        assertNotNull("InputSteam is null for " + resource.getPath(), is);
-        byte[] binaryData = IOUtils.toByteArray(is);
-        assertEquals(SAMPLE_IMAGE_FILESIZE, binaryData.length);
+    static void assertSampleImageFileSize(Resource resource) throws IOException {
+        try (InputStream is = resource.adaptTo(InputStream.class)) {
+            assertNotNull("InputSteam is null for " + resource.getPath(), is);
+            byte[] binaryData = IOUtils.toByteArray(is);
+            assertEquals(SAMPLE_IMAGE_FILESIZE, binaryData.length);
+        }
     }
 
-    private void assertMimeType(Resource resource, String mimeType) {
+    static void assertMimeType(Resource resource, String mimeType) {
         assertNotNull(resource);
         assertEquals(mimeType, ResourceUtil.getValueMap(resource).get(JcrConstants.JCR_MIMETYPE, String.class));
     }

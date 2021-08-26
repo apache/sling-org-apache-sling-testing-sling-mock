@@ -19,11 +19,10 @@
 package org.apache.sling.testing.mock.sling.junit5;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import org.apache.sling.api.resource.Resource;
+import org.apache.sling.testing.mock.sling.ResourceResolverType;
 import org.apache.sling.testing.mock.sling.context.modelsautoreg.ClasspathRegisteredModel;
-import org.apache.sling.testing.resourceresolver.MockResourceResolver;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -38,7 +37,7 @@ class SlingContextTest {
 
     @BeforeEach
     void setUp(SlingContext context) {
-        assertTrue(context.resourceResolver() instanceof MockResourceResolver);
+        assertEquals(ResourceResolverType.RESOURCERESOLVER_MOCK, context.resourceResolverType());
 
         context.create().resource("/content/test", "prop1", "value1");
     }

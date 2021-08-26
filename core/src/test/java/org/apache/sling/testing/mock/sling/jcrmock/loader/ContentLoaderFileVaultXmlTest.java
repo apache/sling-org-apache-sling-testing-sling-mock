@@ -16,8 +16,15 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-/**
- * Helpers for importing test content into the mocked repositories / resource hierarchies.
- */
-@org.osgi.annotation.versioning.Version("1.3.0")
-package org.apache.sling.testing.mock.sling.loader;
+package org.apache.sling.testing.mock.sling.jcrmock.loader;
+
+import org.apache.sling.testing.mock.sling.ResourceResolverType;
+import org.apache.sling.testing.mock.sling.loader.AbstractContentLoaderFileVaultXmlTest;
+
+public class ContentLoaderFileVaultXmlTest extends AbstractContentLoaderFileVaultXmlTest {
+
+    protected ResourceResolverType getResourceResolverType() {
+        return ResourceResolverType.JCR_MOCK;
+    }
+
+}
