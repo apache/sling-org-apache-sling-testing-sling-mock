@@ -21,6 +21,7 @@ package org.apache.sling.testing.mock.sling.loader;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertThrows;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -96,6 +97,13 @@ public abstract class AbstractContentLoaderBinaryTest {
         Resource fileResource = context.resourceResolver().getResource(path + "/sample-image.gif");
         assertSampleImageFileSize(fileResource);
         assertMimeType(fileResource, "mime/test");
+    }
+
+    @Test
+    public void testInvalidPath() {
+        assertThrows(IllegalArgumentException.class, () -> {
+            context.load().binaryFile("/non-existing.xyz", path + "/non-existing.xyz");
+        });
     }
 
     static void assertSampleImageFileSize(Resource resource) throws IOException {

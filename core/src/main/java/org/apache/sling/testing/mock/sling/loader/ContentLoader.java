@@ -28,6 +28,7 @@ import java.util.EnumSet;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
+import java.util.function.Function;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
@@ -159,33 +160,24 @@ public final class ContentLoader {
 
     /**
      * Import content of JSON file into repository.
-     * @param classpathResource Classpath resource URL for JSON content
+     * @param classpathResourceOrFile Classpath resource URL or file path for JSON content
      * @param parentResource Parent resource
      * @param childName Name of child resource to create with JSON content
      * @return Resource
      */
-    public @NotNull Resource json(@NotNull String classpathResource, @NotNull Resource parentResource, @NotNull String childName) {
-        return json(classpathResource, parentResource.getPath() + "/" + childName);
+    public @NotNull Resource json(@NotNull String classpathResourceOrFile, @NotNull Resource parentResource, @NotNull String childName) {
+        return json(classpathResourceOrFile, parentResource.getPath() + "/" + childName);
     }
 
     /**
      * Import content of JSON file into repository. Auto-creates parent
      * hierarchies as nt:unstrucured nodes if missing.
-     * @param classpathResource Classpath resource URL for JSON content
+     * @param classpathResourceOrFile Classpath resource URL or file path for JSON content
      * @param destPath Path to import the JSON content to
      * @return Resource
      */
-    public @NotNull Resource json(@NotNull String classpathResource, @NotNull String destPath) {
-        InputStream is = ContentLoader.class.getResourceAsStream(classpathResource);
-        if (is == null) {
-            throw new IllegalArgumentException("Classpath resource not found: " + classpathResource);
-        }
-        try {
-            return json(is, destPath);
-        }
-        finally {
-            IOUtils.closeQuietly(is);
-        }
+    public @NotNull Resource json(@NotNull String classpathResourceOrFile, @NotNull String destPath) {
+        return processInputStreamFromClasspathOrFilesystem(classpathResourceOrFile, is -> json(is, destPath));
     }
 
     /**
@@ -212,33 +204,24 @@ public final class ContentLoader {
 
     /**
      * Import content of FileVault XML file into repository.
-     * @param filePath File path to single FileVault XML file (usually <code>.content.xml</code>)
+     * @param classpathResourceOrFile Classpath resource URL or file path to single FileVault XML file (usually <code>.content.xml</code>)
      * @param parentResource Parent resource
      * @param childName Name of child resource to create with Filevault content
      * @return Resource
      */
-    public @NotNull Resource fileVaultXml(@NotNull String filePath, @NotNull Resource parentResource, @NotNull String childName) {
-        return fileVaultXml(filePath, parentResource.getPath() + "/" + childName);
+    public @NotNull Resource fileVaultXml(@NotNull String classpathResourceOrFile, @NotNull Resource parentResource, @NotNull String childName) {
+        return fileVaultXml(classpathResourceOrFile, parentResource.getPath() + "/" + childName);
     }
 
     /**
      * Import content of FileVault XML file into repository. Auto-creates parent
      * hierarchies as nt:unstrucured nodes if missing.
-     * @param filePath File path to single FileVault XML file (usually <code>.content.xml</code>)
+     * @param classpathResourceOrFile Classpath resource URL or file path to single FileVault XML file (usually <code>.content.xml</code>)
      * @param destPath Path to import the Filevault content to
      * @return Resource
      */
-    public @NotNull Resource fileVaultXml(@NotNull String filePath, @NotNull String destPath) {
-        File file = new File(filePath);
-        try (InputStream is = new FileInputStream(file)) {
-            return fileVaultXml(is, destPath);
-        }
-        catch (FileNotFoundException ex) {
-            throw new IllegalArgumentException("File not found: " + file.getAbsolutePath());
-        }
-        catch (IOException ex) {
-            throw new RuntimeException(ex);
-        }
+    public @NotNull Resource fileVaultXml(@NotNull String classpathResourceOrFile, @NotNull String destPath) {
+        return processInputStreamFromClasspathOrFilesystem(classpathResourceOrFile, is -> fileVaultXml(is, destPath));
     }
 
     /**
@@ -315,51 +298,27 @@ public final class ContentLoader {
     /**
      * Import binary file as nt:file binary node into repository. Auto-creates
      * parent hierarchies as nt:unstrucured nodes if missing. Mime type is
-     * auto-detected from either {@code classpathResource} or {@code path}.
-     * @param classpathResource Classpath resource URL for binary file.
+     * auto-detected from either {@code classpathResourceOrFile} or {@code path}.
+     * @param classpathResourceOrFile Classpath resource URL or file path for binary file.
      * @param path Path to mount binary data to (parent nodes created
      *            automatically)
      * @return Resource with binary data
      */
-    public @NotNull Resource binaryFile(@NotNull String classpathResource, @NotNull String path) {
-        InputStream is = ContentLoader.class.getResourceAsStream(classpathResource);
-        if (is == null) {
-            throw new IllegalArgumentException("Classpath resource not found: " + classpathResource);
-        }
-        try {
-            return binaryFile(is, path, detectMimeTypeFromNames(classpathResource, path));
-        } finally {
-            try {
-                is.close();
-            } catch (IOException ex) {
-                // ignore
-            }
-        }
+    public @NotNull Resource binaryFile(@NotNull String classpathResourceOrFile, @NotNull String path) {
+        return binaryFile(classpathResourceOrFile, path, detectMimeTypeFromNames(classpathResourceOrFile, path));
     }
 
     /**
      * Import binary file as nt:file binary node into repository. Auto-creates
      * parent hierarchies as nt:unstrucured nodes if missing.
-     * @param classpathResource Classpath resource URL for binary file.
+     * @param classpathResourceOrFile Classpath resource URL or file path for binary file.
      * @param path Path to mount binary data to (parent nodes created
      *            automatically)
      * @param mimeType Mime type of binary data
      * @return Resource with binary data
      */
-    public @NotNull Resource binaryFile(@NotNull String classpathResource, @NotNull String path, @NotNull String mimeType) {
-        InputStream is = ContentLoader.class.getResourceAsStream(classpathResource);
-        if (is == null) {
-            throw new IllegalArgumentException("Classpath resource not found: " + classpathResource);
-        }
-        try {
-            return binaryFile(is, path, mimeType);
-        } finally {
-            try {
-                is.close();
-            } catch (IOException ex) {
-                // ignore
-            }
-        }
+    public @NotNull Resource binaryFile(@NotNull String classpathResourceOrFile, @NotNull String path, @NotNull String mimeType) {
+        return processInputStreamFromClasspathOrFilesystem(classpathResourceOrFile, is -> binaryFile(is, path, mimeType));
     }
 
     /**
@@ -439,51 +398,25 @@ public final class ContentLoader {
     /**
      * Import binary file as nt:resource binary node into repository.
      * Auto-creates parent hierarchies as nt:unstrucured nodes if missing. Mime
-     * type is auto-detected from {@code classpathResource} or {@code path}.
-     * @param classpathResource Classpath resource URL for binary file.
-     * @param path Path to mount binary data to (parent nodes created
-     *            automatically)
+     * type is auto-detected from {@code classpathResourceOrFile} or {@code path}.
+     * @param classpathResourceOrFile Classpath resource URL or file path for binary file.
+     * @param path Path to mount binary data to (parent nodes created automatically)
      * @return Resource with binary data
      */
-    public @NotNull Resource binaryResource(@NotNull String classpathResource, @NotNull String path) {
-        InputStream is = ContentLoader.class.getResourceAsStream(classpathResource);
-        if (is == null) {
-            throw new IllegalArgumentException("Classpath resource not found: " + classpathResource);
-        }
-        try {
-            return binaryResource(is, path, detectMimeTypeFromNames(classpathResource, path));
-        } finally {
-            try {
-                is.close();
-            } catch (IOException ex) {
-                // ignore
-            }
-        }
+    public @NotNull Resource binaryResource(@NotNull String classpathResourceOrFile, @NotNull String path) {
+        return binaryResource(classpathResourceOrFile, path, detectMimeTypeFromNames(classpathResourceOrFile, path));
     }
 
     /**
      * Import binary file as nt:resource binary node into repository.
      * Auto-creates parent hierarchies as nt:unstrucured nodes if missing.
-     * @param classpathResource Classpath resource URL for binary file.
-     * @param path Path to mount binary data to (parent nodes created
-     *            automatically)
+     * @param classpathResourceOrFile Classpath resource URL or file path for binary file.
+     * @param path Path to mount binary data to (parent nodes created automatically)
      * @param mimeType Mime type of binary data
      * @return Resource with binary data
      */
-    public @NotNull Resource binaryResource(@NotNull String classpathResource, @NotNull String path, @NotNull String mimeType) {
-        InputStream is = ContentLoader.class.getResourceAsStream(classpathResource);
-        if (is == null) {
-            throw new IllegalArgumentException("Classpath resource not found: " + classpathResource);
-        }
-        try {
-            return binaryResource(is, path, mimeType);
-        } finally {
-            try {
-                is.close();
-            } catch (IOException ex) {
-                // ignore
-            }
-        }
+    public @NotNull Resource binaryResource(@NotNull String classpathResourceOrFile, @NotNull String path, @NotNull String mimeType) {
+        return processInputStreamFromClasspathOrFilesystem(classpathResourceOrFile, is -> binaryResource(is, path, mimeType));
     }
 
     /**
@@ -582,7 +515,7 @@ public final class ContentLoader {
     }
 
     /**
-     * Mount a folder containing content in JSON (Sling-Inital-Content) format in repository.
+     * Mount a folder (file system) containing content in JSON (Sling-Inital-Content) format in repository.
      * @param mountFolderPath Root folder path to mount
      * @param parentResource Parent resource
      * @param childName Name of child resource to mount folder into
@@ -592,7 +525,7 @@ public final class ContentLoader {
     }
 
     /**
-     * Mount a folder containing content in JSON (Sling-Inital-Content) format in repository.
+     * Mount a folder (file system) containing content in JSON (Sling-Inital-Content) format in repository.
      * @param mountFolder Root folder path to mount
      * @param destPath Path to mount folder into
      */
@@ -631,7 +564,7 @@ public final class ContentLoader {
     }
 
     /**
-     * Mount a folder containing content in FileVault XML format in repository.
+     * Mount a folder (file system) containing content in FileVault XML format in repository.
      * @param mountFolderPath Root folder path to mount. Path needs to point to the root folder of the content package structure.
      * @param parentResource Parent resource
      * @param childName Name of child resource to mount folder into
@@ -641,7 +574,7 @@ public final class ContentLoader {
     }
 
     /**
-     * Mount a folder containing content in FileVault XML format in repository.
+     * Mount a folder (file system) containing content in FileVault XML format in repository.
      * @param mountFolder Root folder path to mount. Path needs to point to the root folder of the content package structure.
      * @param destPath Path to mount folder into
      */
@@ -676,6 +609,30 @@ public final class ContentLoader {
                 "provider.checkinterval", 0);
         FsResourceProvider service = MockOsgi.activateInjectServices(FsResourceProvider.class, bundleContext, serviceProperties);
         bundleContext.registerService(ResourceProvider.class, service, serviceProperties);
+    }
+
+    /**
+     * Get input stream for a resource either from classpath (preferred) or from filesystem (fallback).
+     * @param classpathResourceOrFile Classpath resource URL or file path
+     * @param processor Processes input stream
+     */
+    @SuppressWarnings("null")
+    private <T> @NotNull T processInputStreamFromClasspathOrFilesystem(@NotNull String classpathResourceOrFile, @NotNull Function<InputStream,T> processor) {
+        InputStream is = ContentLoader.class.getResourceAsStream(classpathResourceOrFile);
+        if (is == null) {
+            try {
+                is = new FileInputStream(classpathResourceOrFile);
+            }
+            catch (FileNotFoundException ex) {
+                throw new IllegalArgumentException("Classpath resource or file not found: " + classpathResourceOrFile);
+            }
+        }
+        try {
+            return processor.apply(is);
+        }
+        finally {
+            IOUtils.closeQuietly(is);
+        }
     }
 
 }
