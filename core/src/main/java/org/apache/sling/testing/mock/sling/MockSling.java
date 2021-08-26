@@ -84,6 +84,7 @@ public final class MockSling {
         return factory;
     }
 
+    @SuppressWarnings("unchecked")
     private static ResourceResolverTypeAdapter getResourceResolverTypeAdapter(final ResourceResolverType type,
             @NotNull final BundleContext bundleContext) {
         try {
