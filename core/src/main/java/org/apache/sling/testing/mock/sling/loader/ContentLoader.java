@@ -526,7 +526,7 @@ public final class ContentLoader {
 
     /**
      * Mount a folder (file system) containing content in JSON (Sling-Inital-Content) format in repository.
-     * @param mountFolder Root folder path to mount
+     * @param mountFolderPath Root folder path to mount
      * @param destPath Path to mount folder into
      */
     public void folderJson(@NotNull String mountFolderPath, @NotNull String destPath) {
@@ -535,7 +535,7 @@ public final class ContentLoader {
 
     /**
      * Mount a folder containing content in JSON (Sling-Inital-Content) format in repository.
-     * @param mountFolderPath Root folder to mount
+     * @param mountFolder Root folder to mount
      * @param parentResource Parent resource
      * @param childName Name of child resource to mount folder into
      */
@@ -575,7 +575,7 @@ public final class ContentLoader {
 
     /**
      * Mount a folder (file system) containing content in FileVault XML format in repository.
-     * @param mountFolder Root folder path to mount. Path needs to point to the root folder of the content package structure.
+     * @param mountFolderPath Root folder path to mount. Path needs to point to the root folder of the content package structure.
      * @param destPath Path to mount folder into
      */
     public void folderFileVaultXml(@NotNull String mountFolderPath, @NotNull String destPath) {
@@ -584,7 +584,7 @@ public final class ContentLoader {
 
     /**
      * Mount a folder containing content in FileVault XML format in repository.
-     * @param mountFolderPath Root folder to mount. Path needs to point to the root folder of the content package structure.
+     * @param mountFolder Root folder to mount. Path needs to point to the root folder of the content package structure.
      * @param parentResource Parent resource
      * @param childName Name of child resource to mount folder into
      */
