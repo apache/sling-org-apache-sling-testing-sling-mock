@@ -1,0 +1,5 @@
+{
+  "jcr:primaryType": "app:Component",
+  "jcr:title": "Base Component",
+  "sling:resourceSuperType": "core/components/superResource"
+}

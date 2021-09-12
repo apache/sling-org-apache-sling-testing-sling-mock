@@ -567,7 +567,7 @@ public final class ContentLoader {
      * Mount a folder (file system) containing content in FileVault XML format in repository.
      * @param mountFolderPath Root folder path to mount. Path needs to point to the root folder of the content package structure.
      * @param parentResource Parent resource
-     * @param childName Name of child resource to mount folder into
+     * @param childName Name of child resource of subtree path that should be mounted from FileVault XML structure
      */
     public void folderFileVaultXml(@NotNull String mountFolderPath, @NotNull Resource parentResource, @NotNull String childName) {
         folderFileVaultXml(new File(mountFolderPath), parentResource, childName);
@@ -576,7 +576,7 @@ public final class ContentLoader {
     /**
      * Mount a folder (file system) containing content in FileVault XML format in repository.
      * @param mountFolderPath Root folder path to mount. Path needs to point to the root folder of the content package structure.
-     * @param destPath Path to mount folder into
+     * @param destPath Subtree path that should be mounted from FileVault XML structure
      */
     public void folderFileVaultXml(@NotNull String mountFolderPath, @NotNull String destPath) {
         folderFileVaultXml(new File(mountFolderPath), destPath);
@@ -586,7 +586,7 @@ public final class ContentLoader {
      * Mount a folder containing content in FileVault XML format in repository.
      * @param mountFolder Root folder to mount. Path needs to point to the root folder of the content package structure.
      * @param parentResource Parent resource
-     * @param childName Name of child resource to mount folder into
+     * @param childName Name of child resource of subtree path that should be mounted from FileVault XML structure
      */
     public void folderFileVaultXml(@NotNull File mountFolder, @NotNull Resource parentResource, @NotNull String childName) {
         folderFileVaultXml(mountFolder, parentResource.getPath() + "/" + childName);
@@ -595,7 +595,7 @@ public final class ContentLoader {
     /**
      * Mount a folder containing content in FileVault XML format in repository.
      * @param mountFolder Root folder to mount. Path needs to point to the root folder of the content package structure.
-     * @param destPath Path to mount folder into
+     * @param destPath Subtree path that should be mounted from FileVault XML structure
      */
     @SuppressWarnings("null")
     public void folderFileVaultXml(@NotNull File mountFolder, @NotNull String destPath) {

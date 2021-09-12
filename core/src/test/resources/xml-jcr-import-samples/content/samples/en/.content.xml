@@ -34,6 +34,9 @@
       inheritTeaserbar="{Boolean}false"
       navTitle="HOME"
       pageTitle="Sample Site">
+    <comp1-resource
+        jcr:primaryType="nt:unstructured"
+        sling:resourceType="app1/components/comp1" />
     <teaserbar
         jcr:primaryType="nt:unstructured"
         sling:resourceType="samples/sample-app/components/content/teaserbar/teaserbarParsys">
