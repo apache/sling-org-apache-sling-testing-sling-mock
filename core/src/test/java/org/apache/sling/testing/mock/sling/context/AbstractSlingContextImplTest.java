@@ -27,9 +27,11 @@ import static org.junit.Assert.assertTrue;
 import java.util.Set;
 
 import org.apache.sling.api.resource.Resource;
+import org.apache.sling.api.resource.ResourceResolver;
 import org.apache.sling.api.resource.ResourceResolverFactory;
 import org.apache.sling.api.scripting.SlingBindings;
 import org.apache.sling.settings.SlingSettingsService;
+import org.apache.sling.testing.mock.sling.MockSling;
 import org.apache.sling.testing.mock.sling.ResourceResolverType;
 import org.apache.sling.testing.mock.sling.context.models.OsgiServiceModel;
 import org.apache.sling.testing.mock.sling.context.models.RequestAttributeModel;
@@ -148,6 +150,12 @@ public abstract class AbstractSlingContextImplTest {
         assertEquals(2, newRunModes.size());
         assertTrue(newRunModes.contains("mode1"));
         assertTrue(newRunModes.contains("mode2"));
+    }
+
+    @Test
+    public void testMixedJcrAndDefaultResourceResolver() {
+        ResourceResolver resourceResolver = MockSling.newResourceResolver(context.bundleContext());
+        assertNull(resourceResolver.getResource("/non/existing/path"));
     }
 
 }

@@ -30,7 +30,6 @@ import org.apache.sling.api.adapter.AdapterFactory;
 import org.apache.sling.api.adapter.SlingAdaptable;
 import org.apache.sling.api.resource.Resource;
 import org.apache.sling.api.resource.ResourceResolver;
-import org.apache.sling.testing.mock.sling.MockSling;
 import org.apache.sling.testing.mock.sling.ResourceResolverType;
 import org.apache.sling.testing.mock.sling.builder.ImmutableValueMap;
 import org.jetbrains.annotations.NotNull;
@@ -156,12 +155,6 @@ public class SlingContextTest {
     @Test
     public void testUrlMapping() {
         assertEquals("/foo", context.resourceResolver().map("/content/test/foo"));
-    }
-
-    @Test
-    public void testMixedJcrAndDefaultResourceResolver() {
-        ResourceResolver resourceResolver = MockSling.newResourceResolver(context.bundleContext());
-        assertNull(resourceResolver.getResource("/non/existing/path"));
     }
 
     private void prepareInitialAdapterFactory() {
