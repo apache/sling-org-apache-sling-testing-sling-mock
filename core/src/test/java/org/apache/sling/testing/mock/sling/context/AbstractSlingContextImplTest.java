@@ -27,7 +27,6 @@ import static org.junit.Assert.assertTrue;
 import java.util.Set;
 
 import org.apache.sling.api.resource.Resource;
-import org.apache.sling.api.resource.ResourceResolver;
 import org.apache.sling.api.resource.ResourceResolverFactory;
 import org.apache.sling.api.scripting.SlingBindings;
 import org.apache.sling.settings.SlingSettingsService;
@@ -152,10 +151,11 @@ public abstract class AbstractSlingContextImplTest {
         assertTrue(newRunModes.contains("mode2"));
     }
 
-    @Test
-    public void testMixedJcrAndDefaultResourceResolver() {
-        ResourceResolver resourceResolver = MockSling.newResourceResolver(context.bundleContext());
-        assertNull(resourceResolver.getResource("/non/existing/path"));
+    @Test(expected = IllegalStateException.class)
+    public void testReRegisteringResourceResolverFaactory() {
+        // it is not allowed to create/register a new resource resolver factory instance if there is already one
+        // so this should throw an IllegalStateException it this is detected
+        MockSling.newResourceResolver(context.bundleContext());
     }
 
 }

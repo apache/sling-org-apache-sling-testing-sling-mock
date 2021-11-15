@@ -34,6 +34,7 @@ import org.apache.sling.testing.mock.sling.servlet.MockSlingHttpServletResponse;
 import org.apache.sling.testing.mock.sling.spi.ResourceResolverTypeAdapter;
 import org.jetbrains.annotations.NotNull;
 import org.osgi.framework.BundleContext;
+import org.osgi.framework.ServiceReference;
 
 /**
  * Factory for mock Sling objects.
@@ -70,8 +71,15 @@ public final class MockSling {
      * @param bundleContext Bundle context
      * @return Resource resolver factory instance
      */
+    @SuppressWarnings("null")
     public static @NotNull ResourceResolverFactory newResourceResolverFactory(@NotNull final ResourceResolverType type,
             @NotNull final BundleContext bundleContext) {
+
+        ServiceReference<ResourceResolverFactory> existingReference = bundleContext.getServiceReference(ResourceResolverFactory.class);
+        if (existingReference != null) {
+            throw new IllegalStateException("A ResourceResolverFactory is already registered in this BundleContext - please get the existing service instance.");
+        }
+
         ResourceResolverTypeAdapter adapter = getResourceResolverTypeAdapter(type, bundleContext);
         ResourceResolverFactory factory = adapter.newResourceResolverFactory();
         if (factory == null) {
