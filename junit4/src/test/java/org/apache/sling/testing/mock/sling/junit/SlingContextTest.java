@@ -157,7 +157,6 @@ public class SlingContextTest {
         assertEquals("/foo", context.resourceResolver().map("/content/test/foo"));
     }
 
-
     private void prepareInitialAdapterFactory() {
         // register "traditional" adapter factory without specific service ranking
         AdapterFactory adapterFactory = new AdapterFactory() {

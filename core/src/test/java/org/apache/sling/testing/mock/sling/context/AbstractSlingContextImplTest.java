@@ -30,6 +30,7 @@ import org.apache.sling.api.resource.Resource;
 import org.apache.sling.api.resource.ResourceResolverFactory;
 import org.apache.sling.api.scripting.SlingBindings;
 import org.apache.sling.settings.SlingSettingsService;
+import org.apache.sling.testing.mock.sling.MockSling;
 import org.apache.sling.testing.mock.sling.ResourceResolverType;
 import org.apache.sling.testing.mock.sling.context.models.OsgiServiceModel;
 import org.apache.sling.testing.mock.sling.context.models.RequestAttributeModel;
@@ -148,6 +149,13 @@ public abstract class AbstractSlingContextImplTest {
         assertEquals(2, newRunModes.size());
         assertTrue(newRunModes.contains("mode1"));
         assertTrue(newRunModes.contains("mode2"));
+    }
+
+    @Test(expected = IllegalStateException.class)
+    public void testReRegisteringResourceResolverFaactory() {
+        // it is not allowed to create/register a new resource resolver factory instance if there is already one
+        // so this should throw an IllegalStateException it this is detected
+        MockSling.newResourceResolver(context.bundleContext());
     }
 
 }
