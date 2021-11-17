@@ -34,7 +34,6 @@ import org.apache.sling.resourceresolver.impl.ResourceAccessSecurityTracker;
 import org.apache.sling.resourceresolver.impl.ResourceResolverFactoryActivator;
 import org.apache.sling.serviceusermapping.ServiceUserMapper;
 import org.apache.sling.serviceusermapping.impl.ServiceUserMapperImpl;
-import org.apache.sling.spi.resource.provider.ResourceProvider;
 import org.apache.sling.testing.mock.osgi.MockEventAdmin;
 import org.apache.sling.testing.mock.osgi.MockOsgi;
 import org.jetbrains.annotations.NotNull;
@@ -122,9 +121,7 @@ class ResourceResolverFactoryInitializer {
     private static void initializeJcrResourceProvider(@NotNull BundleContext bundleContext) {
         Dictionary<String, Object> config = new Hashtable<>();
         JcrResourceProvider provider = new JcrResourceProvider();
-        MockOsgi.injectServices(provider, bundleContext);
-        MockOsgi.activate(provider, bundleContext, config);
-        bundleContext.registerService(ResourceProvider.class, provider, config);
+        MockOsgi.registerInjectActivateService(provider, bundleContext, config);
     }
 
     /**
@@ -193,9 +190,7 @@ class ResourceResolverFactoryInitializer {
     private static <T> void registerServiceIfNotPresent(@NotNull BundleContext bundleContext, @NotNull Class<T> serviceClass,
             @NotNull T instance, Dictionary<String, Object> config) {
         if (bundleContext.getServiceReference(serviceClass.getName()) == null) {
-            MockOsgi.injectServices(instance, bundleContext);
-            MockOsgi.activate(instance, bundleContext, config);
-            bundleContext.registerService(serviceClass, instance, config);
+            MockOsgi.registerInjectActivateService(instance, bundleContext, config);
         }
     }
 
