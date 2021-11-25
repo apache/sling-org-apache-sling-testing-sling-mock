@@ -22,11 +22,9 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNull;
 
-import org.apache.sling.api.resource.Resource;
 import org.apache.sling.commons.mime.MimeTypeService;
 import org.apache.sling.testing.mock.sling.context.models.OsgiServiceModel;
 import org.apache.sling.testing.mock.sling.context.models.RequestAttributeModel;
-import org.apache.sling.testing.mock.sling.context.models.ResourceModel;
 import org.apache.sling.testing.mock.sling.context.models.ServiceInterface;
 import org.apache.sling.testing.mock.sling.junit.SlingContext;
 import org.apache.sling.testing.mock.sling.services.MockMimeTypeService;
@@ -69,12 +67,4 @@ public abstract class AbstractModelAdapterFactoryUtilTest {
         assertEquals("myValue", model.getPropValue());
     }
 
-    @Test
-    public void testResourceInsideAndOutsideModel() {
-        Resource resource = context().currentResource("/");
-        assertNotNull(resource);
-        ResourceModel model = resource.adaptTo(ResourceModel.class);
-        assertNotNull(model);
-        assertEquals(resource, model.getAdaptable());
-    }
 }

@@ -20,7 +20,6 @@ package org.apache.sling.testing.mock.sling.context;
 
 import org.apache.sling.testing.mock.sling.context.models.OsgiServiceModel;
 import org.apache.sling.testing.mock.sling.context.models.RequestAttributeModel;
-import org.apache.sling.testing.mock.sling.context.models.ResourceModel;
 import org.apache.sling.testing.mock.sling.context.models.ServiceInterfaceImpl;
 import org.apache.sling.testing.mock.sling.junit.SlingContext;
 import org.junit.Before;
@@ -46,8 +45,7 @@ public class ModelAdapterFactoryUtilClassesTest extends AbstractModelAdapterFact
                 );
         context.addModelsForClasses(
                 RequestAttributeModel.class,
-                ServiceInterfaceImpl.class,
-                ResourceModel.class
+                ServiceInterfaceImpl.class
                 );
     }
 
