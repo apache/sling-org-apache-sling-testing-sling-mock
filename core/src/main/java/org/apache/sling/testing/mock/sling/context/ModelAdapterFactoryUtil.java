@@ -67,9 +67,6 @@ final class ModelAdapterFactoryUtil {
     private static final @NotNull ConcurrentMap<String, List<URL>> MODEL_URLS_FOR_CLASSES = new ConcurrentHashMap<String, List<URL>>();
 
     static {
-        // suppress log entries from Reflections library
-        Reflections.log = null;
-
         // scan classpath for models bundle header entries only once
         MODELS_PACKAGES_FROM_MANIFEST = toArray(ManifestScanner.getValues(PACKAGE_HEADER));
         MODELS_CLASSES_FROM_MANIFEST = toArray(ManifestScanner.getValues(CLASSES_HEADER));
