@@ -42,11 +42,14 @@ import org.osgi.framework.BundleContext;
 import org.osgi.framework.ServiceReference;
 import org.osgi.service.event.EventAdmin;
 import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * Initializes Sling Resource Resolver factories with JCR-resource mapping.
  */
 class ResourceResolverFactoryInitializer {
+
+    private static final Logger log = LoggerFactory.getLogger(ResourceResolverFactoryInitializer.class);
 
     private ResourceResolverFactoryInitializer() {
         // static methods only
@@ -162,8 +165,9 @@ class ResourceResolverFactoryInitializer {
             Class<?> interfaceClass = Class.forName(interfaceClassName);
             Class<?> implClass = Class.forName(implClassName);
             registerServiceIfNotPresent(bundleContext, (Class)interfaceClass, implClass.newInstance());
-        } catch (ClassNotFoundException | InstantiationException | IllegalAccessException e) {
+        } catch (ClassNotFoundException | InstantiationException | IllegalAccessException ex) {
             // ignore - probably not the latest sling models impl version
+            log.debug("registerServiceIfNotPresentByName: Skip registering {} ({}), bundleContext={}", implClassName, interfaceClassName, bundleContext);
         }
     }
 
@@ -191,6 +195,9 @@ class ResourceResolverFactoryInitializer {
             @NotNull T instance, Dictionary<String, Object> config) {
         if (bundleContext.getServiceReference(serviceClass.getName()) == null) {
             MockOsgi.registerInjectActivateService(instance, bundleContext, config);
+        }
+        else if (log.isDebugEnabled()) {
+            log.debug("registerServiceIfNotPresent: Skip registering {} ({}) because already present, bundleContext={}", instance.getClass(), serviceClass, bundleContext);
         }
     }
 

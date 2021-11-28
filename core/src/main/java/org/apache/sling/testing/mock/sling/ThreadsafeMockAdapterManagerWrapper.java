@@ -26,6 +26,8 @@ import org.apache.sling.testing.mock.osgi.MockOsgi;
 import org.jetbrains.annotations.NotNull;
 import org.osgi.framework.BundleContext;
 import org.osgi.framework.ServiceReference;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * Wrapper for {@link MockAdapterManager} which makes sure multiple unit tests
@@ -33,6 +35,8 @@ import org.osgi.framework.ServiceReference;
  * different {@link MockAdapterManager} is used per thread.
  */
 class ThreadsafeMockAdapterManagerWrapper implements AdapterManager {
+
+    private static final Logger log = LoggerFactory.getLogger(ThreadsafeMockAdapterManagerWrapper.class);
 
     private static final ThreadLocal<AdapterManagerBundleContextFactory> THREAD_LOCAL = new ThreadLocal<AdapterManagerBundleContextFactory>() {
         @Override
@@ -71,6 +75,7 @@ class ThreadsafeMockAdapterManagerWrapper implements AdapterManager {
         private BundleContext bundleContext;
 
         public void setBundleContext(@NotNull final BundleContext bundleContext) {
+            log.debug("Set bundle context for AdapterManager, bundleContext={}", bundleContext);
             this.bundleContext = bundleContext;
 
             // register adapter manager
@@ -88,11 +93,13 @@ class ThreadsafeMockAdapterManagerWrapper implements AdapterManager {
         @SuppressWarnings("null")
         public synchronized AdapterManager getAdapterManager() {
             if (bundleContext == null) {
-                setBundleContext(MockOsgi.newBundleContext());
+                BundleContext newBundleContext = MockOsgi.newBundleContext();
+                log.warn("Create new bundle context for adapter manager because it was null, bundleContext={}", bundleContext);
+                setBundleContext(newBundleContext);
             }
             ServiceReference<AdapterManager> serviceReference = bundleContext.getServiceReference(AdapterManager.class);
             if (serviceReference != null) {
-                return (AdapterManager)bundleContext.getService(serviceReference);
+                return bundleContext.getService(serviceReference);
             }
             else {
                 throw new RuntimeException("AdapterManager not registered in bundle context.");

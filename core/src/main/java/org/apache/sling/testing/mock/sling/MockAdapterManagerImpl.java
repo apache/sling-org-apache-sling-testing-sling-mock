@@ -49,8 +49,6 @@ import org.osgi.service.component.annotations.Component;
 import org.osgi.service.component.annotations.Reference;
 import org.osgi.service.component.annotations.ReferenceCardinality;
 import org.osgi.service.component.annotations.ReferencePolicy;
-import org.osgi.service.event.Event;
-import org.osgi.service.event.EventAdmin;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -105,12 +103,6 @@ public class MockAdapterManagerImpl implements AdapterManager {
      */
     private final ConcurrentMap<String, Map<String, List<AdapterFactoryDescriptor>>> factoryCache
     = new ConcurrentHashMap<String, Map<String, List<AdapterFactoryDescriptor>>>();
-
-    /**
-     * The service tracker for the event admin
-     */
-    @Reference(cardinality=ReferenceCardinality.OPTIONAL, policy=ReferencePolicy.DYNAMIC)
-    private volatile EventAdmin eventAdmin;
 
     // DISABLED IN THIS COPY OF CLASS
     /*
@@ -308,13 +300,6 @@ public class MockAdapterManagerImpl implements AdapterManager {
                     SlingConstants.PROPERTY_ADAPTER_CLASSES, Arrays.toString(adapters) });
         }
         factoryDesc.setAdaption(adaptionRegistration);
-
-        // send event
-        final EventAdmin localEA = this.eventAdmin;
-        if ( localEA != null ) {
-            localEA.postEvent(new Event(SlingConstants.TOPIC_ADAPTER_FACTORY_ADDED,
-                    props));
-        }
     }
 
     static String getPackageName(String clazz) {
@@ -396,16 +381,6 @@ public class MockAdapterManagerImpl implements AdapterManager {
                         SlingConstants.PROPERTY_ADAPTABLE_CLASSES, Arrays.toString(adaptables),
                         SlingConstants.PROPERTY_ADAPTER_CLASSES, Arrays.toString(adapters) });
             }
-        }
-
-        // send event
-        final EventAdmin localEA = this.eventAdmin;
-        if ( localEA != null ) {
-            final Dictionary<String, Object> props = new Hashtable<String, Object>();
-            props.put(SlingConstants.PROPERTY_ADAPTABLE_CLASSES, adaptables);
-            props.put(SlingConstants.PROPERTY_ADAPTER_CLASSES, adapters);
-            localEA.postEvent(new Event(SlingConstants.TOPIC_ADAPTER_FACTORY_REMOVED,
-                    props));
         }
     }
 

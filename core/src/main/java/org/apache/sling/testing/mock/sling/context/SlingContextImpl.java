@@ -119,6 +119,7 @@ public class SlingContextImpl extends OsgiContextImpl {
     /**
      * Setup actions before test method execution
      */
+    @Override
     protected void setUp() {
         super.setUp();
         MockSling.setAdapterManagerBundleContext(bundleContext());
@@ -212,7 +213,15 @@ public class SlingContextImpl extends OsgiContextImpl {
     /**
      * Teardown actions after test method execution
      */
+    @Override
     protected void tearDown() {
+
+        if (this.request != null) {
+            MockSlingBindings slingBindings = (MockSlingBindings)this.request.getAttribute(SlingBindings.class.getName());
+            if (slingBindings != null) {
+                slingBindings.tearDown();
+            }
+        }
 
         if (this.resourceResolver != null) {
 

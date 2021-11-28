@@ -27,11 +27,15 @@ import org.apache.sling.testing.mock.sling.ResourceResolverType;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.osgi.framework.BundleContext;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * Create resolve resolver instance and initialize it depending on it's type.
  */
 final class ContextResourceResolverFactory {
+
+    private static final Logger log = LoggerFactory.getLogger(ContextResourceResolverFactory.class);
 
     private ContextResourceResolverFactory() {
         // static methods only
@@ -44,6 +48,7 @@ final class ContextResourceResolverFactory {
             type = MockSling.DEFAULT_RESOURCERESOLVER_TYPE;
         }
         try {
+            log.debug("Start initialize resource resolver factory, bundleContext={}", bundleContext);
             ResourceResolverFactory factory = MockSling.newResourceResolverFactory(type, bundleContext);
 
             switch (type) {
@@ -63,8 +68,11 @@ final class ContextResourceResolverFactory {
                 throw new IllegalArgumentException("Invalid resource resolver type: " + type);
             }
 
+            log.debug("Finished initializing resource resolver factory, bundleContext={}", bundleContext);
+
             return factory;
         } catch (Throwable ex) {
+            log.error("Failed initializing resource resolver factory, bundleContext={}", bundleContext, ex);
             throw new RuntimeException("Unable to initialize " + type + " resource resolver factory: " + ex.getMessage(), ex);
         }
     }

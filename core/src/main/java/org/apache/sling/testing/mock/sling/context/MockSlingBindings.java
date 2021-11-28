@@ -48,7 +48,7 @@ class MockSlingBindings extends SlingBindings implements EventHandler {
      */
     static final String SERVICE_PROPERTY_MOCK_SLING_BINDINGS_IGNORE = "MockSlingBindings-ignore";
 
-    private final SlingContextImpl context;
+    private volatile SlingContextImpl context;
 
     public MockSlingBindings(SlingContextImpl context) {
         this.context = context;
@@ -57,6 +57,9 @@ class MockSlingBindings extends SlingBindings implements EventHandler {
 
     @Override
     public Object get(Object key) {
+        if (this.context == null) {
+            return null;
+        }
         if (key instanceof String) {
             Object result = context.resolveSlingBindingProperty((String)key, context.request());
             if (result != null) {
@@ -81,6 +84,9 @@ class MockSlingBindings extends SlingBindings implements EventHandler {
 
     @Override
     public void handleEvent(Event event) {
+        if (this.context == null) {
+            return;
+        }
         // is triggered by OSGi events fired by {@link org.apache.sling.scripting.core.impl.BindingsValuesProvidersByContextImpl}
         // whenever a new bindings value provider is added or removed
         populateFromBindingsValuesProvider();
@@ -124,6 +130,10 @@ class MockSlingBindings extends SlingBindings implements EventHandler {
         }
 
         return null;
+    }
+
+    public void tearDown() {
+        this.context = null;
     }
 
 }
