@@ -165,12 +165,12 @@
             <artifactId>jackrabbit-api</artifactId>
             <scope>compile</scope>
         </dependency>
+        <!-- for org.apache.jackrabbit.oak.jcr.observation.filter used in https://github.com/apache/sling-org-apache-sling-jcr-resource/blob/18edb8d7e7106c1e1e3333b89bf4d2a49c686e3b/src/main/java/org/apache/sling/jcr/resource/internal/JcrListenerBaseConfig.java#L33-->
         <dependency>
             <groupId>org.apache.jackrabbit</groupId>
             <artifactId>oak-jcr</artifactId>
             <scope>compile</scope>
         </dependency>
-
         <dependency>
            <groupId>org.apache.commons</groupId>
            <artifactId>commons-collections4</artifactId>
