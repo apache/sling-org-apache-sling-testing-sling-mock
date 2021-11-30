@@ -284,7 +284,7 @@
         <profile>
             <id>latest-dependency-versions</id>
             <activation>
-                <activeByDefault>true</activeByDefault>
+                <activeByDefault>false</activeByDefault>
             </activation>
             <dependencyManagement>
                 <dependencies>
