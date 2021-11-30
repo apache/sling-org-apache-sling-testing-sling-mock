@@ -90,4 +90,9 @@ public final class MockSlingSettingService implements SlingSettingsService {
         throw new UnsupportedOperationException();
     }
 
+    // part of Sling Setting Service 1.4.2
+    public int getBestRunModeMatchCountFromSpec(String spec) {
+        throw new UnsupportedOperationException();
+    }
+
 }

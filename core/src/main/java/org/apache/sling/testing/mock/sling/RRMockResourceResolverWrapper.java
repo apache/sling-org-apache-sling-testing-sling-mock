@@ -32,7 +32,6 @@ import org.apache.sling.api.resource.Resource;
 import org.apache.sling.api.resource.ResourceResolver;
 import org.apache.sling.api.resource.ResourceUtil;
 import org.apache.sling.api.wrappers.ResourceResolverWrapper;
-import org.apache.sling.resourceresolver.impl.ResourceTypeUtil;
 import org.apache.sling.spi.resource.provider.ResolveContext;
 import org.apache.sling.spi.resource.provider.ResourceContext;
 import org.apache.sling.spi.resource.provider.ResourceProvider;
@@ -206,6 +205,56 @@ class RRMockResourceResolverWrapper extends ResourceResolverWrapper implements R
             }
         }
         return resourceSuperType;
+    }
+
+
+
+    /**
+     * Some helper methods for doing comparisons on resource types.
+     * This class is private the resource resolver bundle.
+     * Consumers should rely on {@link Resource#isResourceType(String)} or {@link ResourceResolver#isResourceType(Resource, String)} instead.
+     *
+     * <p>
+     *   This is a copy of org.apache.sling.resourceresolver.impl.ResourceTypeUtil which is an internal class
+     *   and its signature has changed between releases.
+     * </p>
+     */
+    static class ResourceTypeUtil {
+
+        /**
+         * Returns <code>true</code> if the given resource type are equal.
+         *
+         * In case the value of any of the given resource types
+         * starts with one of the resource resolver's search paths
+         * it is converted to a relative resource type by stripping off
+         * the resource resolver's search path before doing the comparison.
+         *
+         * @param resourceType A resource type
+         * @param anotherResourceType Another resource type to compare with {@link resourceType}.
+         * @return <code>true</code> if the resource type equals the given resource type.
+         */
+        public static boolean areResourceTypesEqual(@NotNull String resourceType, @NotNull String anotherResourceType, String @NotNull [] searchPath) {
+            return relativizeResourceType(resourceType, searchPath).equals(relativizeResourceType(anotherResourceType, searchPath));
+        }
+
+        /**
+         * Makes the given resource type relative by stripping off any prefix which equals one of the given search paths.
+         * In case the given resource type does not start with any of the given search paths it is returned unmodified.
+         * @param resourceType the resourceType to relativize.
+         * @param searchPath the search paths to strip off from the given resource type.
+         * @return the relative resource type
+         */
+        public static String relativizeResourceType(@NotNull String resourceType, String @NotNull [] searchPath) {
+            if (resourceType.startsWith("/")) {
+                for (String prefix : searchPath) {
+                    if (resourceType.startsWith(prefix)) {
+                        return resourceType.substring(prefix.length());
+                    }
+                }
+            }
+            return resourceType;
+        }
+
     }
 
 }

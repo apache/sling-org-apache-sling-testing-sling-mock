@@ -19,5 +19,5 @@
 /**
  * Mocks for selected Sling services.
  */
-@org.osgi.annotation.versioning.Version("2.0.3")
+@org.osgi.annotation.versioning.Version("2.1")
 package org.apache.sling.testing.mock.sling.services;

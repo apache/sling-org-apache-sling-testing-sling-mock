@@ -18,6 +18,10 @@
  */
 package org.apache.sling.testing.mock.sling;
 
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
+import java.util.Collections;
+import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;
@@ -108,6 +112,21 @@ class RRMockResourceResolverFactoryWrapper implements ResourceResolverFactory,
             return (String)value;
         }
         return null;
+    }
+
+    @SuppressWarnings("unchecked")
+    public @NotNull List<String> getSearchPath() {
+        // call delegate method via reflection, as it is not available in earlier versions of Sling API
+        try {
+            Method getSearchPathMethod = ResourceResolverFactory.class.getMethod("getSearchPath");
+            return (List)getSearchPathMethod.invoke(delegate);
+        }
+        catch (NoSuchMethodException | SecurityException ex) {
+            // earlier version of Sling API - return empty list
+            return Collections.emptyList();
+        } catch (IllegalAccessException | IllegalArgumentException | InvocationTargetException ex) {
+            throw new RuntimeException("Unable to call getSearchPath on delegate.", ex);
+        }
     }
 
 }

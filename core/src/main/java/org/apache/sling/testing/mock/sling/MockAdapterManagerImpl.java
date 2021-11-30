@@ -29,12 +29,11 @@ import java.util.Hashtable;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
+import java.util.TreeMap;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;
 
 import org.apache.sling.adapter.Adaption;
-import org.apache.sling.adapter.internal.AdapterFactoryDescriptor;
-import org.apache.sling.adapter.internal.AdapterFactoryDescriptorMap;
 import org.apache.sling.adapter.internal.AdaptionImpl;
 import org.apache.sling.api.SlingConstants;
 import org.apache.sling.api.adapter.AdapterFactory;
@@ -493,4 +492,81 @@ public class MockAdapterManagerImpl implements AdapterManager {
             }
         }
     }
+
+    /**
+     * The <code>AdapterFactoryDescriptorMap</code> is a sorted map of
+     * {@link AdapterFactoryDescriptor} instances indexed (and ordered) by their
+     * {@link ServiceReference}. This map is used to organize the
+     * registered {@link org.apache.sling.api.adapter.AdapterFactory} services for
+     * a given adaptable type.
+     * <p>
+     * Each entry in the map is a {@link AdapterFactoryDescriptor} thus enabling the
+     * registration of multiple factories for the same (adaptable, adapter) type
+     * tuple. Of course only the first entry (this is the reason for having a sorted
+     * map) for such a given tuple is actually being used. If that first instance is
+     * removed the eventual second instance may actually be used instead.
+     *
+     * <p>
+     *   Copy of import org.apache.sling.adapter.internal.AdapterFactoryDescriptorMap,
+     *   signature has changed in adapter impl 2.2.0.
+     * </p>
+     */
+    static class AdapterFactoryDescriptorMap extends
+            TreeMap<ServiceReference<AdapterFactory>, AdapterFactoryDescriptor> {
+
+        private static final long serialVersionUID = 2L;
+
+    }
+
+    /**
+     * The <code>AdapterFactoryDescriptor</code> is an entry in the
+     * {@link AdapterFactoryDescriptorMap} conveying the list of adapter (target)
+     * types and the respective {@link AdapterFactory}.
+     * <p>
+     *   Copy of import org.apache.sling.adapter.internal.AdapterFactoryDescriptor,
+     *   signature has changed in adapter impl 2.2.0.
+     * </p>
+     */
+    static class AdapterFactoryDescriptor {
+
+        private volatile AdapterFactory factory;
+
+        private final String[] adapters;
+
+        private final ServiceReference<AdapterFactory> reference;
+
+        private final ComponentContext context;
+
+        private volatile ServiceRegistration<Adaption> adaption;
+
+        public AdapterFactoryDescriptor(
+                final ComponentContext context,
+                final ServiceReference<AdapterFactory> reference,
+                final String[] adapters) {
+            this.reference = reference;
+            this.context = context;
+            this.adapters = adapters;
+        }
+
+        public AdapterFactory getFactory() {
+            if ( factory == null ) {
+                factory = context.locateService(
+                        "AdapterFactory", reference);
+            }
+            return factory;
+        }
+
+        public String[] getAdapters() {
+            return adapters;
+        }
+
+        public ServiceRegistration<Adaption> getAdaption() {
+            return adaption;
+        }
+
+        public void setAdaption(ServiceRegistration<Adaption> adaption) {
+            this.adaption = adaption;
+        }
+    }
+
 }

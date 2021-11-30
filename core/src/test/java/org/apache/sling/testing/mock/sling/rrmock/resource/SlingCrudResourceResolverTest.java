@@ -18,14 +18,33 @@
  */
 package org.apache.sling.testing.mock.sling.rrmock.resource;
 
+import static org.junit.Assert.assertNotNull;
+
+import java.lang.reflect.Method;
+import java.util.List;
+
+import org.apache.sling.api.resource.ResourceResolverFactory;
 import org.apache.sling.testing.mock.sling.ResourceResolverType;
 import org.apache.sling.testing.mock.sling.resource.AbstractSlingCrudResourceResolverTest;
+import org.junit.Test;
 
 public class SlingCrudResourceResolverTest extends AbstractSlingCrudResourceResolverTest {
 
     @Override
     protected ResourceResolverType getResourceResolverType() {
         return ResourceResolverType.RESOURCERESOLVER_MOCK;
+    }
+
+    @Test
+    @SuppressWarnings({ "null", "unchecked" })
+    public void testResourceResolverFactory_GetSearchPath() throws Exception {
+        // ensure there is a method getSearchPaths in resource resolver factory, although it is not part of the API we are compiling against (keeping backward compatibility)
+        ResourceResolverFactory factory = context.getService(ResourceResolverFactory.class);
+        Class clazz = factory.getClass();
+        Method getSearchPathMethod = clazz.getMethod("getSearchPath");
+        getSearchPathMethod.setAccessible(true);
+        List<String> searchPaths = (List)getSearchPathMethod.invoke(factory);
+        assertNotNull(searchPaths);
     }
 
 }
