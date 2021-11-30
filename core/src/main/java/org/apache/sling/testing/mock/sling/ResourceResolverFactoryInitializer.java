@@ -133,7 +133,7 @@ class ResourceResolverFactoryInitializer {
      */
     private static void ensureResourceResolverFactoryActivatorDependencies(@NotNull BundleContext bundleContext) {
         Dictionary<String, Object> config = new Hashtable<>();
-        config.put("user.mapping", bundleContext.getBundle().getSymbolicName() + "=admin");
+        config.put("user.mapping", bundleContext.getBundle().getSymbolicName() + "=[admin]");
         registerServiceIfNotPresent(bundleContext, ServiceUserMapper.class, ServiceUserMapperImpl.class, config);
 
         registerServiceIfNotPresent(bundleContext, ResourceAccessSecurityTracker.class, ResourceAccessSecurityTracker.class);
