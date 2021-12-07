@@ -123,8 +123,7 @@ class ResourceResolverFactoryInitializer {
      */
     private static void initializeJcrResourceProvider(@NotNull BundleContext bundleContext) {
         Dictionary<String, Object> config = new Hashtable<>();
-        JcrResourceProvider provider = new JcrResourceProvider();
-        MockOsgi.registerInjectActivateService(provider, bundleContext, config);
+        MockOsgi.registerInjectActivateService(JcrResourceProvider.class, bundleContext, config);
     }
 
     /**
@@ -152,10 +151,7 @@ class ResourceResolverFactoryInitializer {
         // do not required a specific resource provider (otherwise "NONE" will not work)
         config.put("resource.resolver.required.providers", "");
         config.put("resource.resolver.required.providernames", "");
-        ResourceResolverFactoryActivator activator = new ResourceResolverFactoryActivator();
-        MockOsgi.injectServices(activator, bundleContext);
-        MockOsgi.activate(activator, bundleContext, config);
-        bundleContext.registerService(ResourceResolverFactoryActivator.class.getName(), activator, config);
+        MockOsgi.registerInjectActivateService(ResourceResolverFactoryActivator.class, bundleContext, config);
     }
 
     @SuppressWarnings({ "unchecked", "null" })
@@ -221,12 +217,10 @@ class ResourceResolverFactoryInitializer {
      * @param implClass Implementation class
      * @param config OSGi config
      */
-    @SuppressWarnings("unchecked")
     private static <T> void registerServiceIfNotPresent(@NotNull BundleContext bundleContext, @NotNull Class<T> serviceClass,
             @NotNull Class<?> implClass, Dictionary<String, Object> config) {
         if (bundleContext.getServiceReference(serviceClass.getName()) == null) {
-            T instance = (T)MockOsgi.activateInjectServices(implClass, bundleContext, config);
-            bundleContext.registerService(serviceClass, instance, config);
+            MockOsgi.registerInjectActivateService(implClass, bundleContext, config);
         }
     }
 
