@@ -35,6 +35,7 @@ import org.apache.sling.api.wrappers.ResourceResolverWrapper;
 import org.apache.sling.spi.resource.provider.ResolveContext;
 import org.apache.sling.spi.resource.provider.ResourceContext;
 import org.apache.sling.spi.resource.provider.ResourceProvider;
+import org.apache.sling.testing.resourceresolver.MockResourceResolver;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -43,13 +44,22 @@ import org.jetbrains.annotations.Nullable;
  * registered to specific path. This is a very simplified implementation to overlay the mocked
  * resource tree with resource providers, but should be sufficient for unit tests.
  */
-class RRMockResourceResolverWrapper extends ResourceResolverWrapper implements ResolveContext {
+public final class RRMockResourceResolverWrapper extends ResourceResolverWrapper implements ResolveContext {
 
+    private final ResourceResolver wrapped;
     private final ConcurrentMap<String, ResourceProvider> resourceProviders;
 
     RRMockResourceResolverWrapper(ResourceResolver delegate, ConcurrentMap<String, ResourceProvider> resourceProviders) {
         super(delegate);
+        this.wrapped = delegate;
         this.resourceProviders = resourceProviders;
+    }
+
+    /**
+     * @return The wrapped resource resolver
+     */
+    public @NotNull MockResourceResolver getWrappedResourceResolver() {
+        return (MockResourceResolver)wrapped;
     }
 
     @Override

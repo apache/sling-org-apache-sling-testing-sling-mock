@@ -18,14 +18,25 @@
  */
 package org.apache.sling.testing.mock.sling.rrmock.context;
 
+import static org.junit.Assert.assertNotNull;
+
+import org.apache.sling.testing.mock.sling.RRMockResourceResolverWrapper;
 import org.apache.sling.testing.mock.sling.ResourceResolverType;
 import org.apache.sling.testing.mock.sling.context.AbstractSlingContextImplTest;
+import org.apache.sling.testing.resourceresolver.MockResourceResolver;
+import org.junit.Test;
 
 public class SlingContextImplTest extends AbstractSlingContextImplTest {
 
     @Override
     protected ResourceResolverType getResourceResolverType() {
         return ResourceResolverType.RESOURCERESOLVER_MOCK;
+    }
+
+    @Test
+    public void testGetMockResourceResolver() {
+        MockResourceResolver resourceResolver = ((RRMockResourceResolverWrapper)context.resourceResolver()).getWrappedResourceResolver();
+        assertNotNull(resourceResolver);
     }
 
 }
