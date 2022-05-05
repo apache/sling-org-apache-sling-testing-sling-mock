@@ -70,6 +70,32 @@ class RRMockResourceResolverWrapper extends ResourceResolverWrapper implements R
     }
 
     @Override
+    public Resource getResource(Resource base, String path) {
+        if (resourceProviders.isEmpty()) {
+            return super.getResource(base, path);
+        }
+        String normalizedPath = ResourceUtil.normalize(base.getPath() + "/" + path);
+        if (normalizedPath != null) {
+            ResourceProvider resourceProvider = getMatchingResourceProvider(normalizedPath);
+            if (resourceProvider != null) {
+                return resourceProvider.getResource(this, normalizedPath, ResourceContext.EMPTY_CONTEXT, null);
+            }
+            return super.getResource(path);
+        }
+        return null;
+    }
+
+    // duplicated method from MockResourceResolver to ensure resources from resource providers are respected as well
+    @Override
+    public Resource getParent(@NotNull Resource child) {
+        final String parentPath = ResourceUtil.getParent(child.getPath());
+        if (parentPath == null) {
+            return null;
+        }
+        return this.getResource(parentPath);
+    }
+
+    @Override
     @SuppressWarnings("unchecked")
     public @NotNull Iterator<Resource> listChildren(@NotNull Resource parent) {
         if (resourceProviders.isEmpty()) {
@@ -87,6 +113,18 @@ class RRMockResourceResolverWrapper extends ResourceResolverWrapper implements R
         }
         return super.listChildren(parent);
     }
+
+    @Override
+    public @NotNull Iterable<Resource> getChildren(@NotNull Resource parent) {
+        return () -> listChildren(parent);
+    }
+
+    @Override
+    public boolean hasChildren(@NotNull Resource resource) {
+        return listChildren(resource).hasNext();
+    }
+
+
 
     private ResourceProvider getMatchingResourceProvider(String path) {
         ResourceProvider provider = resourceProviders.get(path);

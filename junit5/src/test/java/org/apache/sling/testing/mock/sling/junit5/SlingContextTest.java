@@ -19,6 +19,8 @@
 package org.apache.sling.testing.mock.sling.junit5;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import org.apache.sling.api.resource.Resource;
 import org.apache.sling.testing.mock.sling.ResourceResolverType;
@@ -53,6 +55,24 @@ class SlingContextTest {
         context.request().setAttribute("prop1", "myValue");
         ClasspathRegisteredModel model = context.request().adaptTo(ClasspathRegisteredModel.class);
         assertEquals("myValue", model.getProp1());
+    }
+
+    @Test
+    void testResourceOperationsOnMountedFolder(SlingContext context) {
+        String root = context.uniqueRoot().content() + "/test-content";
+        context.load().folderJson("src/test/resources/test-content", root);
+
+        Resource parent = context.resourceResolver().getResource(root + "/parent");
+        assertNotNull(parent, "Expected to resolve the 'parent' resource.");
+        assertNotNull(parent.getChild("child"), "Expected to resolver the 'child' resource.");
+
+        Resource uniqueRoot = context.resourceResolver().getParent(parent);
+        assertNotNull(uniqueRoot, "Expected to resolve the unique root");
+        assertEquals(root, uniqueRoot.getPath(), "The resolved unique root is not identical to the created unique root.");
+
+        assertTrue(context.resourceResolver().listChildren(parent).hasNext(), "Expected to get a list of children.");
+        assertTrue(context.resourceResolver().getChildren(parent).iterator().hasNext(), "Expected to get a list of children.");
+        assertTrue(parent.hasChildren(), "Expected to get a list of children.");
     }
 
     @AfterEach

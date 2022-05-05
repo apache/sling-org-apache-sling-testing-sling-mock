@@ -1,0 +1,6 @@
+{
+    "jcr:primaryType": "nt:unstructured",
+    "child" : {
+        "jcr:primaryType": "nt:unstructured"
+    }
+}
