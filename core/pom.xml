@@ -23,7 +23,7 @@
     <parent>
         <groupId>org.apache.sling</groupId>
         <artifactId>org.apache.sling.testing.sling-mock.parent</artifactId>
-        <version>3.2.3-SNAPSHOT</version>
+        <version>3.3.0-SNAPSHOT</version>
         <relativePath>../parent/pom.xml</relativePath>
     </parent>
 
@@ -68,6 +68,16 @@
         <dependency>
             <groupId>org.osgi</groupId>
             <artifactId>org.osgi.resource</artifactId>
+            <scope>compile</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.osgi</groupId>
+            <artifactId>org.osgi.util.converter</artifactId>
+            <scope>compile</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.osgi</groupId>
+            <artifactId>org.osgi.util.function</artifactId>
             <scope>compile</scope>
         </dependency>
         <dependency>
@@ -162,7 +172,7 @@
         </dependency>
         <dependency>
             <groupId>org.apache.jackrabbit</groupId>
-            <artifactId>jackrabbit-api</artifactId>
+            <artifactId>oak-jackrabbit-api</artifactId>
             <scope>compile</scope>
         </dependency>
         <!-- for org.apache.jackrabbit.oak.jcr.observation.filter used in https://github.com/apache/sling-org-apache-sling-jcr-resource/blob/18edb8d7e7106c1e1e3333b89bf4d2a49c686e3b/src/main/java/org/apache/sling/jcr/resource/internal/JcrListenerBaseConfig.java#L33-->
@@ -215,11 +225,6 @@
         <dependency>
             <groupId>org.apache.sling</groupId>
             <artifactId>org.apache.sling.fsresource</artifactId>
-            <scope>compile</scope>
-        </dependency>
-        <dependency>
-            <groupId>commons-beanutils</groupId>
-            <artifactId>commons-beanutils</artifactId>
             <scope>compile</scope>
         </dependency>
 

@@ -41,7 +41,6 @@ import javax.jcr.nodetype.NodeTypeTemplate;
 import javax.jcr.nodetype.PropertyDefinition;
 import javax.jcr.nodetype.PropertyDefinitionTemplate;
 
-import org.apache.commons.io.IOUtils;
 import org.apache.jackrabbit.commons.cnd.CndImporter;
 import org.apache.jackrabbit.commons.cnd.CompactNodeTypeDefReader;
 import org.apache.jackrabbit.commons.cnd.DefinitionBuilderFactory;
@@ -125,11 +124,10 @@ public final class NodeTypeDefinitionScanner {
               new TemplateBuilderFactory(new DummyNodeTypeManager(), valueFactory, namespaceRegistry);
 
       for (String nodeTypeResource : nodeTypeResources) {
-          InputStream is = classLoader.getResourceAsStream(nodeTypeResource);
-          if (is == null) {
-              continue;
-          }
-          try {
+          try (InputStream is = classLoader.getResourceAsStream(nodeTypeResource)) {
+              if (is == null) {
+                  continue;
+              }
               Reader reader = new InputStreamReader(is);
               CompactNodeTypeDefReader<NodeTypeTemplate, NamespaceRegistry> cndReader
                       = new CompactNodeTypeDefReader<NodeTypeTemplate, NamespaceRegistry>(reader, nodeTypeResource, factory);
@@ -147,9 +145,6 @@ public final class NodeTypeDefinitionScanner {
           }
           catch (Throwable ex) {
               log.warn("Unable to parse node type definition: " + nodeTypeResource, ex);
-          }
-          finally {
-              IOUtils.closeQuietly(is);
           }
       }
 
@@ -197,11 +192,10 @@ public final class NodeTypeDefinitionScanner {
         Iterator<String> nodeTypeResourcesIterator = nodeTypeResources.iterator();
         while (nodeTypeResourcesIterator.hasNext()) {
             String nodeTypeResource = nodeTypeResourcesIterator.next();
-            InputStream is = classLoader.getResourceAsStream(nodeTypeResource);
-            if (is == null) {
-                continue;
-            }
-            try {
+            try (InputStream is = classLoader.getResourceAsStream(nodeTypeResource)) {
+                if (is == null) {
+                    continue;
+                }
                 Reader reader = new InputStreamReader(is);
                 CndImporter.registerNodeTypes(reader, nodeTypeResource, nodeTypeManager, namespaceRegistry, valueFactory, true);
                 nodeTypeResourcesIterator.remove();
@@ -210,9 +204,6 @@ public final class NodeTypeDefinitionScanner {
                 if (logError) {
                     log.warn("Unable to register node type: " + nodeTypeResource, ex);
                 }
-            }
-            finally {
-                IOUtils.closeQuietly(is);
             }
         }
     }
