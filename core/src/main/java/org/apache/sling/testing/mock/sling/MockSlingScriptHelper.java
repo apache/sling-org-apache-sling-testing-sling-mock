@@ -29,6 +29,7 @@ import org.apache.sling.api.scripting.InvalidServiceFilterSyntaxException;
 import org.apache.sling.api.scripting.SlingScript;
 import org.apache.sling.api.scripting.SlingScriptHelper;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 import org.osgi.framework.BundleContext;
 import org.osgi.framework.InvalidSyntaxException;
 import org.osgi.framework.ServiceReference;
@@ -61,8 +62,8 @@ public final class MockSlingScriptHelper implements SlingScriptHelper {
     }
 
     @Override
-    @SuppressWarnings({ "unchecked", "null" })
-    public <ServiceType> ServiceType getService(@NotNull final Class<ServiceType> serviceType) {
+    @SuppressWarnings("unchecked")
+    public @Nullable <ServiceType> ServiceType getService(@NotNull final Class<ServiceType> serviceType) {
         ServiceReference serviceReference = this.bundleContext.getServiceReference(serviceType.getName());
         if (serviceReference != null) {
             return (ServiceType) this.bundleContext.getService(serviceReference);
@@ -73,7 +74,7 @@ public final class MockSlingScriptHelper implements SlingScriptHelper {
 
     @Override
     @SuppressWarnings("unchecked")
-    public <ServiceType> ServiceType[] getServices(@NotNull final Class<ServiceType> serviceType, final String filter) {
+    public @Nullable <ServiceType> ServiceType[] getServices(@NotNull final Class<ServiceType> serviceType, final String filter) {
         try {
             ServiceReference[] serviceReferences = this.bundleContext.getServiceReferences(serviceType.getName(),
                     filter);
