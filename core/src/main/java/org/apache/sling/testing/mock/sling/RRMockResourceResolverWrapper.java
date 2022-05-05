@@ -70,7 +70,8 @@ class RRMockResourceResolverWrapper extends ResourceResolverWrapper implements R
     }
 
     @Override
-    public Resource getResource(Resource base, String path) {
+    @SuppressWarnings("unchecked")
+    public Resource getResource(Resource base, @NotNull String path) {
         if (resourceProviders.isEmpty()) {
             return super.getResource(base, path);
         }
