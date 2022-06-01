@@ -83,6 +83,14 @@ public abstract class AbstractSlingContextImplTest {
     }
 
     @Test
+    public void testNonMockedSlingBindings() {
+        final SlingBindings slingBindings = new SlingBindings();
+        context.request().setAttribute(SlingBindings.class.getName(), slingBindings);
+        SlingBindings bindings = (SlingBindings) context.request().getAttribute(SlingBindings.class.getName());
+        assertNotNull(bindings);
+    }
+
+    @Test
     public void testSetCurrentResource() {
         context.currentResource("/content/sample/en/jcr:content/par/colctrl");
         assertEquals("/content/sample/en/jcr:content/par/colctrl", context.currentResource().getPath());

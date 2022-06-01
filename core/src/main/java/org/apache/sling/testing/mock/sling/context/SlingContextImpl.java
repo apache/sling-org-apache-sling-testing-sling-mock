@@ -217,9 +217,9 @@ public class SlingContextImpl extends OsgiContextImpl {
     protected void tearDown() {
 
         if (this.request != null) {
-            MockSlingBindings slingBindings = (MockSlingBindings)this.request.getAttribute(SlingBindings.class.getName());
-            if (slingBindings != null) {
-                slingBindings.tearDown();
+            SlingBindings slingBindings = (SlingBindings)this.request.getAttribute(SlingBindings.class.getName());
+            if (slingBindings != null && slingBindings instanceof MockSlingBindings) {
+                ((MockSlingBindings)slingBindings).tearDown();
             }
         }
 
