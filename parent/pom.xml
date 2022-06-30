@@ -28,7 +28,7 @@
     </parent>
 
     <artifactId>org.apache.sling.testing.sling-mock.parent</artifactId>
-    <version>3.3.2</version>
+    <version>3.3.3-SNAPSHOT</version>
     <packaging>pom</packaging>
 
     <name>Apache Sling Testing Sling Mock Parent</name>
@@ -42,7 +42,7 @@
         <servlet-helpers.version>1.4.2</servlet-helpers.version>
         <resourcebuilder.version>1.0.4</resourcebuilder.version>
 
-        <project.build.outputTimestamp>2022-06-30T07:13:24Z</project.build.outputTimestamp>
+        <project.build.outputTimestamp>2022-06-30T07:15:29Z</project.build.outputTimestamp>
     </properties>
 
     <dependencies>
