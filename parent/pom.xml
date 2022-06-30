@@ -28,7 +28,7 @@
     </parent>
 
     <artifactId>org.apache.sling.testing.sling-mock.parent</artifactId>
-    <version>3.3.1-SNAPSHOT</version>
+    <version>3.3.2</version>
     <packaging>pom</packaging>
 
     <name>Apache Sling Testing Sling Mock Parent</name>
@@ -42,7 +42,7 @@
         <servlet-helpers.version>1.4.2</servlet-helpers.version>
         <resourcebuilder.version>1.0.4</resourcebuilder.version>
 
-        <project.build.outputTimestamp>2022-05-05T16:31:06Z</project.build.outputTimestamp>
+        <project.build.outputTimestamp>2022-06-30T07:13:24Z</project.build.outputTimestamp>
     </properties>
 
     <dependencies>
@@ -424,7 +424,7 @@
     </profiles>
 
   <scm>
-    <tag>HEAD</tag>
+    <tag>org.apache.sling.testing.sling-mock.reactor-3.3.2</tag>
     <connection>scm:git:https://gitbox.apache.org/repos/asf/sling-org-apache-sling-testing-sling-mock.git</connection>
     <developerConnection>scm:git:https://gitbox.apache.org/repos/asf/sling-org-apache-sling-testing-sling-mock.git</developerConnection>
     <url>https://gitbox.apache.org/repos/asf?p=sling-org-apache-sling-testing-sling-mock.git</url>
