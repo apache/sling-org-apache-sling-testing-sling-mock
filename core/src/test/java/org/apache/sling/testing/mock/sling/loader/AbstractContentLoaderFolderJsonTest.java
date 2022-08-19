@@ -108,4 +108,22 @@ public abstract class AbstractContentLoaderFolderJsonTest {
         assertTrue(context.resourceResolver().isResourceType(resource, "core/components/superResource"));
     }
 
+    @Test
+    public void testResourceOperationsOnMountedFolder() {
+        String root = context.uniqueRoot().content() + "/test-content";
+        context.load().folderJson("src/test/resources/test-content", root);
+
+        Resource parent = context.resourceResolver().getResource(root + "/parent");
+        assertNotNull( "Expected to resolve the 'parent' resource.", parent);
+        assertNotNull("Expected to resolver the 'child' resource.", parent.getChild("child"));
+
+        Resource uniqueRoot = context.resourceResolver().getParent(parent);
+        assertNotNull("Expected to resolve the unique root.", uniqueRoot);
+        assertEquals("The resolved unique root is not identical to the created unique root.", root, uniqueRoot.getPath());
+
+        assertTrue("Expected to see a list of children.", context.resourceResolver().listChildren(parent).hasNext());
+        assertTrue("Expected to get a list of children.", context.resourceResolver().getChildren(parent).iterator().hasNext());
+        assertTrue("Expected to see a list of children.", parent.hasChildren());
+    }
+
 }
