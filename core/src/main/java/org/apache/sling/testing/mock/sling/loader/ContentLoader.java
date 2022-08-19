@@ -38,6 +38,7 @@ import org.apache.jackrabbit.JcrConstants;
 import org.apache.sling.api.resource.PersistenceException;
 import org.apache.sling.api.resource.Resource;
 import org.apache.sling.api.resource.ResourceResolver;
+import org.apache.sling.api.resource.ResourceResolverFactory;
 import org.apache.sling.api.resource.ResourceUtil;
 import org.apache.sling.commons.mime.MimeTypeService;
 import org.apache.sling.contentparser.api.ContentParser;
@@ -52,6 +53,7 @@ import org.apache.sling.testing.mock.osgi.MapUtil;
 import org.apache.sling.testing.mock.osgi.MockOsgi;
 import org.apache.sling.testing.mock.sling.ResourceResolverType;
 import org.apache.sling.testing.mock.sling.builder.ImmutableValueMap;
+import org.apache.sling.testing.resourceresolver.MockResourceResolverFactory;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.osgi.framework.BundleContext;
@@ -548,19 +550,13 @@ public final class ContentLoader {
      * @param mountFolder Root folder to mount
      * @param destPath Path to mount folder into
      */
-    @SuppressWarnings("null")
     public void folderJson(@NotNull File mountFolder, @NotNull String destPath) {
-        if (bundleContext == null) {
-            throw new IllegalArgumentException("No bundle context given for content loader.");
-        }
-        Dictionary<String, Object> serviceProperties = MapUtil.toDictionary(
+        registerFileSystemResourceProvider(
                 "provider.file", mountFolder.getAbsolutePath(),
                 "provider.root", destPath,
                 "provider.fs.mode", "INITIAL_CONTENT",
                 "provider.initial.content.import.options", "overwrite:=true;ignoreImportProviders:=\"xml\"",
                 "provider.checkinterval", 0);
-        FsResourceProvider service = MockOsgi.activateInjectServices(FsResourceProvider.class, bundleContext, serviceProperties);
-        bundleContext.registerService(ResourceProvider.class, service, serviceProperties);
     }
 
     /**
@@ -597,18 +593,12 @@ public final class ContentLoader {
      * @param mountFolder Root folder to mount. Path needs to point to the root folder of the content package structure.
      * @param destPath Subtree path that should be mounted from FileVault XML structure
      */
-    @SuppressWarnings("null")
     public void folderFileVaultXml(@NotNull File mountFolder, @NotNull String destPath) {
-        if (bundleContext == null) {
-            throw new IllegalArgumentException("No bundle context given for content loader.");
-        }
-        Dictionary<String, Object> serviceProperties = MapUtil.toDictionary(
+        registerFileSystemResourceProvider(
                 "provider.file", mountFolder.getAbsolutePath(),
                 "provider.root", destPath,
                 "provider.fs.mode", "FILEVAULT_XML",
                 "provider.checkinterval", 0);
-        FsResourceProvider service = MockOsgi.activateInjectServices(FsResourceProvider.class, bundleContext, serviceProperties);
-        bundleContext.registerService(ResourceProvider.class, service, serviceProperties);
     }
 
     /**
@@ -632,6 +622,34 @@ public final class ContentLoader {
         }
         finally {
             IOUtils.closeQuietly(is);
+        }
+    }
+
+    @SuppressWarnings("null")
+    private void registerFileSystemResourceProvider(Object... serviceProperties) {
+        if (bundleContext == null) {
+            throw new IllegalStateException("No bundle context given for content loader.");
+        }
+        if (isUsingMockResourceResolverFactory()) {
+            throw new IllegalStateException("Loading folder content is not supported with RESOURCERESOLVER_MOCK resource resolver type. "
+                    + "Use RESOURCEPROVIDER_MOCK or one of the other types.");
+        }
+        Dictionary<String,Object> props = MapUtil.toDictionary(serviceProperties);
+        FsResourceProvider service = MockOsgi.activateInjectServices(FsResourceProvider.class, bundleContext, props);
+        bundleContext.registerService(ResourceProvider.class, service, props);
+    }
+
+    private boolean isUsingMockResourceResolverFactory() {
+        ServiceReference<ResourceResolverFactory> serviceReference = bundleContext.getServiceReference(ResourceResolverFactory.class);
+        if (serviceReference == null) {
+            throw new IllegalStateException("No resource resolver factory service present.");
+        }
+        try {
+            ResourceResolverFactory resourceResolverFactory = bundleContext.getService(serviceReference);
+            return resourceResolverFactory instanceof MockResourceResolverFactory;
+        }
+        finally {
+            bundleContext.ungetService(serviceReference);
         }
     }
 

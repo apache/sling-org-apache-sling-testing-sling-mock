@@ -18,9 +18,6 @@
  */
 package org.apache.sling.testing.mock.sling.context;
 
-import javax.jcr.RepositoryException;
-
-import org.apache.sling.api.resource.LoginException;
 import org.apache.sling.api.resource.ResourceResolverFactory;
 import org.apache.sling.testing.mock.sling.MockSling;
 import org.apache.sling.testing.mock.sling.ResourceResolverType;
@@ -50,47 +47,12 @@ final class ContextResourceResolverFactory {
         try {
             log.debug("Start initialize resource resolver factory, bundleContext={}", bundleContext);
             ResourceResolverFactory factory = MockSling.newResourceResolverFactory(type, bundleContext);
-
-            switch (type) {
-            case JCR_MOCK:
-                initializeJcrMock(factory);
-                break;
-            case JCR_OAK:
-                initializeJcrOak(factory);
-                break;
-            case RESOURCERESOLVER_MOCK:
-                initializeResourceResolverMock(factory);
-                break;
-            case NONE:
-                initializeResourceResolverNone(factory);
-                break;
-            default:
-                throw new IllegalArgumentException("Invalid resource resolver type: " + type);
-            }
-
             log.debug("Finished initializing resource resolver factory, bundleContext={}", bundleContext);
-
             return factory;
         } catch (Throwable ex) {
             log.error("Failed initializing resource resolver factory, bundleContext={}", bundleContext, ex);
             throw new RuntimeException("Unable to initialize " + type + " resource resolver factory: " + ex.getMessage(), ex);
         }
-    }
-
-    private static void initializeJcrMock(@NotNull ResourceResolverFactory factory) throws RepositoryException, LoginException {
-        // nothing to do
-    }
-
-    private static void initializeJcrOak(@NotNull ResourceResolverFactory factory) {
-        // register sling node types?
-    }
-
-    private static void initializeResourceResolverMock(@NotNull ResourceResolverFactory factory) {
-        // nothing to do
-    }
-
-    private static void initializeResourceResolverNone(@NotNull ResourceResolverFactory factory) {
-        // nothing to do
     }
 
 }

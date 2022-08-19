@@ -28,25 +28,34 @@ import org.jetbrains.annotations.NotNull;
 public enum ResourceResolverType {
 
     /**
-     * Uses Sling "resourceresolver-mock" implementation, no underlying JCR
-     * repository.
+     * Uses Sling "resourceresolver-mock" implementation, no underlying JCR repository.
      * <ul>
-     * <li>Simulates an In-Memory resource tree, does not provide adaptions to
-     * JCR.</li>
-     * <li>You can use it to make sure the code you want to test does not
-     * contain references to JCR API.</li>
-     * <li>Behaves slightly different from JCR resource mapping e.g. handling
-     * binary and date values.</li>
+     * <li>Simulates an In-Memory resource tree, does not provide adaptions to JCR.</li>
+     * <li>You can use it to make sure the code you want to test does not contain references to JCR API.</li>
+     * <li>Behaves slightly different from JCR resource mapping e.g. handling binary and date values.</li>
      * <li>This resource resolver type is very fast.</li>
      * </ul>
      */
     RESOURCERESOLVER_MOCK(RRMockMockResourceResolverAdapter.class.getName(), null, NodeTypeMode.NOT_SUPPORTED),
 
     /**
+     * Uses Sling "resourceresolver-mock" implementation, no underlying JCR repository.
+     * <ul>
+     * <li>Uses the real Sling Resource Resolver and JCR Resource mapping implementation.
+     *  This allows using multiple resource providers and loading folders for JSON or FileVault XML content.</li>
+     * <li>Simulates an In-Memory resource tree, does not provide adaptions to JCR.</li>
+     * <li>You can use it to make sure the code you want to test does not contain references to JCR API.</li>
+     * <li>Behaves slightly different from JCR resource mapping e.g. handling binary and date values.</li>
+     * <li>This resource resolver type is quite fast.</li>
+     * </ul>
+     */
+    RESOURCEPROVIDER_MOCK(RPMockMockResourceResolverAdapter.class.getName(), null, NodeTypeMode.NOT_SUPPORTED),
+
+    /**
      * Uses a simple JCR "in-memory" mock as underlying repository.
      * <ul>
-     * <li>Uses the real Sling Resource Resolver and JCR Resource mapping
-     * implementation.</li>
+     * <li>Uses the real Sling Resource Resolver and JCR Resource mapping implementation.
+     *  This allows using multiple resource providers and loading folders for JSON or FileVault XML content.</li>
      * <li>The mock JCR implementation from Apache Sling is used.</li>
      * <li>It supports the most important, but not all JCR features. Extended
      * features like Versioning, Eventing, Search, Transaction handling etc. are
@@ -59,12 +68,10 @@ public enum ResourceResolverType {
     /**
      * Uses a real JCR Jackrabbit Oak repository.
      * <ul>
-     * <li>Uses the real Sling Resource Resolver and JCR Resource mapping
-     * implementation.</li>
-     * <li>The JCR repository is started on first access, this may take some
-     * seconds.</li>
-     * <li>The <code>MemoryNodeStore</code> implementation is used, with no
-     * customizations.</li>
+     * <li>Uses the real Sling Resource Resolver and JCR Resource mapping implementation.
+     *  This allows using multiple resource providers and loading folders for JSON or FileVault XML content.</li>
+     * <li>The JCR repository is started on first access, this may take some seconds.</li>
+     * <li>The <code>MemoryNodeStore</code> implementation is used, with no customizations.</li>
      * </ul>
      */
     JCR_OAK("org.apache.sling.testing.mock.sling.oak.OakMockResourceResolverAdapter",
@@ -79,7 +86,6 @@ public enum ResourceResolverType {
      * </ul>
      */
     NONE(MockNoneResourceResolverAdapter.class.getName(), null, NodeTypeMode.NOT_SUPPORTED);
-
 
 
     private final @NotNull String resourceResolverTypeAdapterClass;
