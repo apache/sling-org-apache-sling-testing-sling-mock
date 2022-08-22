@@ -43,6 +43,7 @@ import org.apache.sling.api.resource.ResourceUtil;
 import org.apache.sling.api.resource.ValueMap;
 import org.apache.sling.testing.mock.sling.ResourceResolverType;
 import org.apache.sling.testing.mock.sling.builder.ContentBuilder;
+import org.apache.sling.testing.mock.sling.context.models.ResourceModel;
 import org.apache.sling.testing.mock.sling.junit.SlingContext;
 import org.junit.Before;
 import org.junit.Rule;
@@ -338,6 +339,15 @@ public abstract class AbstractSlingCrudResourceResolverTest {
     public void testResourceWithoutResourceType() throws PersistenceException {
         Resource noResourceType = context.create().resource(getTestRootResource().getPath() + "/noResourceType");
         assertNotNull(noResourceType.getResourceType());
+    }
+
+    @Test
+    public void testResourceInsideAndOutsideModel() {
+        Resource resource = context.currentResource("/");
+        assertNotNull(resource);
+        ResourceModel model = resource.adaptTo(ResourceModel.class);
+        assertNotNull(model);
+        assertEquals(resource, model.getAdaptable());
     }
 
 }

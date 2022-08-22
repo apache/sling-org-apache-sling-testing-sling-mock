@@ -16,8 +16,22 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-/**
- * Mock implementation of selected Sling APIs.
- */
-@org.osgi.annotation.versioning.Version("3.4.0")
-package org.apache.sling.testing.mock.sling;
+package org.apache.sling.testing.mock.sling.context.models;
+
+import org.apache.sling.api.resource.Resource;
+import org.apache.sling.models.annotations.Model;
+
+@Model(adaptables = Resource.class)
+public class ResourceModel {
+    
+    private final Resource resource;
+
+    public ResourceModel(Resource resource) {
+        this.resource = resource;
+    }
+
+    public Resource getAdaptable() {
+        return resource;
+    }
+
+}

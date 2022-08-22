@@ -20,29 +20,27 @@ package org.apache.sling.testing.mock.sling;
 
 import org.apache.sling.api.resource.ResourceResolverFactory;
 import org.apache.sling.jcr.api.SlingRepository;
+import org.apache.sling.testing.mock.osgi.MockOsgi;
 import org.apache.sling.testing.mock.sling.spi.ResourceResolverTypeAdapter;
-import org.apache.sling.testing.resourceresolver.MockResourceResolverFactory;
-import org.apache.sling.testing.resourceresolver.MockResourceResolverFactoryOptions;
+import org.apache.sling.testing.resourceresolver.MockResourceProvider;
 import org.osgi.framework.BundleContext;
 
 /**
- * Resource resolver type adapter for Sling Resource Resolver Mock implementation using {@link org.apache.sling.testing.resourceresolver.MockResourceResolver}.
+ * Resource resolver type adapter for Sling Resource Resolver Mock implementation using {@link MockResourceProvider}.
  */
-class RRMockMockResourceResolverAdapter implements ResourceResolverTypeAdapter {
-
-    private final MockResourceResolverFactoryOptions options;
+class RPMockMockResourceResolverAdapter implements ResourceResolverTypeAdapter {
 
     /**
      * Constructor
      */
-    public RRMockMockResourceResolverAdapter(BundleContext bundleContext) {
-        options = new MockResourceResolverFactoryOptions();
-        options.setMangleNamespacePrefixes(true);
+    public RPMockMockResourceResolverAdapter(BundleContext bundleContext) {
+        // register resource provider from resourceresolver-mock and use Sling ResourceResolver implementation
+        MockOsgi.registerInjectActivateService(MockResourceProvider.class, bundleContext);
     }
 
     @Override
     public ResourceResolverFactory newResourceResolverFactory() {
-        return new MockResourceResolverFactory(options);
+        return null;
     }
 
     @Override

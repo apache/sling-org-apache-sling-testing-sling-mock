@@ -16,16 +16,16 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-package org.apache.sling.testing.mock.sling.rrmock.loader;
+package org.apache.sling.testing.mock.sling.rpmock.loader;
 
 import org.apache.sling.testing.mock.sling.ResourceResolverType;
-import org.apache.sling.testing.mock.sling.loader.AbstractContentLoaderFolderFileVaultXmlTest;
+import org.apache.sling.testing.mock.sling.loader.AbstractContentLoaderFileVaultXmlTest;
 
-public class ContentLoaderFolderFileVaultXmlTest extends AbstractContentLoaderFolderFileVaultXmlTest {
+public class ContentLoaderFileVaultXmlTest extends AbstractContentLoaderFileVaultXmlTest {
 
     @Override
     protected ResourceResolverType getResourceResolverType() {
-        return ResourceResolverType.RESOURCERESOLVER_MOCK;
+        return ResourceResolverType.RESOURCEPROVIDER_MOCK;
     }
 
 }

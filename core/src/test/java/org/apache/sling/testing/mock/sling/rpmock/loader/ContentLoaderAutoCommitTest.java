@@ -16,8 +16,15 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-/**
- * Mock implementation of selected Sling APIs.
- */
-@org.osgi.annotation.versioning.Version("3.4.0")
-package org.apache.sling.testing.mock.sling;
+package org.apache.sling.testing.mock.sling.rpmock.loader;
+
+import org.apache.sling.testing.mock.sling.ResourceResolverType;
+import org.apache.sling.testing.mock.sling.loader.AbstractContentLoaderAutoCommitTest;
+
+public class ContentLoaderAutoCommitTest extends AbstractContentLoaderAutoCommitTest {
+
+    @Override
+    protected ResourceResolverType getResourceResolverType() {
+        return ResourceResolverType.RESOURCEPROVIDER_MOCK;
+    }
+}
