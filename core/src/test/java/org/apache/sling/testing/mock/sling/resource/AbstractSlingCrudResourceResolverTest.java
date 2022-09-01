@@ -343,6 +343,7 @@ public abstract class AbstractSlingCrudResourceResolverTest {
 
     @Test
     public void testResourceInsideAndOutsideModel() {
+        context.addModelsForClasses(ResourceModel.class);
         Resource resource = context.currentResource("/");
         assertNotNull(resource);
         ResourceModel model = resource.adaptTo(ResourceModel.class);
