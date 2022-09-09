@@ -18,9 +18,14 @@
  */
 package org.apache.sling.testing.mock.sling.resource;
 
+import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNull;
+import static org.junit.Assert.assertTrue;
 
+import java.util.Collections;
+
+import org.apache.sling.api.resource.PersistenceException;
 import org.apache.sling.api.resource.Resource;
 import org.apache.sling.api.resource.ResourceResolver;
 import org.apache.sling.api.resource.ResourceResolverFactory;
@@ -28,6 +33,7 @@ import org.apache.sling.testing.mock.osgi.MockOsgi;
 import org.apache.sling.testing.mock.sling.MockSling;
 import org.apache.sling.testing.mock.sling.ResourceResolverType;
 import org.junit.After;
+import org.junit.Before;
 import org.junit.Test;
 import org.osgi.framework.BundleContext;
 
@@ -43,8 +49,15 @@ public abstract class AbstractMultipleResourceResolverTest {
 
     protected abstract ResourceResolverType getResourceResolverType();
 
+    private ResourceResolverFactory resourceResolverFactory;
+
     protected ResourceResolverFactory newResourceResolerFactory() {
         return MockSling.newResourceResolverFactory(getResourceResolverType(), bundleContext);
+    }
+
+    @Before
+    public void setUp() {
+        this.resourceResolverFactory = newResourceResolerFactory();
     }
 
     @After
@@ -52,12 +65,11 @@ public abstract class AbstractMultipleResourceResolverTest {
         MockOsgi.shutdown(bundleContext);
     }
 
-    @SuppressWarnings("deprecation")
     @Test
+    @SuppressWarnings("deprecation")
     public void testMultipleResourceResolver() throws Exception {
-        ResourceResolverFactory factory = newResourceResolerFactory();
-        ResourceResolver resolver1 = factory.getAdministrativeResourceResolver(null);
-        ResourceResolver resolver2 = factory.getAdministrativeResourceResolver(null);
+        ResourceResolver resolver1 = resourceResolverFactory.getAdministrativeResourceResolver(null);
+        ResourceResolver resolver2 = resourceResolverFactory.getAdministrativeResourceResolver(null);
 
         // add a resource in resolver 1
         Resource root = resolver1.getResource("/");
@@ -73,6 +85,26 @@ public abstract class AbstractMultipleResourceResolverTest {
         resolver2.commit();
 
         assertNull(resolver1.getResource("/test"));
+    }
+
+    @Test
+    @SuppressWarnings("deprecation")
+    public void testIsResourceTypeWithAdminResourceResolver() throws Exception {
+        ResourceResolver resourceResolver = resourceResolverFactory.getAdministrativeResourceResolver(null);
+        createResourceAndCheckResourceType(resourceResolver);
+    }
+
+    @Test
+    public void testIsResourceTypeWithNonAdminResourceResolver() throws Exception {
+        ResourceResolver resourceResolver = resourceResolverFactory.getServiceResourceResolver(null);
+        createResourceAndCheckResourceType(resourceResolver);
+    }
+
+    private static void createResourceAndCheckResourceType(ResourceResolver serviceResolver) throws PersistenceException {
+        Resource root = serviceResolver.getResource("/");
+        Resource resource = serviceResolver.create(root, "testResource", Collections.singletonMap("sling:resourceType", "testResourceType"));
+        assertTrue("is expected resource type 'testResourceType'", resource.isResourceType("testResourceType"));
+        assertFalse("is not unexpected resource type 'anotherResourceType'", resource.isResourceType("anotherResourceType"));
     }
 
 }
