@@ -20,10 +20,11 @@ package org.apache.sling.testing.mock.sling.context;
 
 import javax.jcr.Node;
 import javax.jcr.Session;
-import javax.script.SimpleBindings;
+import javax.script.Bindings;
 
 import org.apache.commons.lang3.StringUtils;
 import org.apache.sling.api.resource.Resource;
+import org.apache.sling.api.scripting.LazyBindings;
 import org.apache.sling.api.scripting.SlingBindings;
 import org.apache.sling.scripting.api.BindingsValuesProvider;
 import org.jetbrains.annotations.NotNull;
@@ -73,12 +74,13 @@ class MockSlingBindings extends SlingBindings implements EventHandler {
      * Removes all (non-dynamic) properties from bindings and populates them from all registered {@link BindingsValuesProvider} implementations.
      */
     private void populateFromBindingsValuesProvider() {
-        SimpleBindings bindings = new SimpleBindings();
+        Bindings bindings = new LazyBindings();
         for (BindingsValuesProvider provider : context.getServices(BindingsValuesProvider.class,
                 "(!(" + SERVICE_PROPERTY_MOCK_SLING_BINDINGS_IGNORE + "=true))")) {
             provider.addBindings(bindings);
         }
         this.clear();
+        // if a provider added properties which are evaluated lazily, they are evaluated here.
         this.putAll(bindings);
     }
 
