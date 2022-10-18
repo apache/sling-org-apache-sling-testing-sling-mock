@@ -162,6 +162,9 @@ public final class ContentLoader {
 
     /**
      * Import content of JSON file into repository.
+     * <ul>
+     * <li>The imported resources support reading and writing.</li>
+     * </ul>
      * @param classpathResourceOrFile Classpath resource URL or file path for JSON content
      * @param parentResource Parent resource
      * @param childName Name of child resource to create with JSON content
@@ -172,8 +175,11 @@ public final class ContentLoader {
     }
 
     /**
-     * Import content of JSON file into repository. Auto-creates parent
-     * hierarchies as nt:unstrucured nodes if missing.
+     * Import content of JSON file into repository.
+     * <ul>
+     * <li>Auto-creates parent hierarchies as nt:unstrucured nodes if missing.</li>
+     * <li>The imported resources support reading and writing.</li>
+     * </ul>
      * @param classpathResourceOrFile Classpath resource URL or file path for JSON content
      * @param destPath Path to import the JSON content to
      * @return Resource
@@ -184,6 +190,9 @@ public final class ContentLoader {
 
     /**
      * Import content of JSON file into repository.
+     * <ul>
+     * <li>The imported resources support reading and writing.</li>
+     * </ul>
      * @param inputStream Input stream with JSON content
      * @param parentResource Parent resource
      * @param childName Name of child resource to create with JSON content
@@ -194,8 +203,11 @@ public final class ContentLoader {
     }
 
     /**
-     * Import content of JSON file into repository. Auto-creates parent
-     * hierarchies as nt:unstrucured nodes if missing.
+     * Import content of JSON file into repository.
+     * <ul>
+     * <li>Auto-creates parent hierarchies as nt:unstrucured nodes if missing.</li>
+     * <li>The imported resources support reading and writing.</li>
+     * </ul>
      * @param inputStream Input stream with JSON content
      * @param destPath Path to import the JSON content to
      * @return Resource
@@ -206,6 +218,9 @@ public final class ContentLoader {
 
     /**
      * Import content of FileVault XML file into repository.
+     * <ul>
+     * <li>The imported resources support reading and writing.</li>
+     * </ul>
      * @param classpathResourceOrFile Classpath resource URL or file path to single FileVault XML file (usually <code>.content.xml</code>)
      * @param parentResource Parent resource
      * @param childName Name of child resource to create with Filevault content
@@ -216,8 +231,11 @@ public final class ContentLoader {
     }
 
     /**
-     * Import content of FileVault XML file into repository. Auto-creates parent
-     * hierarchies as nt:unstrucured nodes if missing.
+     * Import content of FileVault XML file into repository.
+     * <ul>
+     * <li>Auto-creates parent hierarchies as nt:unstrucured nodes if missing.</li>
+     * <li>The imported resources support reading and writing.</li>
+     * </ul>
      * @param classpathResourceOrFile Classpath resource URL or file path to single FileVault XML file (usually <code>.content.xml</code>)
      * @param destPath Path to import the Filevault content to
      * @return Resource
@@ -228,6 +246,9 @@ public final class ContentLoader {
 
     /**
      * Import content of FileVault XML file into repository.
+     * <ul>
+     * <li>The imported resources support reading and writing.</li>
+     * </ul>
      * @param inputStream Input stream with Filevault content
      * @param parentResource Parent resource
      * @param childName Name of child resource to create with Filevault content
@@ -238,8 +259,11 @@ public final class ContentLoader {
     }
 
     /**
-     * Import content of FileVault XML file into repository. Auto-creates parent
-     * hierarchies as nt:unstrucured nodes if missing.
+     * Import content of FileVault XML file into repository.
+     * <ul>
+     * <li>Auto-creates parent hierarchies as nt:unstrucured nodes if missing.</li>
+     * <li>The imported resources support reading and writing.</li>
+     * </ul>
      * @param inputStream Input stream with Filevault content
      * @param destPath Path to import the Filevault content to
      * @return Resource
@@ -298,9 +322,12 @@ public final class ContentLoader {
     }
 
     /**
-     * Import binary file as nt:file binary node into repository. Auto-creates
-     * parent hierarchies as nt:unstrucured nodes if missing. Mime type is
-     * auto-detected from either {@code classpathResourceOrFile} or {@code path}.
+     * Import binary file as nt:file binary node into repository.
+     * <ul>
+     * <li>Auto-creates parent hierarchies as nt:unstrucured nodes if missing.</li>
+     * <li>Mime type is auto-detected from either {@code classpathResourceOrFile} or {@code path}.</li>
+     * <li>The imported resources support reading and writing.</li>
+     * </ul>
      * @param classpathResourceOrFile Classpath resource URL or file path for binary file.
      * @param path Path to mount binary data to (parent nodes created
      *            automatically)
@@ -311,8 +338,11 @@ public final class ContentLoader {
     }
 
     /**
-     * Import binary file as nt:file binary node into repository. Auto-creates
-     * parent hierarchies as nt:unstrucured nodes if missing.
+     * Import binary file as nt:file binary node into repository.
+     * <ul>
+     * <li>Auto-creates parent hierarchies as nt:unstrucured nodes if missing.</li>
+     * <li>The imported resources support reading and writing.</li>
+     * </ul>
      * @param classpathResourceOrFile Classpath resource URL or file path for binary file.
      * @param path Path to mount binary data to (parent nodes created
      *            automatically)
@@ -324,9 +354,12 @@ public final class ContentLoader {
     }
 
     /**
-     * Import binary file as nt:file binary node into repository. Auto-creates
-     * parent hierarchies as nt:unstrucured nodes if missing. Mime type is
-     * auto-detected from resource name.
+     * Import binary file as nt:file binary node into repository.
+     * <ul>
+     * <li>Auto-creates parent hierarchies as nt:unstrucured nodes if missing.</li>
+     * <li>Mime type is auto-detected from resource name.</li>
+     * <li>The imported resources support reading and writing.</li>
+     * </ul>
      * @param inputStream Input stream for binary data
      * @param path Path to mount binary data to (parent nodes created
      *            automatically)
@@ -337,8 +370,11 @@ public final class ContentLoader {
     }
 
     /**
-     * Import binary file as nt:file binary node into repository. Auto-creates
-     * parent hierarchies as nt:unstrucured nodes if missing.
+     * Import binary file as nt:file binary node into repository.
+     * <ul>
+     * <li>Auto-creates parent hierarchies as nt:unstrucured nodes if missing.</li>
+     * <li>The imported resources support reading and writing.</li>
+     * </ul>
      * @param inputStream Input stream for binary data
      * @param path Path to mount binary data to (parent nodes created
      *            automatically)
@@ -359,9 +395,12 @@ public final class ContentLoader {
     }
 
     /**
-     * Import binary file as nt:file binary node into repository. Auto-creates
-     * parent hierarchies as nt:unstrucured nodes if missing. Mime type is
-     * auto-detected from resource name.
+     * Import binary file as nt:file binary node into repository.
+     * <ul>
+     * <li>Auto-creates parent hierarchies as nt:unstrucured nodes if missing.</li>
+     * <li>Mime type is auto-detected from resource name.</li>
+     * <li>The imported resources support reading and writing.</li>
+     * </ul>
      * @param inputStream Input stream for binary data
      * @param parentResource Parent resource
      * @param name Resource name for nt:file
@@ -372,8 +411,11 @@ public final class ContentLoader {
     }
 
     /**
-     * Import binary file as nt:file binary node into repository. Auto-creates
-     * parent hierarchies as nt:unstrucured nodes if missing.
+     * Import binary file as nt:file binary node into repository.
+     * <ul>
+     * <li>Auto-creates parent hierarchies as nt:unstrucured nodes if missing.</li>
+     * <li>The imported resources support reading and writing.</li>
+     * </ul>
      * @param inputStream Input stream for binary data
      * @param parentResource Parent resource
      * @param name Resource name for nt:file
@@ -399,8 +441,11 @@ public final class ContentLoader {
 
     /**
      * Import binary file as nt:resource binary node into repository.
-     * Auto-creates parent hierarchies as nt:unstrucured nodes if missing. Mime
-     * type is auto-detected from {@code classpathResourceOrFile} or {@code path}.
+     * <ul>
+     * <li>Auto-creates parent hierarchies as nt:unstrucured nodes if missing.</li>
+     * <li>Mime type is auto-detected from {@code classpathResourceOrFile} or {@code path}.</li>
+     * <li>The imported resources support reading and writing.</li>
+     * </ul>
      * @param classpathResourceOrFile Classpath resource URL or file path for binary file.
      * @param path Path to mount binary data to (parent nodes created automatically)
      * @return Resource with binary data
@@ -411,7 +456,10 @@ public final class ContentLoader {
 
     /**
      * Import binary file as nt:resource binary node into repository.
-     * Auto-creates parent hierarchies as nt:unstrucured nodes if missing.
+     * <ul>
+     * <li>Auto-creates parent hierarchies as nt:unstrucured nodes if missing.</li>
+     * <li>The imported resources support reading and writing.</li>
+     * </ul>
      * @param classpathResourceOrFile Classpath resource URL or file path for binary file.
      * @param path Path to mount binary data to (parent nodes created automatically)
      * @param mimeType Mime type of binary data
@@ -423,8 +471,11 @@ public final class ContentLoader {
 
     /**
      * Import binary file as nt:resource binary node into repository.
-     * Auto-creates parent hierarchies as nt:unstrucured nodes if missing. Mime
-     * type is auto-detected from resource name.
+     * <ul>
+     * <li>Auto-creates parent hierarchies as nt:unstrucured nodes if missing.</li>
+     * <li>Mime type is auto-detected from resource name.</li>
+     * <li>The imported resources support reading and writing.</li>
+     * </ul>
      * @param inputStream Input stream for binary data
      * @param path Path to mount binary data to (parent nodes created
      *            automatically)
@@ -436,7 +487,10 @@ public final class ContentLoader {
 
     /**
      * Import binary file as nt:resource binary node into repository.
-     * Auto-creates parent hierarchies as nt:unstrucured nodes if missing.
+     * <ul>
+     * <li>Auto-creates parent hierarchies as nt:unstrucured nodes if missing.</li>
+     * <li>The imported resources support reading and writing.</li>
+     * </ul>
      * @param inputStream Input stream for binary data
      * @param path Path to mount binary data to (parent nodes created
      *            automatically)
@@ -458,8 +512,11 @@ public final class ContentLoader {
 
     /**
      * Import binary file as nt:resource binary node into repository.
-     * Auto-creates parent hierarchies as nt:unstrucured nodes if missing. Mime
-     * type is auto-detected from resource name.
+     * <ul>
+     * <li>Auto-creates parent hierarchies as nt:unstrucured nodes if missing.</li>
+     * <li>Mime type is auto-detected from resource name.</li>
+     * <li>The imported resources support reading and writing.</li>
+     * </ul>
      * @param inputStream Input stream for binary data
      * @param parentResource Parent resource
      * @param name Resource name for nt:resource
@@ -471,7 +528,10 @@ public final class ContentLoader {
 
     /**
      * Import binary file as nt:resource binary node into repository.
-     * Auto-creates parent hierarchies as nt:unstrucured nodes if missing.
+     * <ul>
+     * <li>Auto-creates parent hierarchies as nt:unstrucured nodes if missing.</li>
+     * <li>The imported resources support reading and writing.</li>
+     * </ul>
      * @param inputStream Input stream for binary data
      * @param parentResource Parent resource
      * @param name Resource name for nt:resource
@@ -517,7 +577,11 @@ public final class ContentLoader {
     }
 
     /**
-     * Mount a folder (file system) containing content in JSON (Sling-Inital-Content) format in repository.
+     * Mount a folder (file system) containing content in JSON (Sling-Initial-Content) format in repository.
+     * <ul>
+     * <li>The resources are not imported, but mounted via FS Resource Provider.</li>
+     * <li>The mounted resource tree is read-only.</li>
+     * </ul>
      * @param mountFolderPath Root folder path to mount
      * @param parentResource Parent resource
      * @param childName Name of child resource to mount folder into
@@ -527,7 +591,11 @@ public final class ContentLoader {
     }
 
     /**
-     * Mount a folder (file system) containing content in JSON (Sling-Inital-Content) format in repository.
+     * Mount a folder (file system) containing content in JSON (Sling-Initial-Content) format in repository.
+     * <ul>
+     * <li>The resources are not imported, but mounted via FS Resource Provider.</li>
+     * <li>The mounted resource tree is read-only.</li>
+     * </ul>
      * @param mountFolderPath Root folder path to mount
      * @param destPath Path to mount folder into
      */
@@ -536,7 +604,11 @@ public final class ContentLoader {
     }
 
     /**
-     * Mount a folder containing content in JSON (Sling-Inital-Content) format in repository.
+     * Mount a folder containing content in JSON (Sling-Initial-Content) format in repository.
+     * <ul>
+     * <li>The resources are not imported, but mounted via FS Resource Provider.</li>
+     * <li>The mounted resource tree is read-only.</li>
+     * </ul>
      * @param mountFolder Root folder to mount
      * @param parentResource Parent resource
      * @param childName Name of child resource to mount folder into
@@ -546,7 +618,11 @@ public final class ContentLoader {
     }
 
     /**
-     * Mount a folder containing content in JSON (Sling-Inital-Content) format in repository.
+     * Mount a folder containing content in JSON (Sling-Initial-Content) format in repository.
+     * <ul>
+     * <li>The resources are not imported, but mounted via FS Resource Provider.</li>
+     * <li>The mounted resource tree is read-only.</li>
+     * </ul>
      * @param mountFolder Root folder to mount
      * @param destPath Path to mount folder into
      */
@@ -561,6 +637,10 @@ public final class ContentLoader {
 
     /**
      * Mount a folder (file system) containing content in FileVault XML format in repository.
+     * <ul>
+     * <li>The resources are not imported, but mounted via FS Resource Provider.</li>
+     * <li>The mounted resource tree is read-only.</li>
+     * </ul>
      * @param mountFolderPath Root folder path to mount. Path needs to point to the root folder of the content package structure.
      * @param parentResource Parent resource
      * @param childName Name of child resource of subtree path that should be mounted from FileVault XML structure
@@ -571,6 +651,10 @@ public final class ContentLoader {
 
     /**
      * Mount a folder (file system) containing content in FileVault XML format in repository.
+     * <ul>
+     * <li>The resources are not imported, but mounted via FS Resource Provider.</li>
+     * <li>The mounted resource tree is read-only.</li>
+     * </ul>
      * @param mountFolderPath Root folder path to mount. Path needs to point to the root folder of the content package structure.
      * @param destPath Subtree path that should be mounted from FileVault XML structure
      */
@@ -580,6 +664,10 @@ public final class ContentLoader {
 
     /**
      * Mount a folder containing content in FileVault XML format in repository.
+     * <ul>
+     * <li>The resources are not imported, but mounted via FS Resource Provider.</li>
+     * <li>The mounted resource tree is read-only.</li>
+     * </ul>
      * @param mountFolder Root folder to mount. Path needs to point to the root folder of the content package structure.
      * @param parentResource Parent resource
      * @param childName Name of child resource of subtree path that should be mounted from FileVault XML structure
@@ -590,6 +678,10 @@ public final class ContentLoader {
 
     /**
      * Mount a folder containing content in FileVault XML format in repository.
+     * <ul>
+     * <li>The resources are not imported, but mounted via FS Resource Provider.</li>
+     * <li>The mounted resource tree is read-only.</li>
+     * </ul>
      * @param mountFolder Root folder to mount. Path needs to point to the root folder of the content package structure.
      * @param destPath Subtree path that should be mounted from FileVault XML structure
      */
