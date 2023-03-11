@@ -39,7 +39,7 @@
         <jcr-mock.version>1.6.4</jcr-mock.version>
         <resourceresolver-mock.version>1.4.0</resourceresolver-mock.version>
         <logging-mock.version>2.0.0</logging-mock.version>
-        <servlet-helpers.version>1.4.2</servlet-helpers.version>
+        <servlet-helpers.version>1.4.4</servlet-helpers.version>
         <resourcebuilder.version>1.0.4</resourcebuilder.version>
 
         <project.build.outputTimestamp>2022-09-12T14:32:57Z</project.build.outputTimestamp>
