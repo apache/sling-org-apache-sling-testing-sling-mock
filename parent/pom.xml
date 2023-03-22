@@ -35,8 +35,8 @@
     <description>Mock implementation of selected Sling APIs.</description>
 
     <properties>
-        <osgi-mock.version>3.3.6</osgi-mock.version>
-        <jcr-mock.version>1.6.6</jcr-mock.version>
+        <osgi-mock.version>3.3.7-SNAPSHOT</osgi-mock.version>
+        <jcr-mock.version>1.6.7-SNAPSHOT</jcr-mock.version>
         <resourceresolver-mock.version>1.4.0</resourceresolver-mock.version>
         <logging-mock.version>2.0.0</logging-mock.version>
         <servlet-helpers.version>1.4.4</servlet-helpers.version>
