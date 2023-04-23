@@ -23,7 +23,7 @@
     <parent>
         <groupId>org.apache.sling</groupId>
         <artifactId>org.apache.sling.testing.sling-mock.parent</artifactId>
-        <version>3.4.6</version>
+        <version>3.4.7-SNAPSHOT</version>
         <relativePath>../parent/pom.xml</relativePath>
     </parent>
 
@@ -43,7 +43,7 @@
         <dependency>
             <groupId>org.apache.sling</groupId>
             <artifactId>org.apache.sling.testing.jcr-mock</artifactId>
-            <version>1.6.8</version>
+            <version>1.6.9-SNAPSHOT</version>
             <scope>compile</scope>
         </dependency>
         <dependency>
@@ -55,7 +55,7 @@
         <dependency>
             <groupId>org.apache.sling</groupId>
             <artifactId>org.apache.sling.servlet-helpers</artifactId>
-            <version>1.4.6</version>
+            <version>1.4.7-SNAPSHOT</version>
             <scope>compile</scope>
         </dependency>
         <dependency>
