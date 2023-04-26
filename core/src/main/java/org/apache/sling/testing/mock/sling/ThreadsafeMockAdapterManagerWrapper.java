@@ -38,7 +38,8 @@ class ThreadsafeMockAdapterManagerWrapper implements AdapterManager {
 
     private static final Logger log = LoggerFactory.getLogger(ThreadsafeMockAdapterManagerWrapper.class);
 
-    private static final ThreadLocal<AdapterManagerBundleContextFactory> THREAD_LOCAL = new ThreadLocal<AdapterManagerBundleContextFactory>() {
+    private static final InheritableThreadLocal<AdapterManagerBundleContextFactory> THREAD_LOCAL =
+            new InheritableThreadLocal<AdapterManagerBundleContextFactory>() {
         @Override
         protected AdapterManagerBundleContextFactory initialValue() {
             return new AdapterManagerBundleContextFactory();
