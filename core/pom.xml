@@ -37,31 +37,26 @@
         <dependency>
             <groupId>org.apache.sling</groupId>
             <artifactId>org.apache.sling.testing.osgi-mock.core</artifactId>
-            <version>${osgi-mock.version}</version>
             <scope>compile</scope>
         </dependency>
         <dependency>
             <groupId>org.apache.sling</groupId>
             <artifactId>org.apache.sling.testing.jcr-mock</artifactId>
-            <version>1.6.8</version>
             <scope>compile</scope>
         </dependency>
         <dependency>
             <groupId>org.apache.sling</groupId>
             <artifactId>org.apache.sling.testing.resourceresolver-mock</artifactId>
-            <version>${resourceresolver-mock.version}</version>
             <scope>compile</scope>
         </dependency>
         <dependency>
             <groupId>org.apache.sling</groupId>
             <artifactId>org.apache.sling.servlet-helpers</artifactId>
-            <version>1.4.6</version>
             <scope>compile</scope>
         </dependency>
         <dependency>
             <groupId>org.apache.sling</groupId>
             <artifactId>org.apache.sling.resourcebuilder</artifactId>
-            <version>${resourcebuilder.version}</version>
             <scope>compile</scope>
         </dependency>
 

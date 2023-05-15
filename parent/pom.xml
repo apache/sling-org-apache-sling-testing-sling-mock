@@ -78,6 +78,42 @@
       <dependencies>
 
         <dependency>
+            <groupId>org.apache.sling</groupId>
+            <artifactId>org.apache.sling.testing.osgi-mock.core</artifactId>
+            <version>${osgi-mock.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.apache.sling</groupId>
+            <artifactId>org.apache.sling.testing.osgi-mock.junit4</artifactId>
+            <version>${osgi-mock.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.apache.sling</groupId>
+            <artifactId>org.apache.sling.testing.jcr-mock</artifactId>
+            <version>${jcr-mock.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.apache.sling</groupId>
+            <artifactId>org.apache.sling.testing.resourceresolver-mock</artifactId>
+            <version>${resourceresolver-mock.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.apache.sling</groupId>
+            <artifactId>org.apache.sling.testing.logging-mock</artifactId>
+            <version>${logging-mock.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.apache.sling</groupId>
+            <artifactId>org.apache.sling.servlet-helpers</artifactId>
+            <version>${servlet-helpers.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.apache.sling</groupId>
+            <artifactId>org.apache.sling.resourcebuilder</artifactId>
+            <version>${resourcebuilder.version}</version>
+        </dependency>
+
+        <dependency>
             <groupId>org.osgi</groupId>
             <artifactId>org.osgi.resource</artifactId>
             <version>1.0.0</version>
@@ -274,11 +310,6 @@
             <groupId>org.mockito</groupId>
             <artifactId>mockito-junit-jupiter</artifactId>
             <version>4.7.0</version>
-        </dependency>
-        <dependency>
-            <groupId>org.apache.sling</groupId>
-            <artifactId>org.apache.sling.testing.logging-mock</artifactId>
-            <version>${logging-mock.version}</version>
         </dependency>
 
       </dependencies>
