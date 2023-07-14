@@ -128,36 +128,42 @@ public class MockXSSAPIImplTest {
     @Test
     public void testEncodeForHTML() throws Exception {
         assertEquals("val", underTest.encodeForHTML("val"));
+        assertEquals("&lt;b&gt;&#34;val&#39;&lt;/b&gt;", underTest.encodeForHTML("<b>\"val'</b>"));
         assertNull(underTest.encodeForHTML(null));
     }
 
     @Test
     public void testEncodeForHTMLAttr() throws Exception {
         assertEquals("val", underTest.encodeForHTMLAttr("val"));
+        assertEquals("&amp;&lt;&#34;val&#39;", underTest.encodeForHTMLAttr("&<\"val'"));
         assertNull(underTest.encodeForHTMLAttr(null));
     }
 
     @Test
     public void testEncodeForXML() throws Exception {
         assertEquals("val", underTest.encodeForXML("val"));
+        assertEquals("&lt;tag&gt;&#34;val&#39;&lt;/tag&gt;", underTest.encodeForHTML("<tag>\"val'</tag>"));
         assertNull(underTest.encodeForXML(null));
     }
 
     @Test
     public void testEncodeForXMLAttr() throws Exception {
         assertEquals("val", underTest.encodeForXMLAttr("val"));
+        assertEquals("&amp;&lt;&#34;val&#39;", underTest.encodeForXMLAttr("&<\"val'"));
         assertNull(underTest.encodeForXMLAttr(null));
     }
 
     @Test
     public void testEncodeForJSString() throws Exception {
         assertEquals("val", underTest.encodeForJSString("val"));
+        assertEquals("\\x22\\x26val\\x27\\u002D\\/\\\\", underTest.encodeForJSString("\"&val'-/\\"));
         assertNull(underTest.encodeForJSString(null));
     }
 
     @Test
     public void testEncodeForCSSString() throws Exception {
         assertEquals("val", underTest.encodeForCSSString("val"));
+        assertEquals("\\22\\27\\5c\\3c\\26(val)\\2f\\3e", underTest.encodeForCSSString("\"'\\<&(val)/>"));
         assertNull(underTest.encodeForCSSString(null));
     }
 

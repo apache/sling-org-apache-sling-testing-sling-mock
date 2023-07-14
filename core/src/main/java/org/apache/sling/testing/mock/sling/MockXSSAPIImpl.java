@@ -25,6 +25,7 @@ import org.apache.sling.xss.XSSAPI;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.osgi.service.component.annotations.Component;
+import org.owasp.encoder.Encode;
 
 /**
  * This is a very simplified mock implementation of {@link XSSAPI} which in most cases just returns
@@ -127,32 +128,32 @@ public final class MockXSSAPIImpl implements XSSAPI {
 
     @Override
     public @Nullable String encodeForHTML(@Nullable String source) {
-        return source;
+        return source == null ? null : Encode.forHtml(source);
     }
 
     @Override
     public @Nullable String encodeForHTMLAttr(@Nullable String source) {
-        return source;
+        return source == null ? null : Encode.forHtmlAttribute(source);
     }
 
     @Override
     public @Nullable String encodeForXML(@Nullable String source) {
-        return source;
+        return source == null ? null : Encode.forXml(source);
     }
 
     @Override
     public @Nullable String encodeForXMLAttr(@Nullable String source) {
-        return source;
+        return source == null ? null : Encode.forXmlAttribute(source);
     }
 
     @Override
     public @Nullable String encodeForJSString(@Nullable String source) {
-        return source;
+        return source == null ? null : Encode.forJavaScript(source).replace("\\-", "\\u002D");
     }
 
     @Override
     public @Nullable String encodeForCSSString(@Nullable String source) {
-        return source;
+        return source == null ? null : Encode.forCssString(source);
     }
 
     @Override
