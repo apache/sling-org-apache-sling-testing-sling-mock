@@ -16,8 +16,36 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-/**
- * Mock implementation of selected Sling APIs.
- */
-@org.osgi.annotation.versioning.Version("4.0.0")
 package org.apache.sling.testing.mock.sling;
+
+import org.apache.sling.xss.ProtectionContext;
+import org.apache.sling.xss.XSSFilter;
+import org.osgi.service.component.annotations.Component;
+
+/**
+ * Mock implementation of {@link XSSFilter} that just accepts anything.
+ */
+@Component(service = XSSFilter.class)
+public final class MockXSSFilter implements XSSFilter {
+
+    @Override
+    public boolean check(ProtectionContext context, String src) {
+        return true;
+    }
+
+    @Override
+    public String filter(String src) {
+        return src != null ? src : "";
+    }
+
+    @Override
+    public String filter(ProtectionContext context, String src) {
+        return src != null ? src : "";
+    }
+
+    @Override
+    public boolean isValidHref(String url) {
+        return true;
+    }
+
+}
