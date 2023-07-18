@@ -53,7 +53,7 @@ import org.apache.sling.testing.mock.osgi.MockOsgi;
 import org.apache.sling.testing.mock.osgi.context.OsgiContextImpl;
 import org.apache.sling.testing.mock.sling.MockResourceBundleProvider;
 import org.apache.sling.testing.mock.sling.MockSling;
-import org.apache.sling.testing.mock.sling.MockXSSAPIImpl;
+import org.apache.sling.testing.mock.sling.MockXSSFilter;
 import org.apache.sling.testing.mock.sling.ResourceResolverType;
 import org.apache.sling.testing.mock.sling.builder.ContentBuilder;
 import org.apache.sling.testing.mock.sling.loader.ContentLoader;
@@ -62,6 +62,7 @@ import org.apache.sling.testing.mock.sling.services.MockSlingSettingService;
 import org.apache.sling.testing.mock.sling.servlet.MockRequestPathInfo;
 import org.apache.sling.testing.mock.sling.servlet.MockSlingHttpServletRequest;
 import org.apache.sling.testing.mock.sling.servlet.MockSlingHttpServletResponse;
+import org.apache.sling.xss.impl.XSSAPIImpl;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.osgi.annotation.versioning.ConsumerType;
@@ -189,7 +190,8 @@ public class SlingContextImpl extends OsgiContextImpl {
         registerInjectActivateService(new JcrObjectsBindingsValuesProvider(),
                 SERVICE_PROPERTY_MOCK_SLING_BINDINGS_IGNORE, true);
         registerInjectActivateService(new MockResourceBundleProvider());
-        registerInjectActivateService(new MockXSSAPIImpl());
+        registerInjectActivateService(MockXSSFilter.class);
+        registerInjectActivateService(XSSAPIImpl.class);
         registerInjectActivateService(new FeatureManager());
 
         // scan for models defined via bundle headers in classpath

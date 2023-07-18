@@ -27,7 +27,7 @@ import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
 
-public class MockXSSAPIImplTest {
+public class XSSAPIImplTest {
 
     @Rule
     public SlingContext context = new SlingContext();
@@ -60,7 +60,6 @@ public class MockXSSAPIImplTest {
     @Test
     public void testGetValidDouble() throws Exception {
         assertEquals((Double)1.23d, underTest.getValidDouble("1.23", -1d));
-        assertEquals((Double)(-1.23d), underTest.getValidDouble("-1.23", -1d));
         assertEquals((Double)(-1d), underTest.getValidDouble("invalid", -1d));
         assertEquals((Double)(-1.5d), underTest.getValidDouble("", -1.5d));
         assertEquals((Double)(-1d), underTest.getValidDouble(null, -1d));
@@ -107,22 +106,24 @@ public class MockXSSAPIImplTest {
     @Test
     public void testGetValidMultiLineComment() throws Exception {
         assertEquals("val", underTest.getValidMultiLineComment("val", "def"));
-        assertEquals("def", underTest.getValidMultiLineComment("", "def"));
+        assertEquals("", underTest.getValidMultiLineComment("", "def"));
         assertEquals("def", underTest.getValidMultiLineComment(null, "def"));
     }
 
     @Test
     public void testGetValidJSON() throws Exception {
-        assertEquals("val", underTest.getValidJSON("val", "def"));
-        assertEquals("def", underTest.getValidJSON("", "def"));
-        assertEquals("def", underTest.getValidJSON(null, "def"));
+        assertEquals("{\"valid\":true}", underTest.getValidJSON("{\"valid\":true}", "{}"));
+        assertEquals("", underTest.getValidJSON("", "{}"));
+        assertEquals("{}", underTest.getValidJSON("{invalid", "{}"));
+        assertEquals("{}", underTest.getValidJSON(null, "{}"));
     }
 
     @Test
     public void testGetValidXML() throws Exception {
-        assertEquals("val", underTest.getValidXML("val", "def"));
-        assertEquals("def", underTest.getValidXML("", "def"));
-        assertEquals("def", underTest.getValidXML(null, "def"));
+        assertEquals("<valid/>", underTest.getValidXML("<valid/>", "<default/>"));
+        assertEquals("", underTest.getValidXML("", "<default/>"));
+        assertEquals("<default/>", underTest.getValidXML("<invalid", "<default/>"));
+        assertEquals("<default/>", underTest.getValidXML(null, "<default/>"));
     }
 
     @Test
