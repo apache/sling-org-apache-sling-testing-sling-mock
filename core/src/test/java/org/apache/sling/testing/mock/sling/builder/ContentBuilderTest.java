@@ -22,6 +22,8 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
 
+import java.util.Map;
+
 import org.apache.sling.api.resource.Resource;
 import org.apache.sling.api.resource.ResourceUtil;
 import org.apache.sling.api.resource.ValueMap;
@@ -29,8 +31,6 @@ import org.apache.sling.testing.mock.sling.ResourceResolverType;
 import org.apache.sling.testing.mock.sling.junit.SlingContext;
 import org.junit.Rule;
 import org.junit.Test;
-
-import com.google.common.collect.ImmutableMap;
 
 public class ContentBuilderTest {
 
@@ -47,10 +47,9 @@ public class ContentBuilderTest {
 
     @Test
     public void testResourceWithProperties_Map() {
-        Resource resource = context.create().resource("/content/test1/resource2", ImmutableMap.<String,Object>builder()
-                .put("jcr:title", "Test Title")
-                .put("stringProp", "value1")
-                .build());
+        Resource resource = context.create().resource("/content/test1/resource2", Map.<String,Object>of(
+                "jcr:title", "Test Title",
+                "stringProp", "value1"));
         assertNotNull(resource);
         assertEquals("resource2", resource.getName());
         ValueMap props = ResourceUtil.getValueMap(resource);

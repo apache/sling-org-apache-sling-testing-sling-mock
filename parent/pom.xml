@@ -23,7 +23,7 @@
     <parent>
         <groupId>org.apache.sling</groupId>
         <artifactId>sling-bundle-parent</artifactId>
-        <version>49</version>
+        <version>52</version>
         <relativePath />
     </parent>
 
@@ -303,13 +303,6 @@
             <groupId>org.jetbrains</groupId>
             <artifactId>annotations</artifactId>
             <scope>provided</scope>
-        </dependency>
-
-        <dependency>
-            <groupId>com.google.guava</groupId>
-            <artifactId>guava</artifactId>
-            <version>15.0</version>
-            <scope>test</scope>
         </dependency>
 
     </dependencies>

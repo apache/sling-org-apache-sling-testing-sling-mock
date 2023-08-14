@@ -698,7 +698,7 @@ public final class ContentLoader {
      * @param classpathResourceOrFile Classpath resource URL or file path
      * @param processor Processes input stream
      */
-    @SuppressWarnings({ "null", "deprecation" })
+    @SuppressWarnings("null")
     private <T> @NotNull T processInputStreamFromClasspathOrFilesystem(@NotNull String classpathResourceOrFile, @NotNull Function<InputStream,T> processor) {
         InputStream is = ContentLoader.class.getResourceAsStream(classpathResourceOrFile);
         if (is == null) {

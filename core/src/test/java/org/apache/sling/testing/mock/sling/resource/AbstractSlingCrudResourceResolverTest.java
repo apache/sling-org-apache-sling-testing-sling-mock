@@ -33,7 +33,10 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.TreeMap;
 
+import org.apache.commons.collections4.IterableUtils;
+import org.apache.commons.collections4.IteratorUtils;
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.jackrabbit.JcrConstants;
@@ -48,10 +51,6 @@ import org.apache.sling.testing.mock.sling.junit.SlingContext;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
-
-import com.google.common.collect.ImmutableList;
-import com.google.common.collect.ImmutableMap;
-import com.google.common.collect.Lists;
 
 /**
  * Implements simple write and read resource and values test. Sling CRUD API is
@@ -97,9 +96,8 @@ public abstract class AbstractSlingCrudResourceResolverTest {
         props.put("binaryProp", new ByteArrayInputStream(BINARY_VALUE));
         Resource node1 = context.resourceResolver().create(rootNode, "node1", props);
 
-        context.resourceResolver().create(node1, "node11", ImmutableMap.<String, Object>builder()
-                .put("stringProp11", STRING_VALUE)
-                .build());
+        context.resourceResolver().create(node1, "node11", Map.<String, Object>of(
+                "stringProp11", STRING_VALUE));
         context.resourceResolver().create(node1, "node12", ValueMap.EMPTY);
 
         context.resourceResolver().commit();
@@ -203,7 +201,7 @@ public abstract class AbstractSlingCrudResourceResolverTest {
     public void testListChildren() throws IOException {
         Resource resource1 = context.resourceResolver().getResource(getTestRootResource().getPath() + "/node1");
 
-        List<Resource> children = ImmutableList.copyOf(resource1.listChildren());
+        List<Resource> children = IteratorUtils.toList(resource1.listChildren());
         assertEquals(2, children.size());
         assertEquals("node11", children.get(0).getName());
         assertEquals("node12", children.get(1).getName());
@@ -213,11 +211,11 @@ public abstract class AbstractSlingCrudResourceResolverTest {
     public void testListChildren_RootNode() throws IOException {
         Resource resource1 = context.resourceResolver().getResource("/");
 
-        List<Resource> children = Lists.newArrayList(resource1.listChildren());
+        List<Resource> children = IteratorUtils.toList(resource1.listChildren());
         assertFalse(children.isEmpty());
         assertTrue(containsResource(children, getTestRootResource().getParent()));
 
-        children = Lists.newArrayList(resource1.getChildren());
+        children = IterableUtils.toList(resource1.getChildren());
         assertFalse(children.isEmpty());
         assertTrue(containsResource(children, getTestRootResource().getParent()));
     }
@@ -296,23 +294,23 @@ public abstract class AbstractSlingCrudResourceResolverTest {
     @Test
     public void testCreateNestedResources() throws IOException {
         Resource nested = context.create().resource(getTestRootResource().getPath() + "/nested",
-                ImmutableMap.<String,Object>of(
+                new TreeMap<>(Map.<String,Object>of(
                         "prop1", "value1",
-                        "child1", ImmutableMap.<String,Object>of(
+                        "child1", new TreeMap<>(Map.<String,Object>of(
                             "prop2","value2",
-                            "child1a", ImmutableMap.<String,Object>of(
+                            "child1a", Map.<String,Object>of(
                                 "prop3", "value3"),
-                            "child1b", ImmutableMap.<String,Object>of(
+                            "child1b", Map.<String,Object>of(
                                 "prop4", "value4")
-                        ),
-                        "child2", ImmutableMap.<String,Object>of(
+                        )),
+                        "child2", Map.<String,Object>of(
                             "prop5","value5"
-                        )));
+                        ))));
 
         assertNotNull(nested);
         assertEquals("value1", nested.getValueMap().get("prop1", String.class));
 
-        List<Resource> children = ImmutableList.copyOf(nested.getChildren());
+        List<Resource> children = IterableUtils.toList(nested.getChildren());
         assertEquals(2, children.size());
 
         Resource child1 = children.get(0);
@@ -323,7 +321,7 @@ public abstract class AbstractSlingCrudResourceResolverTest {
         assertEquals("child2", child2.getName());
         assertEquals("value5", child2.getValueMap().get("prop5", String.class));
 
-        List<Resource> child1children = ImmutableList.copyOf(child1.getChildren());
+        List<Resource> child1children = IterableUtils.toList(child1.getChildren());
         assertEquals(2, child1children.size());
 
         Resource child1a = child1children.get(0);

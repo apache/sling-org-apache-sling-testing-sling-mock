@@ -24,6 +24,7 @@ import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
 
 import java.util.Collections;
+import java.util.Map;
 
 import org.apache.sling.api.resource.PersistenceException;
 import org.apache.sling.api.resource.Resource;
@@ -36,8 +37,6 @@ import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 import org.osgi.framework.BundleContext;
-
-import com.google.common.collect.ImmutableMap;
 
 /**
  * Tests content access accross multiple resource resolvers.
@@ -73,7 +72,7 @@ public abstract class AbstractMultipleResourceResolverTest {
 
         // add a resource in resolver 1
         Resource root = resolver1.getResource("/");
-        resolver1.create(root, "test", ImmutableMap.<String, Object>of());
+        resolver1.create(root, "test", Map.<String, Object>of());
         resolver1.commit();
 
         // try to get resource in resolver 2

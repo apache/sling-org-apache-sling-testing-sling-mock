@@ -23,12 +23,11 @@ import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 
 import java.util.Locale;
+import java.util.Map;
+import java.util.Set;
 
 import org.junit.Before;
 import org.junit.Test;
-
-import com.google.common.collect.ImmutableMap;
-import com.google.common.collect.ImmutableSet;
 
 public class MockResourceBundleTest {
 
@@ -45,20 +44,20 @@ public class MockResourceBundleTest {
     @Test
     public void testEmpty() {
         assertEquals("unknown", underTest.getString("unknown"));
-        assertEquals(ImmutableSet.of(), underTest.keySet());
+        assertEquals(Set.of(), underTest.keySet());
         assertFalse(underTest.getKeys().hasMoreElements());
     }
 
     @Test
     public void testWithMappings() {
         underTest.put("key1", "value1");
-        underTest.putAll(ImmutableMap.of("key2", "value2", "key3" ,"value3"));
+        underTest.putAll(Map.of("key2", "value2", "key3" ,"value3"));
 
         assertEquals("value1", underTest.getString("key1"));
         assertEquals("value2", underTest.getString("key2"));
         assertEquals("value3", underTest.getString("key3"));
 
-        assertEquals(ImmutableSet.of("key1", "key2", "key3"), underTest.keySet());
+        assertEquals(Set.of("key1", "key2", "key3"), underTest.keySet());
         assertTrue(underTest.getKeys().hasMoreElements());
     }
 

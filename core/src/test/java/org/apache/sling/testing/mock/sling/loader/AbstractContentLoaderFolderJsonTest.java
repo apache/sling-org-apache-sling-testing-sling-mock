@@ -26,6 +26,7 @@ import static org.junit.Assert.assertTrue;
 import java.io.IOException;
 import java.util.List;
 
+import org.apache.commons.collections4.IteratorUtils;
 import org.apache.jackrabbit.vault.util.JcrConstants;
 import org.apache.sling.api.resource.Resource;
 import org.apache.sling.testing.mock.sling.ResourceResolverType;
@@ -34,8 +35,6 @@ import org.junit.After;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
-
-import com.google.common.collect.ImmutableList;
 
 @SuppressWarnings("null")
 public abstract class AbstractContentLoaderFolderJsonTest {
@@ -66,7 +65,7 @@ public abstract class AbstractContentLoaderFolderJsonTest {
     @Test
     public void testContentListChildren() {
         Resource resource = context.resourceResolver().getResource("/mount/content");
-        List<Resource> result = ImmutableList.copyOf(resource.listChildren());
+        List<Resource> result = IteratorUtils.toList(resource.listChildren());
         assertEquals("jcr:content", result.get(0).getName());
         assertEquals("toolbar", result.get(1).getName());
     }
