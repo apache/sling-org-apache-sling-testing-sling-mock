@@ -27,17 +27,15 @@ import java.util.Set;
 
 import org.junit.Test;
 
-import com.google.common.collect.ImmutableSet;
-
 public class MockSlingSettingServiceTest {
 
     @Test
     public void testDefaultRunModes() {
-        Set<String> defaultRunModes = ImmutableSet.<String> builder().add("mode0").build();
+        Set<String> defaultRunModes = Set.of("mode0");
         MockSlingSettingService underTest = new MockSlingSettingService(defaultRunModes);
         assertEquals(defaultRunModes, underTest.getRunModes());
 
-        Set<String> newRunModes = ImmutableSet.<String> builder().add("mode1").add("mode2").build();
+        Set<String> newRunModes = Set.of("mode1", "mode2");
         underTest.setRunModes(newRunModes);
         assertEquals(newRunModes, underTest.getRunModes());
     }
@@ -47,7 +45,7 @@ public class MockSlingSettingServiceTest {
         MockSlingSettingService underTest = new MockSlingSettingService();
         assertTrue(underTest.getRunModes().isEmpty());
 
-        Set<String> newRunModes = ImmutableSet.<String> builder().add("mode1").add("mode2").build();
+        Set<String> newRunModes = Set.of("mode1", "mode2");
         underTest.setRunModes(newRunModes);
         assertEquals(newRunModes, underTest.getRunModes());
     }

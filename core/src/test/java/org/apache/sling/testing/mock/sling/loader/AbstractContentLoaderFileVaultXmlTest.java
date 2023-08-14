@@ -21,6 +21,8 @@ package org.apache.sling.testing.mock.sling.loader;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 
+import java.util.List;
+
 import javax.jcr.Node;
 import javax.jcr.RepositoryException;
 import javax.jcr.Session;
@@ -36,8 +38,6 @@ import org.junit.After;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
-
-import com.google.common.collect.ImmutableList;
 
 @SuppressWarnings("null")
 public abstract class AbstractContentLoaderFileVaultXmlTest {
@@ -55,7 +55,7 @@ public abstract class AbstractContentLoaderFileVaultXmlTest {
 
         try {
             NodeTypeDefinitionScanner.get().register(context.resourceResolver().adaptTo(Session.class),
-                    ImmutableList.of("SLING-INF/nodetypes/app.cnd"),
+                    List.of("SLING-INF/nodetypes/app.cnd"),
                     getResourceResolverType().getNodeTypeMode());
         }
         catch (RepositoryException ex) {

@@ -20,6 +20,7 @@ package org.apache.sling.testing.mock.sling.jcrmock.resource;
 
 import java.util.Collections;
 import java.util.Iterator;
+import java.util.Map;
 
 import javax.jcr.Node;
 import javax.jcr.Session;
@@ -34,8 +35,6 @@ import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
 
-import com.google.common.collect.ImmutableMap;
-
 @SuppressWarnings("null")
 public class FindResourcesTest {
 
@@ -46,8 +45,9 @@ public class FindResourcesTest {
   public void setUp() {
     Resource resource = context.create().resource(
         "/test",
-        ImmutableMap.<String, Object> builder().put("prop1", "value1")
-            .put("prop2", "value2").build());
+        Map.<String, Object>of(
+            "prop1", "value1",
+            "prop2", "value2"));
     Node node = resource.adaptTo(Node.class);
     Session session = context.resourceResolver().adaptTo(Session.class);
 

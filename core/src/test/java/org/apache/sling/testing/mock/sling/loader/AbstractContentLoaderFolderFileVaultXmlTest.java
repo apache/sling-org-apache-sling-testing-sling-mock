@@ -27,6 +27,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.util.List;
 
+import org.apache.commons.collections4.IteratorUtils;
 import org.apache.commons.io.IOUtils;
 import org.apache.jackrabbit.vault.util.JcrConstants;
 import org.apache.sling.api.resource.Resource;
@@ -36,8 +37,6 @@ import org.junit.After;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
-
-import com.google.common.collect.ImmutableList;
 
 @SuppressWarnings("null")
 public abstract class AbstractContentLoaderFolderFileVaultXmlTest {
@@ -68,7 +67,7 @@ public abstract class AbstractContentLoaderFolderFileVaultXmlTest {
     @Test
     public void testContentListChildren() {
         Resource resource = context.resourceResolver().getResource("/content/samples/en");
-        List<Resource> result = ImmutableList.copyOf(resource.listChildren());
+        List<Resource> result = IteratorUtils.toList(resource.listChildren());
         assertEquals("jcr:content", result.get(0).getName());
         assertEquals("tools", result.get(1).getName());
     }

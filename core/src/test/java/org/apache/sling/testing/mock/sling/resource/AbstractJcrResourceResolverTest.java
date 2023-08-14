@@ -30,11 +30,13 @@ import java.io.InputStream;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
+import java.util.Map;
 
 import javax.jcr.Node;
 import javax.jcr.RepositoryException;
 import javax.jcr.Session;
 
+import org.apache.commons.collections4.IteratorUtils;
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang3.time.DateUtils;
 import org.apache.jackrabbit.JcrConstants;
@@ -48,9 +50,6 @@ import org.junit.After;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
-
-import com.google.common.collect.ImmutableList;
-import com.google.common.collect.ImmutableMap;
 
 /**
  * Implements simple write and read resource and values test.
@@ -141,7 +140,7 @@ public abstract class AbstractJcrResourceResolverTest {
         is2.close();
         assertArrayEquals(BINARY_VALUE, dataFromResource2);
 
-        List<Resource> children = ImmutableList.copyOf(resource1.listChildren());
+        List<Resource> children = IteratorUtils.toList(resource1.listChildren());
         assertEquals(2, children.size());
         assertEquals("node11", children.get(0).getName());
         assertEquals("node12", children.get(1).getName());
@@ -151,8 +150,8 @@ public abstract class AbstractJcrResourceResolverTest {
     public void testCreateNodeWithPrimaryType() throws RepositoryException, PersistenceException {
         Resource parent = context.resourceResolver().getResource(getTestRootNode().getPath());
 
-        Resource child = context.resourceResolver().create(parent, "nodeTypeResource", ImmutableMap.<String, Object> builder()
-                .put("sling:resourceType", JcrConstants.NT_UNSTRUCTURED).build());
+        Resource child = context.resourceResolver().create(parent, "nodeTypeResource", Map.<String, Object>of(
+                "sling:resourceType", JcrConstants.NT_UNSTRUCTURED));
         assertNotNull(child);
         assertEquals(JcrConstants.NT_UNSTRUCTURED, child.getResourceType());
         assertEquals(JcrConstants.NT_UNSTRUCTURED, child.adaptTo(Node.class).getPrimaryNodeType().getName());

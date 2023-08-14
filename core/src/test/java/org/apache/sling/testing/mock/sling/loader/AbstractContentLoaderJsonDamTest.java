@@ -25,6 +25,7 @@ import static org.junit.Assert.assertNotNull;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.List;
 
 import javax.jcr.RepositoryException;
 import javax.jcr.Session;
@@ -42,8 +43,6 @@ import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
 
-import com.google.common.collect.ImmutableList;
-
 @SuppressWarnings("null")
 public abstract class AbstractContentLoaderJsonDamTest {
 
@@ -60,7 +59,7 @@ public abstract class AbstractContentLoaderJsonDamTest {
 
         try {
             NodeTypeDefinitionScanner.get().register(context.resourceResolver().adaptTo(Session.class),
-                    ImmutableList.of("SLING-INF/nodetypes/app.cnd"),
+                    List.of("SLING-INF/nodetypes/app.cnd"),
                     getResourceResolverType().getNodeTypeMode());
         }
         catch (RepositoryException ex) {

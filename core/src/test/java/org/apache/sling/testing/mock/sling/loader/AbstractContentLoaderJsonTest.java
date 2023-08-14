@@ -24,6 +24,7 @@ import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotNull;
 
 import java.util.Calendar;
+import java.util.List;
 import java.util.TimeZone;
 
 import javax.jcr.Node;
@@ -42,8 +43,6 @@ import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
 
-import com.google.common.collect.ImmutableList;
-
 @SuppressWarnings("null")
 public abstract class AbstractContentLoaderJsonTest {
 
@@ -60,7 +59,7 @@ public abstract class AbstractContentLoaderJsonTest {
 
         try {
             NodeTypeDefinitionScanner.get().register(context.resourceResolver().adaptTo(Session.class),
-                    ImmutableList.of("SLING-INF/nodetypes/app.cnd"),
+                    List.of("SLING-INF/nodetypes/app.cnd"),
                     getResourceResolverType().getNodeTypeMode());
         }
         catch (RepositoryException ex) {
