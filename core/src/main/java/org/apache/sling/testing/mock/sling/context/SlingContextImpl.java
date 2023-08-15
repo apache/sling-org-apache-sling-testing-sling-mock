@@ -191,7 +191,11 @@ public class SlingContextImpl extends OsgiContextImpl {
                 SERVICE_PROPERTY_MOCK_SLING_BINDINGS_IGNORE, true);
         registerInjectActivateService(new MockResourceBundleProvider());
         registerInjectActivateService(MockXSSFilter.class);
+
+        // ugly hack: prevent default console logging from ESAPI on each initialization by setting system property
+        System.setProperty("org.owasp.esapi.logSpecial.discard", "true");
         registerInjectActivateService(XSSAPIImpl.class);
+
         registerInjectActivateService(new FeatureManager());
 
         // scan for models defined via bundle headers in classpath
