@@ -27,6 +27,7 @@ import java.util.Dictionary;
 import java.util.EnumSet;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Objects;
 import java.util.Set;
 import java.util.function.Function;
 import java.util.stream.Collectors;
@@ -573,7 +574,7 @@ public final class ContentLoader {
                 }
             }
         }
-        return StringUtils.defaultString(mimeType, CONTENTTYPE_OCTET_STREAM);
+        return Objects.toString(mimeType, CONTENTTYPE_OCTET_STREAM);
     }
 
     /**
