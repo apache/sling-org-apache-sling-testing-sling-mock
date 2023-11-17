@@ -196,13 +196,13 @@
         <dependency>
             <groupId>org.apache.jackrabbit</groupId>
             <artifactId>oak-jackrabbit-api</artifactId>
-            <version>1.22.5</version>
+            <version>1.22.17</version>
             <scope>compile</scope>
         </dependency>
         <dependency>
             <groupId>org.apache.jackrabbit</groupId>
             <artifactId>oak-jcr</artifactId>
-            <version>1.22.5</version>
+            <version>1.22.17</version>
             <exclusions>
                 <exclusion>
                     <groupId>org.osgi</groupId>
@@ -217,6 +217,12 @@
                     <artifactId>jcl-over-slf4j</artifactId>
                 </exclusion>
             </exclusions>
+        </dependency>
+        <dependency>
+            <!-- "provided" in Oak since 1.22.14 -->
+            <groupId>com.google.guava</groupId>
+            <artifactId>guava</artifactId>
+            <version>15.0</version>
         </dependency>
 
         <dependency>
@@ -414,12 +420,12 @@
                     <dependency>
                         <groupId>org.apache.jackrabbit</groupId>
                         <artifactId>oak-jackrabbit-api</artifactId>
-                        <version>1.56.0</version>
+                        <version>1.58.0</version>
                     </dependency>
                     <dependency>
                         <groupId>org.apache.jackrabbit</groupId>
                         <artifactId>oak-jcr</artifactId>
-                        <version>1.56.0</version>
+                        <version>1.58.0</version>
                     </dependency>
                 </dependencies>
             </dependencyManagement>
