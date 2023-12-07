@@ -28,14 +28,14 @@
     </parent>
 
     <artifactId>org.apache.sling.testing.sling-mock.parent</artifactId>
-    <version>3.4.15-SNAPSHOT</version>
+    <version>3.4.16</version>
     <packaging>pom</packaging>
 
     <name>Apache Sling Testing Sling Mock Parent</name>
     <description>Mock implementation of selected Sling APIs.</description>
 
     <properties>
-        <project.build.outputTimestamp>2023-10-12T13:43:06Z</project.build.outputTimestamp>
+        <project.build.outputTimestamp>2023-12-07T16:53:15Z</project.build.outputTimestamp>
     </properties>
 
     <dependencyManagement>
@@ -462,7 +462,7 @@
     </profiles>
 
   <scm>
-    <tag>org.apache.sling.testing.sling-mock.reactor-3.3.2</tag>
+    <tag>org.apache.sling.testing.sling-mock.reactor-3.4.16</tag>
     <connection>scm:git:https://gitbox.apache.org/repos/asf/sling-org-apache-sling-testing-sling-mock.git</connection>
     <developerConnection>scm:git:https://gitbox.apache.org/repos/asf/sling-org-apache-sling-testing-sling-mock.git</developerConnection>
     <url>https://gitbox.apache.org/repos/asf?p=sling-org-apache-sling-testing-sling-mock.git</url>
