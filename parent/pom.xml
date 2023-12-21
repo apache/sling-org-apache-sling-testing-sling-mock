@@ -44,22 +44,22 @@
         <dependency>
             <groupId>org.apache.sling</groupId>
             <artifactId>org.apache.sling.testing.osgi-mock.core</artifactId>
-            <version>3.4.0</version>
+            <version>3.4.1-SNAPSHOT</version>
         </dependency>
         <dependency>
             <groupId>org.apache.sling</groupId>
             <artifactId>org.apache.sling.testing.osgi-mock.junit4</artifactId>
-            <version>3.4.0</version>
+            <version>3.4.1-SNAPSHOT</version>
         </dependency>
         <dependency>
             <groupId>org.apache.sling</groupId>
             <artifactId>org.apache.sling.testing.jcr-mock</artifactId>
-            <version>1.6.10</version>
+            <version>1.6.13-SNAPSHOT</version>
         </dependency>
         <dependency>
             <groupId>org.apache.sling</groupId>
             <artifactId>org.apache.sling.testing.resourceresolver-mock</artifactId>
-            <version>1.4.4</version>
+            <version>1.4.5-SNAPSHOT</version>
         </dependency>
         <dependency>
             <groupId>org.apache.sling</groupId>
@@ -85,7 +85,6 @@
         <dependency>
             <groupId>org.osgi</groupId>
             <artifactId>org.osgi.util.converter</artifactId>
-            <!-- Versions below 1.0.8 lead to problems converting values to BigDecimal with Java 17 -->
             <version>1.0.8</version>
         </dependency>
         <dependency>
@@ -116,12 +115,12 @@
         <dependency>
             <groupId>org.apache.sling</groupId>
             <artifactId>org.apache.sling.resourceresolver</artifactId>
-            <version>1.7.0</version>
+            <version>1.7.10</version>
         </dependency>
         <dependency>
             <groupId>org.apache.sling</groupId>
             <artifactId>org.apache.sling.serviceusermapper</artifactId>
-            <version>1.4.4</version>
+            <version>1.5.4</version>
         </dependency>
         <dependency>
             <groupId>org.apache.sling</groupId>
@@ -161,7 +160,7 @@
         <dependency>
             <groupId>org.apache.johnzon</groupId>
             <artifactId>johnzon-core</artifactId>
-            <version>1.1.1</version>
+            <version>1.2.8</version>
         </dependency>
         <dependency>
             <groupId>org.apache.sling</groupId>
@@ -186,7 +185,7 @@
         <dependency>
             <groupId>org.apache.sling</groupId>
             <artifactId>org.apache.sling.xss</artifactId>
-            <version>2.2.6</version>
+            <version>2.2.16</version>
         </dependency>
         <dependency>
             <groupId>org.apache.sling</groupId>
@@ -196,13 +195,13 @@
         <dependency>
             <groupId>org.apache.jackrabbit</groupId>
             <artifactId>oak-jackrabbit-api</artifactId>
-            <version>1.22.5</version>
+            <version>1.22.15</version>
             <scope>compile</scope>
         </dependency>
         <dependency>
             <groupId>org.apache.jackrabbit</groupId>
             <artifactId>oak-jcr</artifactId>
-            <version>1.22.5</version>
+            <version>1.22.15</version>
             <exclusions>
                 <exclusion>
                     <groupId>org.osgi</groupId>
@@ -222,7 +221,7 @@
         <dependency>
            <groupId>org.apache.commons</groupId>
            <artifactId>commons-collections4</artifactId>
-           <version>4.2</version>
+           <version>4.4</version>
         </dependency>
         <dependency>
             <groupId>commons-collections</groupId>
@@ -289,12 +288,12 @@
         <dependency>
             <groupId>org.mockito</groupId>
             <artifactId>mockito-core</artifactId>
-            <version>5.7.0</version>
+            <version>5.8.0</version>
         </dependency>
         <dependency>
             <groupId>org.mockito</groupId>
             <artifactId>mockito-junit-jupiter</artifactId>
-            <version>5.7.0</version>
+            <version>5.8.0</version>
         </dependency>
 
       </dependencies>
@@ -394,7 +393,7 @@
                     <dependency>
                         <groupId>org.apache.sling</groupId>
                         <artifactId>org.apache.sling.commons.mime</artifactId>
-                        <version>2.2.4</version>
+                        <version>2.3.0</version>
                     </dependency>
                     <dependency>
                         <groupId>org.apache.sling</groupId>
