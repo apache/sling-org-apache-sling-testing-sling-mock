@@ -20,8 +20,14 @@ package org.apache.sling.testing.mock.sling;
 
 import static org.junit.Assert.assertTrue;
 
+import javax.jcr.Session;
+import javax.jcr.nodetype.NodeTypeIterator;
+import java.io.StringReader;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
+import org.apache.sling.testing.mock.jcr.MockJcr;
 import org.junit.Test;
 
 
@@ -34,6 +40,24 @@ public class NodeTypeDefinitionScannerTest {
         // ensure some node types from jcr.resource exist
         assertTrue(definitions.contains("SLING-INF/nodetypes/folder.cnd"));
         assertTrue(definitions.contains("SLING-INF/nodetypes/resource.cnd"));
+    }
+
+    @Test
+    public void testRegistersNodeTypes() throws Exception {
+        Session session = MockJcr.newSession();
+        MockJcr.loadNodeTypeDefs(session, new StringReader(
+            "[nt:hierarchyNode] > nt:base\n" +
+            "[nt:folder] > nt:hierarchyNode"));
+
+        NodeTypeDefinitionScanner.get().register(session, NodeTypeMode.NODETYPES_REQUIRED);
+
+        Set<String> nodeTypes = new HashSet<>();
+        NodeTypeIterator nodeTypeIterator = session.getWorkspace().getNodeTypeManager().getAllNodeTypes();
+        while (nodeTypeIterator.hasNext()) {
+            nodeTypes.add(nodeTypeIterator.nextNodeType().getName());
+        }
+        assertTrue(nodeTypes.containsAll(Set.of("sling:Folder", "sling:HierarchyNode", "sling:OrderedFolder",
+            "sling:Resource", "sling:ResourceSuperType")));
     }
 
 }
