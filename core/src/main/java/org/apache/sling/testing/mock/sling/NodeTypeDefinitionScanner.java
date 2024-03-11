@@ -22,8 +22,9 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.Reader;
 import java.util.ArrayList;
-import java.util.Iterator;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import javax.jcr.NamespaceRegistry;
 import javax.jcr.RepositoryException;
@@ -41,7 +42,7 @@ import javax.jcr.nodetype.NodeTypeTemplate;
 import javax.jcr.nodetype.PropertyDefinition;
 import javax.jcr.nodetype.PropertyDefinitionTemplate;
 
-import org.apache.jackrabbit.commons.cnd.CndImporter;
+import org.apache.jackrabbit.JcrConstants;
 import org.apache.jackrabbit.commons.cnd.CompactNodeTypeDefReader;
 import org.apache.jackrabbit.commons.cnd.DefinitionBuilderFactory;
 import org.apache.jackrabbit.commons.cnd.TemplateBuilderFactory;
@@ -57,8 +58,6 @@ import org.slf4j.LoggerFactory;
 public final class NodeTypeDefinitionScanner {
 
     private static final NodeTypeDefinitionScanner SINGLETON = new NodeTypeDefinitionScanner();
-
-    private static final int MAX_ITERATIONS = 5;
 
     private static final Logger log = LoggerFactory.getLogger(NodeTypeDefinitionScanner.class);
 
@@ -161,49 +160,74 @@ public final class NodeTypeDefinitionScanner {
       NodeTypeManager nodeTypeManager = workspace.getNodeTypeManager();
       NamespaceRegistry namespaceRegistry = workspace.getNamespaceRegistry();
       ValueFactory valueFactory = session.getValueFactory();
+      DefinitionBuilderFactory<NodeTypeTemplate, NamespaceRegistry> factory =
+            new TemplateBuilderFactory(nodeTypeManager, valueFactory, namespaceRegistry);
 
-      // try registering node types multiple times because the exact order is not known
-      int iteration = 0;
-      List<String> remainingNodeTypeResources = new ArrayList<String>(nodeTypeResources);
-      while (!remainingNodeTypeResources.isEmpty()) {
-          registerNodeTypesAndRemoveSucceeds(remainingNodeTypeResources, classLoader, nodeTypeManager, namespaceRegistry, valueFactory, false);
-          iteration++;
-          if (iteration >= MAX_ITERATIONS) {
-              break;
-          }
+      Map<String, NodeTypeTemplate> nodeTypes = new HashMap<>();
+      for (String resource : nodeTypeResources) {
+          nodeTypes.putAll(parseNodeTypesFromResource(resource, classLoader, factory));
       }
-      if (!remainingNodeTypeResources.isEmpty()) {
-          registerNodeTypesAndRemoveSucceeds(remainingNodeTypeResources, classLoader, nodeTypeManager, namespaceRegistry, valueFactory, true);
+      for (NodeTypeTemplate template : nodeTypes.values()) {
+          ensureNtBase(template, nodeTypes, nodeTypeManager);
       }
+
+      nodeTypeManager.registerNodeTypes(nodeTypes.values().toArray(new NodeTypeTemplate[0]), true);
     }
 
     /**
-     * Register node types found in classpath in JCR repository, and remove those that succeeded to register from the list.
-     * @param nodeTypeResources List of nodetype classpath resources
-     * @param classLoader
-     * @param nodeTypeManager
-     * @param namespaceRegistry
-     * @param valueFactory
-     * @param logError if true, and error is logged if node type registration failed. Otherwise it is ignored.
+     * Parses a CND file present on the classpath and returns the node types found within.
+     * @param resource The resource name.
+     * @param classLoader The classloader to load resources with.
+     * @param factory The factory to build node type definitions with.
+     * @return A mapping from node type names to node type definitions.
      */
-    private void registerNodeTypesAndRemoveSucceeds(List<String> nodeTypeResources, ClassLoader classLoader,
-            NodeTypeManager nodeTypeManager, NamespaceRegistry namespaceRegistry, ValueFactory valueFactory,
-            boolean logError) {
-        Iterator<String> nodeTypeResourcesIterator = nodeTypeResources.iterator();
-        while (nodeTypeResourcesIterator.hasNext()) {
-            String nodeTypeResource = nodeTypeResourcesIterator.next();
-            try (InputStream is = classLoader.getResourceAsStream(nodeTypeResource)) {
-                if (is == null) {
-                    continue;
-                }
-                Reader reader = new InputStreamReader(is);
-                CndImporter.registerNodeTypes(reader, nodeTypeResource, nodeTypeManager, namespaceRegistry, valueFactory, true);
-                nodeTypeResourcesIterator.remove();
+    private Map<String, NodeTypeTemplate> parseNodeTypesFromResource(String resource, ClassLoader classLoader,
+            DefinitionBuilderFactory<NodeTypeTemplate, NamespaceRegistry> factory) {
+        try (InputStream is = classLoader.getResourceAsStream(resource)) {
+            if (is == null) {
+                return Map.of();
             }
-            catch (Throwable ex) {
-                if (logError) {
-                    log.warn("Unable to register node type: " + nodeTypeResource, ex);
+            CompactNodeTypeDefReader<NodeTypeTemplate, NamespaceRegistry> cndReader =
+                new CompactNodeTypeDefReader<>(new InputStreamReader(is), resource, factory);
+            Map<String, NodeTypeTemplate> result = new HashMap<>();
+            for (NodeTypeTemplate template : cndReader.getNodeTypeDefinitions()) {
+                result.put(template.getName(), template);
+            }
+            return result;
+        } catch (Throwable ex) {
+            log.warn("Failed to parse CND resource: " + resource, ex);
+            return Map.of();
+        }
+    }
+
+    /**
+     * Add an implied nt:base supertype explicitly to the node type definition.
+     * @param nodeTypeTemplate The definition to update.
+     * @param templates The mapping of all definitions that are going to be added.
+     * @param nodeTypeManager Node type manager of the target repository, for looking up existing types.
+     * @throws RepositoryException If any issues happen while querying type information from the repository.
+     */
+    private static void ensureNtBase(NodeTypeTemplate nodeTypeTemplate, Map<String, NodeTypeTemplate> templates,
+            NodeTypeManager nodeTypeManager) throws RepositoryException {
+        // This is lifted from Jackrabbit JCR Commons. We can't call it directly because it's private.
+        if (!nodeTypeTemplate.isMixin() && !JcrConstants.NT_BASE.equals(nodeTypeTemplate.getName())) {
+            String[] supertypes = nodeTypeTemplate.getDeclaredSupertypeNames();
+            boolean needsNtBase = true;
+            for (String name : supertypes) {
+                NodeTypeDefinition superDefinition = templates.get(name);
+                if (superDefinition == null) {
+                    superDefinition = nodeTypeManager.getNodeType(name);
                 }
+                if (superDefinition != null && !superDefinition.isMixin()) {
+                    needsNtBase = false;
+                    break;
+                }
+            }
+            if (needsNtBase) {
+                String[] withNtBase = new String[supertypes.length + 1];
+                withNtBase[0] = JcrConstants.NT_BASE;
+                System.arraycopy(supertypes, 0, withNtBase, 1, supertypes.length);
+                nodeTypeTemplate.setDeclaredSuperTypeNames(withNtBase);
             }
         }
     }
