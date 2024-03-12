@@ -1,1 +1,4 @@
 Sling-Model-Packages: org.apache.sling.testing.mock.sling.context.modelsautoreg
+Sling-Nodetypes: SLING-INF/nodetypes/missing.cnd,
+ SLING-INF/nodetypes/syntax-error.cnd,
+ SLING-INF/nodetypes/implied-supertype.cnd
