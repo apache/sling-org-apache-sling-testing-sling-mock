@@ -1,2 +1,0 @@
-// Test case of a type that does not explicitly set a supertype.
-[sling:DummyType]

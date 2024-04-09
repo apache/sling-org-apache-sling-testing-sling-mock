@@ -42,7 +42,6 @@ import javax.jcr.nodetype.NodeTypeTemplate;
 import javax.jcr.nodetype.PropertyDefinition;
 import javax.jcr.nodetype.PropertyDefinitionTemplate;
 
-import org.apache.jackrabbit.JcrConstants;
 import org.apache.jackrabbit.commons.cnd.CompactNodeTypeDefReader;
 import org.apache.jackrabbit.commons.cnd.DefinitionBuilderFactory;
 import org.apache.jackrabbit.commons.cnd.TemplateBuilderFactory;
@@ -167,9 +166,6 @@ public final class NodeTypeDefinitionScanner {
       for (String resource : nodeTypeResources) {
           nodeTypes.putAll(parseNodeTypesFromResource(resource, classLoader, factory));
       }
-      for (NodeTypeTemplate template : nodeTypes.values()) {
-          ensureNtBase(template, nodeTypes, nodeTypeManager);
-      }
 
       nodeTypeManager.registerNodeTypes(nodeTypes.values().toArray(new NodeTypeTemplate[0]), true);
     }
@@ -197,38 +193,6 @@ public final class NodeTypeDefinitionScanner {
         } catch (Throwable ex) {
             log.warn("Failed to parse CND resource: " + resource, ex);
             return Map.of();
-        }
-    }
-
-    /**
-     * Add an implied nt:base supertype explicitly to the node type definition.
-     * @param nodeTypeTemplate The definition to update.
-     * @param templates The mapping of all definitions that are going to be added.
-     * @param nodeTypeManager Node type manager of the target repository, for looking up existing types.
-     * @throws RepositoryException If any issues happen while querying type information from the repository.
-     */
-    private static void ensureNtBase(NodeTypeTemplate nodeTypeTemplate, Map<String, NodeTypeTemplate> templates,
-            NodeTypeManager nodeTypeManager) throws RepositoryException {
-        // This is lifted from Jackrabbit JCR Commons. We can't call it directly because it's private.
-        if (!nodeTypeTemplate.isMixin() && !JcrConstants.NT_BASE.equals(nodeTypeTemplate.getName())) {
-            String[] supertypes = nodeTypeTemplate.getDeclaredSupertypeNames();
-            boolean needsNtBase = true;
-            for (String name : supertypes) {
-                NodeTypeDefinition superDefinition = templates.get(name);
-                if (superDefinition == null) {
-                    superDefinition = nodeTypeManager.getNodeType(name);
-                }
-                if (superDefinition != null && !superDefinition.isMixin()) {
-                    needsNtBase = false;
-                    break;
-                }
-            }
-            if (needsNtBase) {
-                String[] withNtBase = new String[supertypes.length + 1];
-                withNtBase[0] = JcrConstants.NT_BASE;
-                System.arraycopy(supertypes, 0, withNtBase, 1, supertypes.length);
-                nodeTypeTemplate.setDeclaredSuperTypeNames(withNtBase);
-            }
         }
     }
 
