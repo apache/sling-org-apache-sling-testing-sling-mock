@@ -219,6 +219,9 @@ public final class NodeTypeDefinitionScanner {
         return new ArrayList<String>(ManifestScanner.getValues("Sling-Nodetypes"));
     }
 
+    /**
+     * @return Instance
+     */
     public static NodeTypeDefinitionScanner get() {
         return SINGLETON;
     }

@@ -55,6 +55,9 @@ public final class MockSlingSettingService implements SlingSettingsService {
         return Collections.unmodifiableSet(this.runModes);
     }
 
+    /**
+     * @param runModes Rund modes
+     */
     public void setRunModes(@NotNull Set<String> runModes) {
         this.runModes = runModes;
     }
@@ -80,17 +83,21 @@ public final class MockSlingSettingService implements SlingSettingsService {
         throw new UnsupportedOperationException();
     }
 
-    // part of Sling API 2.7
+    @Override
     public String getSlingName() {
         throw new UnsupportedOperationException();
     }
 
-    // part of Sling API 2.7
+    @Override
     public String getSlingDescription() {
         throw new UnsupportedOperationException();
     }
 
     // part of Sling Setting Service 1.4.2
+    /**
+     * @param spec run mode spec
+     * @return number of matching run modes
+     */
     public int getBestRunModeMatchCountFromSpec(String spec) {
         throw new UnsupportedOperationException();
     }

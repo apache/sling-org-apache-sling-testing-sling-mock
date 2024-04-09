@@ -87,16 +87,59 @@ public class SlingContextImpl extends OsgiContextImpl {
 
     private static final @NotNull String RESOURCERESOLVERFACTORYACTIVATOR_PID = "org.apache.sling.jcr.resource.internal.JcrResourceResolverFactoryImpl";
 
+    /**
+     * Resource resolver factory
+     */
     protected ResourceResolverFactory resourceResolverFactory;
+
+    /**
+     * Resource resolver type
+     */
     protected ResourceResolverType resourceResolverType;
+
+    /**
+     * Resource resolver
+     */
     protected ResourceResolver resourceResolver;
+
+    /**
+     * Sling request
+     */
     protected MockSlingHttpServletRequest request;
+
+    /**
+     * Sling response
+     */
     protected MockSlingHttpServletResponse response;
+
+    /**
+     * Sling script helper
+     */
     protected SlingScriptHelper slingScriptHelper;
+
+    /**
+     * Content loader
+     */
     protected ContentLoader contentLoader;
+
+    /**
+     * Content loader with auto commit after loading content
+     */
     protected ContentLoader contentLoaderAutoCommit;
+
+    /**
+     * Content builder
+     */
     protected ContentBuilder contentBuilder;
+
+    /**
+     * Resource builder
+     */
     protected ResourceBuilder resourceBuilder;
+
+    /**
+     * Unique root helper
+     */
     protected UniqueRoot uniqueRoot;
 
     private Map<String, Object> resourceResolverFactoryActivatorProps;
@@ -114,10 +157,16 @@ public class SlingContextImpl extends OsgiContextImpl {
         }
     }
 
+    /**
+     * @param props Resolver resolver factory activator properties
+     */
     protected void setResourceResolverFactoryActivatorProps(@Nullable Map<String, Object> props) {
         this.resourceResolverFactoryActivatorProps = props;
     }
 
+    /**
+     * @param registerSlingModelsFromClassPath Register sling models from classpath
+     */
     protected void setRegisterSlingModelsFromClassPath(boolean registerSlingModelsFromClassPath) {
         this.registerSlingModelsFromClassPath = registerSlingModelsFromClassPath;
     }

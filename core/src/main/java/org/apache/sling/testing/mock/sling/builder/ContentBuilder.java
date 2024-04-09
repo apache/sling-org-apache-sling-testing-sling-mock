@@ -40,6 +40,9 @@ public class ContentBuilder {
 
     static final String DUMMY_TEMPLATE = "/apps/sample/templates/template1";
 
+    /**
+     * Resource resolver
+     */
     protected final ResourceResolver resourceResolver;
 
     /**

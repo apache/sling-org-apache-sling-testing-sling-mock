@@ -42,6 +42,9 @@ public class UniqueRoot {
 
     private final SlingContextImpl context;
 
+    /**
+     * Unique path part
+     */
     protected final String uniquePathPart;
 
     private Resource contentRoot;
@@ -50,6 +53,9 @@ public class UniqueRoot {
 
     private static final Logger log = LoggerFactory.getLogger(UniqueRoot.class);
 
+    /**
+     * @param context Sling context
+     */
     protected UniqueRoot(@NotNull SlingContextImpl context) {
         this.context = context;
         // generate unique path part by using a UUID

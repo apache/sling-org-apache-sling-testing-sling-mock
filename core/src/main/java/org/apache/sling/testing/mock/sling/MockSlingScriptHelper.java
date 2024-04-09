@@ -44,6 +44,11 @@ public final class MockSlingScriptHelper implements SlingScriptHelper {
     private final @NotNull BundleContext bundleContext;
     private SlingScript script;
 
+    /**
+     * @param request Sling HTTP servlet request
+     * @param response Sling HTTP servlet response
+     * @param bundleContext OSGi bundle context
+     */
     public MockSlingScriptHelper(@NotNull final SlingHttpServletRequest request, @NotNull final SlingHttpServletResponse response,
             @NotNull final BundleContext bundleContext) {
         this.request = request;
@@ -97,6 +102,9 @@ public final class MockSlingScriptHelper implements SlingScriptHelper {
         return this.script;
     }
 
+    /**
+     * @param script Script
+     */
     public void setScript(@NotNull SlingScript script) {
         this.script = script;
     }

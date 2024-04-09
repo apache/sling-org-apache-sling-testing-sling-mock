@@ -40,6 +40,9 @@ public final class MockJcrSlingRepository implements SlingRepository {
 
     private Repository repository;
 
+    /**
+     * @param componentContext Component context
+     */
     @Activate
     protected void activate(ComponentContext componentContext) {
         repository = MockJcr.newRepository();
