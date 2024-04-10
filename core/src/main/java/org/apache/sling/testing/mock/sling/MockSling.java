@@ -20,6 +20,8 @@ package org.apache.sling.testing.mock.sling;
 
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
+import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.ConcurrentMap;
 
 import org.apache.sling.api.SlingHttpServletRequest;
 import org.apache.sling.api.SlingHttpServletResponse;
@@ -49,6 +51,9 @@ public final class MockSling {
 
     private static final ThreadsafeMockAdapterManagerWrapper ADAPTER_MANAGER =
             new ThreadsafeMockAdapterManagerWrapper();
+
+    private static final ConcurrentMap<Class<? extends ResourceResolverTypeAdapter>, Object> SNAPSHOTS =
+            new ConcurrentHashMap<>();
 
     static {
         // register mocked adapter manager
@@ -89,8 +94,23 @@ public final class MockSling {
         ResourceResolverTypeAdapter adapter = getResourceResolverTypeAdapter(type, bundleContext);
         ResourceResolverFactory factory = adapter.newResourceResolverFactory();
         if (factory == null) {
-            SlingRepository repository = adapter.newSlingRepository();
-            factory = ResourceResolverFactoryInitializer.setUp(repository, bundleContext, type.getNodeTypeMode());
+            Object existingSnapshot = SNAPSHOTS.get(adapter.getClass());
+            SlingRepository repository;
+            if (existingSnapshot == null) {
+                repository = adapter.newSlingRepository();
+            } else {
+                repository = adapter.newSlingRepositoryFromSnapshot(existingSnapshot);
+            }
+            factory = ResourceResolverFactoryInitializer.setUp(
+                    repository,
+                    bundleContext,
+                    existingSnapshot == null ? type.getNodeTypeMode() : NodeTypeMode.NOT_SUPPORTED);
+            if (existingSnapshot == null) {
+                Object newSnapshot = adapter.snapshot(repository);
+                if (newSnapshot != null) {
+                    SNAPSHOTS.putIfAbsent(adapter.getClass(), newSnapshot);
+                }
+            }
         } else {
             bundleContext.registerService(ResourceResolverFactory.class.getName(), factory, null);
         }
