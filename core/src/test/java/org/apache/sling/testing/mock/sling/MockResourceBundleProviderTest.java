@@ -18,10 +18,6 @@
  */
 package org.apache.sling.testing.mock.sling;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertNull;
-
 import java.util.Locale;
 import java.util.ResourceBundle;
 
@@ -29,6 +25,10 @@ import org.apache.sling.i18n.ResourceBundleProvider;
 import org.apache.sling.testing.mock.sling.junit.SlingContext;
 import org.junit.Rule;
 import org.junit.Test;
+
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertNull;
 
 public class MockResourceBundleProviderTest {
 
@@ -41,32 +41,33 @@ public class MockResourceBundleProviderTest {
     public void testGetResourceBundleFromRequest() {
         ResourceBundle bundle = context.request().getResourceBundle(Locale.CANADA_FRENCH);
         assertEquals(Locale.CANADA_FRENCH, bundle.getLocale());
-        assertNull(((MockResourceBundle)bundle).getBaseName());
+        assertNull(((MockResourceBundle) bundle).getBaseName());
     }
 
     @Test
     public void testGetResourceBundleFromRequestWithBaseName() {
         ResourceBundle bundle = context.request().getResourceBundle(MY_NAME, Locale.CANADA_FRENCH);
         assertEquals(Locale.CANADA_FRENCH, bundle.getLocale());
-        assertEquals(MY_NAME, ((MockResourceBundle)bundle).getBaseName());
+        assertEquals(MY_NAME, ((MockResourceBundle) bundle).getBaseName());
     }
 
     @Test
     public void testDefaultLocale() {
-        MockResourceBundleProvider bundleProvider = (MockResourceBundleProvider)context.getService(ResourceBundleProvider.class);
+        MockResourceBundleProvider bundleProvider =
+                (MockResourceBundleProvider) context.getService(ResourceBundleProvider.class);
         assertNotNull(bundleProvider);
         bundleProvider.setDefaultLocale(Locale.KOREA);
 
         ResourceBundle bundle = context.request().getResourceBundle(null);
         assertEquals(Locale.KOREA, bundle.getLocale());
-        assertNull(((MockResourceBundle)bundle).getBaseName());
+        assertNull(((MockResourceBundle) bundle).getBaseName());
     }
 
     @Test
     public void testCaching() {
         ResourceBundle bundle = context.request().getResourceBundle(Locale.GERMAN);
 
-        ((MockResourceBundle)bundle).put("key1", "value1");
+        ((MockResourceBundle) bundle).put("key1", "value1");
         assertEquals("value1", bundle.getString("key1"));
 
         ResourceBundle bundle_cached = context.request().getResourceBundle(Locale.GERMAN);
@@ -78,5 +79,4 @@ public class MockResourceBundleProviderTest {
         ResourceBundle bundle_otherbasename = context.request().getResourceBundle(MY_NAME, Locale.GERMAN);
         assertEquals("key1", bundle_otherbasename.getString("key1"));
     }
-
 }

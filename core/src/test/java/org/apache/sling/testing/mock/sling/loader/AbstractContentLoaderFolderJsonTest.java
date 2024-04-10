@@ -18,11 +18,6 @@
  */
 package org.apache.sling.testing.mock.sling.loader;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertTrue;
-
 import java.io.IOException;
 import java.util.List;
 
@@ -35,6 +30,11 @@ import org.junit.After;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
+
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertTrue;
 
 @SuppressWarnings("null")
 public abstract class AbstractContentLoaderFolderJsonTest {
@@ -113,16 +113,20 @@ public abstract class AbstractContentLoaderFolderJsonTest {
         context.load().folderJson("src/test/resources/test-content", root);
 
         Resource parent = context.resourceResolver().getResource(root + "/parent");
-        assertNotNull( "Expected to resolve the 'parent' resource.", parent);
+        assertNotNull("Expected to resolve the 'parent' resource.", parent);
         assertNotNull("Expected to resolver the 'child' resource.", parent.getChild("child"));
 
         Resource uniqueRoot = context.resourceResolver().getParent(parent);
         assertNotNull("Expected to resolve the unique root.", uniqueRoot);
-        assertEquals("The resolved unique root is not identical to the created unique root.", root, uniqueRoot.getPath());
+        assertEquals(
+                "The resolved unique root is not identical to the created unique root.", root, uniqueRoot.getPath());
 
-        assertTrue("Expected to see a list of children.", context.resourceResolver().listChildren(parent).hasNext());
-        assertTrue("Expected to get a list of children.", context.resourceResolver().getChildren(parent).iterator().hasNext());
+        assertTrue(
+                "Expected to see a list of children.",
+                context.resourceResolver().listChildren(parent).hasNext());
+        assertTrue(
+                "Expected to get a list of children.",
+                context.resourceResolver().getChildren(parent).iterator().hasNext());
         assertTrue("Expected to see a list of children.", parent.hasChildren());
     }
-
 }

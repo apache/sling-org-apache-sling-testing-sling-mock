@@ -18,16 +18,16 @@
  */
 package org.apache.sling.testing.mock.sling;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertTrue;
-
 import java.util.Locale;
 import java.util.Map;
 import java.util.Set;
 
 import org.junit.Before;
 import org.junit.Test;
+
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertTrue;
 
 public class MockResourceBundleTest {
 
@@ -51,7 +51,7 @@ public class MockResourceBundleTest {
     @Test
     public void testWithMappings() {
         underTest.put("key1", "value1");
-        underTest.putAll(Map.of("key2", "value2", "key3" ,"value3"));
+        underTest.putAll(Map.of("key2", "value2", "key3", "value3"));
 
         assertEquals("value1", underTest.getString("key1"));
         assertEquals("value2", underTest.getString("key2"));
@@ -60,5 +60,4 @@ public class MockResourceBundleTest {
         assertEquals(Set.of("key1", "key2", "key3"), underTest.keySet());
         assertTrue(underTest.getKeys().hasMoreElements());
     }
-
 }

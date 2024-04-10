@@ -63,8 +63,10 @@ final class ModelAdapterFactoryUtil {
     private static final @NotNull String @NotNull [] MODELS_PACKAGES_FROM_MANIFEST;
     private static final @NotNull String @NotNull [] MODELS_CLASSES_FROM_MANIFEST;
 
-    private static final @NotNull ConcurrentMap<String, List<URL>> MODEL_URLS_FOR_PACKAGES = new ConcurrentHashMap<String, List<URL>>();
-    private static final @NotNull ConcurrentMap<String, List<URL>> MODEL_URLS_FOR_CLASSES = new ConcurrentHashMap<String, List<URL>>();
+    private static final @NotNull ConcurrentMap<String, List<URL>> MODEL_URLS_FOR_PACKAGES =
+            new ConcurrentHashMap<String, List<URL>>();
+    private static final @NotNull ConcurrentMap<String, List<URL>> MODEL_URLS_FOR_CLASSES =
+            new ConcurrentHashMap<String, List<URL>>();
 
     static {
         // scan classpath for models bundle header entries only once
@@ -86,7 +88,8 @@ final class ModelAdapterFactoryUtil {
      * @param bundleContext Bundle context
      * @param packageNames Java package names
      */
-    public static void addModelsForPackages(@NotNull BundleContext bundleContext, @NotNull String @NotNull ... packageNames) {
+    public static void addModelsForPackages(
+            @NotNull BundleContext bundleContext, @NotNull String @NotNull ... packageNames) {
         Bundle bundle = new RegisterModelsBundle(bundleContext, Bundle.ACTIVE, packageNames, null);
         BundleEvent event = new BundleEvent(BundleEvent.STARTED, bundle);
         MockOsgi.sendBundleEvent(bundleContext, event);
@@ -97,7 +100,8 @@ final class ModelAdapterFactoryUtil {
      * @param bundleContext Bundle context
      * @param classNames Java class names
      */
-    public static void addModelsForClasses(@NotNull BundleContext bundleContext, @NotNull String @NotNull ... classNames) {
+    public static void addModelsForClasses(
+            @NotNull BundleContext bundleContext, @NotNull String @NotNull ... classNames) {
         Bundle bundle = new RegisterModelsBundle(bundleContext, Bundle.ACTIVE, null, classNames);
         BundleEvent event = new BundleEvent(BundleEvent.STARTED, bundle);
         MockOsgi.sendBundleEvent(bundleContext, event);
@@ -141,7 +145,7 @@ final class ModelAdapterFactoryUtil {
             // add "." to each package name because it's a prefix, not a package name
             ConfigurationBuilder reflectionsConfig = new ConfigurationBuilder();
             Stream.of(StringUtils.split(packageNames, ","))
-                .forEach(packageName -> reflectionsConfig.addUrls(ClasspathHelper.forPackage(packageName + ".")));
+                    .forEach(packageName -> reflectionsConfig.addUrls(ClasspathHelper.forPackage(packageName + ".")));
             Reflections reflections = new Reflections(reflectionsConfig);
             Set<Class<?>> classes = reflections.getTypesAnnotatedWith(Model.class);
             for (Class<?> clazz : classes) {
@@ -168,8 +172,7 @@ final class ModelAdapterFactoryUtil {
                     if (clazz.isAnnotationPresent(Model.class)) {
                         urls.add(classToUrl(clazz));
                     }
-                }
-                catch (ClassNotFoundException e) {
+                } catch (ClassNotFoundException e) {
                     // ignore
                 }
             }
@@ -181,12 +184,10 @@ final class ModelAdapterFactoryUtil {
     private static URL classToUrl(Class clazz) {
         try {
             return new URL("file:/" + clazz.getName().replace('.', '/') + ".class");
-        }
-        catch (MalformedURLException ex) {
+        } catch (MalformedURLException ex) {
             throw new RuntimeException("Malformed URL.", ex);
         }
     }
-
 
     private static class RegisterModelsBundle implements Bundle {
 
@@ -197,7 +198,8 @@ final class ModelAdapterFactoryUtil {
         private final String packageNames;
         private final String classNames;
 
-        public RegisterModelsBundle(BundleContext bundleContext, int state, String[] packageNames, String[] classNames) {
+        public RegisterModelsBundle(
+                BundleContext bundleContext, int state, String[] packageNames, String[] classNames) {
             this.bundleContext = bundleContext;
             this.state = state;
             this.packageNames = normalizeValueList(packageNames);
@@ -217,7 +219,7 @@ final class ModelAdapterFactoryUtil {
         }
 
         @Override
-        public Dictionary<String,String> getHeaders() {
+        public Dictionary<String, String> getHeaders() {
             Dictionary<String, String> headers = new Hashtable<String, String>();
             headers.put(PACKAGE_HEADER, MAGIC_STRING);
             return headers;
@@ -311,7 +313,7 @@ final class ModelAdapterFactoryUtil {
         }
 
         @Override
-        public Dictionary<String,String> getHeaders(String locale) {
+        public Dictionary<String, String> getHeaders(String locale) {
             return null;
         }
 
@@ -365,7 +367,5 @@ final class ModelAdapterFactoryUtil {
         public File getDataFile(String filename) {
             return null;
         }
-
     }
-
 }

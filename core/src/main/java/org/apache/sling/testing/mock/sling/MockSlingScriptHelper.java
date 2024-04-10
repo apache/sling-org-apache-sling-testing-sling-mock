@@ -49,7 +49,9 @@ public final class MockSlingScriptHelper implements SlingScriptHelper {
      * @param response Sling HTTP servlet response
      * @param bundleContext OSGi bundle context
      */
-    public MockSlingScriptHelper(@NotNull final SlingHttpServletRequest request, @NotNull final SlingHttpServletResponse response,
+    public MockSlingScriptHelper(
+            @NotNull final SlingHttpServletRequest request,
+            @NotNull final SlingHttpServletResponse response,
             @NotNull final BundleContext bundleContext) {
         this.request = request;
         this.response = response;
@@ -79,10 +81,11 @@ public final class MockSlingScriptHelper implements SlingScriptHelper {
 
     @Override
     @SuppressWarnings("unchecked")
-    public @Nullable <ServiceType> ServiceType[] getServices(@NotNull final Class<ServiceType> serviceType, final String filter) {
+    public @Nullable <ServiceType> ServiceType[] getServices(
+            @NotNull final Class<ServiceType> serviceType, final String filter) {
         try {
-            ServiceReference[] serviceReferences = this.bundleContext.getServiceReferences(serviceType.getName(),
-                    filter);
+            ServiceReference[] serviceReferences =
+                    this.bundleContext.getServiceReferences(serviceType.getName(), filter);
             if (serviceReferences != null) {
                 ServiceType[] services = (ServiceType[]) Array.newInstance(serviceType, serviceReferences.length);
                 for (int i = 0; i < serviceReferences.length; i++) {
@@ -174,5 +177,4 @@ public final class MockSlingScriptHelper implements SlingScriptHelper {
     public void include(@NotNull final Resource resource, final RequestDispatcherOptions requestDispatcherOptions) {
         throw new UnsupportedOperationException();
     }
-
 }

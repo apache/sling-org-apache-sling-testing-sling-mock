@@ -27,5 +27,4 @@ public class MultipleResourceResolverTest extends AbstractMultipleResourceResolv
     protected ResourceResolverType getResourceResolverType() {
         return ResourceResolverType.RESOURCERESOLVER_MOCK;
     }
-
 }

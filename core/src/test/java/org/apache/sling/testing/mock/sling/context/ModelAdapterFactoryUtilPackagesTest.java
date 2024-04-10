@@ -36,9 +36,6 @@ public class ModelAdapterFactoryUtilPackagesTest extends AbstractModelAdapterFac
     public void setUp() throws Exception {
         // scan for @Model classes
         context.addModelsForPackage(
-                "org.apache.sling.testing.mock.sling.context",
-                "org.apache.sling.testing.mock.sling.context.models"
-                );
+                "org.apache.sling.testing.mock.sling.context", "org.apache.sling.testing.mock.sling.context.models");
     }
-
 }

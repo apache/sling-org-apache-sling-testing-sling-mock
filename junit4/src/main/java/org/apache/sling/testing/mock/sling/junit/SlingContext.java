@@ -76,7 +76,9 @@ public final class SlingContext extends SlingContextImpl implements TestRule {
      * @param afterSetUpCallback Allows the application to register an own callback function that is called after the built-in setup rules are executed.
      * @param resourceResolverType Resource resolver type.
      */
-    public <T extends OsgiContextImpl> SlingContext(@NotNull final ContextCallback<T> afterSetUpCallback, @NotNull final ResourceResolverType resourceResolverType) {
+    public <T extends OsgiContextImpl> SlingContext(
+            @NotNull final ContextCallback<T> afterSetUpCallback,
+            @NotNull final ResourceResolverType resourceResolverType) {
         this(new ContextPlugins(afterSetUpCallback), null, resourceResolverType);
     }
 
@@ -88,7 +90,8 @@ public final class SlingContext extends SlingContextImpl implements TestRule {
      * @param afterSetUpCallback Allows the application to register an own callback function that is called after the built-in setup rules are executed.
      * @param beforeTearDownCallback Allows the application to register an own callback function that is called before the built-in teardown rules are executed.
      */
-    public <U extends OsgiContextImpl, V extends OsgiContextImpl> SlingContext(@NotNull final ContextCallback<U> afterSetUpCallback,
+    public <U extends OsgiContextImpl, V extends OsgiContextImpl> SlingContext(
+            @NotNull final ContextCallback<U> afterSetUpCallback,
             @NotNull final ContextCallback<V> beforeTearDownCallback) {
         this(new ContextPlugins(afterSetUpCallback, beforeTearDownCallback), null, null);
     }
@@ -101,7 +104,8 @@ public final class SlingContext extends SlingContextImpl implements TestRule {
      * @param beforeTearDownCallback Allows the application to register an own callback function that is called before the built-in teardown rules are executed.
      * @param resourceResolverType Resource resolver type.
      */
-    public <U extends OsgiContextImpl, V extends OsgiContextImpl> SlingContext(@NotNull final ContextCallback<U> afterSetUpCallback,
+    public <U extends OsgiContextImpl, V extends OsgiContextImpl> SlingContext(
+            @NotNull final ContextCallback<U> afterSetUpCallback,
             @NotNull final ContextCallback<V> beforeTearDownCallback,
             @NotNull final ResourceResolverType resourceResolverType) {
         this(new ContextPlugins(afterSetUpCallback, beforeTearDownCallback), null, resourceResolverType);
@@ -113,7 +117,8 @@ public final class SlingContext extends SlingContextImpl implements TestRule {
      * @param resourceResolverFactoryActivatorProps Allows to override OSGi configuration parameters for the Resource Resolver Factory Activator service.
      * @param resourceResolverType Resource resolver type.
      */
-    SlingContext(@NotNull final ContextPlugins contextPlugins,
+    SlingContext(
+            @NotNull final ContextPlugins contextPlugins,
             @Nullable final Map<String, Object> resourceResolverFactoryActivatorProps,
             @Nullable final ResourceResolverType resourceResolverType) {
         this(contextPlugins, resourceResolverFactoryActivatorProps, resourceResolverType, true);
@@ -126,7 +131,8 @@ public final class SlingContext extends SlingContextImpl implements TestRule {
      * @param resourceResolverType Resource resolver type.
      * @param registerSlingModelsFromClassPath Automatic registering of all Sling Models found in the classpath on startup.
      */
-    SlingContext(@NotNull final ContextPlugins contextPlugins,
+    SlingContext(
+            @NotNull final ContextPlugins contextPlugins,
             @Nullable final Map<String, Object> resourceResolverFactoryActivatorProps,
             @Nullable final ResourceResolverType resourceResolverType,
             final boolean registerSlingModelsFromClassPath) {
@@ -160,5 +166,4 @@ public final class SlingContext extends SlingContextImpl implements TestRule {
     public Statement apply(final Statement base, final Description description) {
         return this.delegate.apply(base, description);
     }
-
 }

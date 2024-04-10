@@ -18,10 +18,6 @@
  */
 package org.apache.sling.testing.mock.sling.builder;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertTrue;
-
 import java.util.Map;
 
 import org.apache.sling.api.resource.Resource;
@@ -31,6 +27,10 @@ import org.apache.sling.testing.mock.sling.ResourceResolverType;
 import org.apache.sling.testing.mock.sling.junit.SlingContext;
 import org.junit.Rule;
 import org.junit.Test;
+
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertTrue;
 
 public class ContentBuilderTest {
 
@@ -47,9 +47,12 @@ public class ContentBuilderTest {
 
     @Test
     public void testResourceWithProperties_Map() {
-        Resource resource = context.create().resource("/content/test1/resource2", Map.<String,Object>of(
-                "jcr:title", "Test Title",
-                "stringProp", "value1"));
+        Resource resource = context.create()
+                .resource(
+                        "/content/test1/resource2",
+                        Map.<String, Object>of(
+                                "jcr:title", "Test Title",
+                                "stringProp", "value1"));
         assertNotNull(resource);
         assertEquals("resource2", resource.getName());
         ValueMap props = ResourceUtil.getValueMap(resource);
@@ -59,9 +62,8 @@ public class ContentBuilderTest {
 
     @Test
     public void testResourceWithProperties_ObjectArray() {
-        Resource resource = context.create().resource("/content/test1/resource2",
-                "jcr:title", "Test Title",
-                "stringProp", "value1");
+        Resource resource = context.create()
+                .resource("/content/test1/resource2", "jcr:title", "Test Title", "stringProp", "value1");
         assertNotNull(resource);
         assertEquals("resource2", resource.getName());
         ValueMap props = ResourceUtil.getValueMap(resource);
@@ -78,12 +80,10 @@ public class ContentBuilderTest {
         assertEquals("child1", child1.getName());
         assertTrue(ResourceUtil.getValueMap(child1).isEmpty());
 
-        Resource child2 = context.create().resource(resource, "/child2",
-                "prop1", "value1");
+        Resource child2 = context.create().resource(resource, "/child2", "prop1", "value1");
         assertNotNull(child2);
         assertEquals("child2", child2.getName());
         ValueMap props = ResourceUtil.getValueMap(child2);
         assertEquals("value1", props.get("prop1", String.class));
     }
-
 }

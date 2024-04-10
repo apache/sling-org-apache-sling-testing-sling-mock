@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="ISO-8859-1"?>
+<?xml version="1.0" encoding="UTF-8"?>
 <!--
   Licensed to the Apache Software Foundation (ASF) under one
   or more contributor license agreements.  See the NOTICE file
@@ -32,13 +32,6 @@
 
     <name>Apache Sling Testing Sling Mock</name>
 
-    <scm>
-        <connection>scm:git:https://gitbox.apache.org/repos/asf/sling-org-apache-sling-testing-sling-mock.git</connection>
-        <developerConnection>scm:git:https://gitbox.apache.org/repos/asf/sling-org-apache-sling-testing-sling-mock.git</developerConnection>
-        <url>https://github.com/apache/sling-org-apache-sling-testing-sling-mock.git</url>
-        <tag>org.apache.sling.testing.sling-mock.reactor-3.3.2</tag>
-    </scm>
-
     <modules>
         <module>parent</module>
         <module>core</module>
@@ -46,6 +39,13 @@
         <module>junit5</module>
         <module>relocate</module>
     </modules>
+
+    <scm>
+        <connection>scm:git:https://gitbox.apache.org/repos/asf/sling-org-apache-sling-testing-sling-mock.git</connection>
+        <developerConnection>scm:git:https://gitbox.apache.org/repos/asf/sling-org-apache-sling-testing-sling-mock.git</developerConnection>
+        <tag>org.apache.sling.testing.sling-mock.reactor-3.3.2</tag>
+        <url>https://github.com/apache/sling-org-apache-sling-testing-sling-mock.git</url>
+    </scm>
 
     <build>
         <plugins>

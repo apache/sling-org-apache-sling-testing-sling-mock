@@ -27,5 +27,4 @@ public class UniqueRootTest extends AbstractUniqueRootTest {
     protected ResourceResolverType getResourceResolverType() {
         return ResourceResolverType.JCR_MOCK;
     }
-
 }

@@ -36,5 +36,4 @@ public class ServiceInterfaceImpl implements ServiceInterface {
     public String getPropValue() {
         return this.prop1;
     }
-
 }

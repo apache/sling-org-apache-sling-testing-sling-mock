@@ -61,5 +61,4 @@ public interface SlingBindingsModel {
 
     @ScriptVariable(name = "custom-param-3", injectionStrategy = InjectionStrategy.OPTIONAL)
     String getCustomParam3();
-
 }

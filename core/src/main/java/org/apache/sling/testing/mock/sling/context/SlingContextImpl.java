@@ -18,8 +18,8 @@
  */
 package org.apache.sling.testing.mock.sling.context;
 
-import static org.apache.sling.testing.mock.sling.context.MockSlingBindings.SERVICE_PROPERTY_MOCK_SLING_BINDINGS_IGNORE;
-import static org.osgi.service.event.EventConstants.EVENT_TOPIC;
+import javax.jcr.RepositoryException;
+import javax.jcr.Session;
 
 import java.util.Arrays;
 import java.util.Collections;
@@ -28,9 +28,6 @@ import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 import java.util.function.Function;
-
-import javax.jcr.RepositoryException;
-import javax.jcr.Session;
 
 import org.apache.sling.api.SlingHttpServletRequest;
 import org.apache.sling.api.adapter.AdapterFactory;
@@ -70,6 +67,9 @@ import org.osgi.framework.Constants;
 import org.osgi.framework.ServiceReference;
 import org.osgi.service.event.EventHandler;
 
+import static org.apache.sling.testing.mock.sling.context.MockSlingBindings.SERVICE_PROPERTY_MOCK_SLING_BINDINGS_IGNORE;
+import static org.osgi.service.event.EventConstants.EVENT_TOPIC;
+
 /**
  * Defines Sling context objects with lazy initialization.
  * Should not be used directly but via the SlingContext JUnit rule or extension.
@@ -85,7 +85,8 @@ public class SlingContextImpl extends OsgiContextImpl {
     // default to publish instance run mode
     static final @NotNull Set<String> DEFAULT_RUN_MODES = Collections.singleton("publish");
 
-    private static final @NotNull String RESOURCERESOLVERFACTORYACTIVATOR_PID = "org.apache.sling.jcr.resource.internal.JcrResourceResolverFactoryImpl";
+    private static final @NotNull String RESOURCERESOLVERFACTORYACTIVATOR_PID =
+            "org.apache.sling.jcr.resource.internal.JcrResourceResolverFactoryImpl";
 
     /**
      * Resource resolver factory
@@ -151,8 +152,7 @@ public class SlingContextImpl extends OsgiContextImpl {
     protected void setResourceResolverType(@Nullable final ResourceResolverType resourceResolverType) {
         if (resourceResolverType == null) {
             this.resourceResolverType = MockSling.DEFAULT_RESOURCERESOLVER_TYPE;
-        }
-        else {
+        } else {
             this.resourceResolverType = resourceResolverType;
         }
     }
@@ -180,8 +180,10 @@ public class SlingContextImpl extends OsgiContextImpl {
         MockSling.setAdapterManagerBundleContext(bundleContext());
 
         if (this.resourceResolverFactoryActivatorProps != null) {
-            // use OSGi ConfigurationAdmin to pass over customized configuration to Resource Resolver Factory Activator service
-            MockOsgi.setConfigForPid(bundleContext(), RESOURCERESOLVERFACTORYACTIVATOR_PID, this.resourceResolverFactoryActivatorProps);
+            // use OSGi ConfigurationAdmin to pass over customized configuration to Resource Resolver Factory Activator
+            // service
+            MockOsgi.setConfigForPid(
+                    bundleContext(), RESOURCERESOLVERFACTORYACTIVATOR_PID, this.resourceResolverFactoryActivatorProps);
         }
 
         // automatically register resource resolver factory when ResourceResolverType != NONE,
@@ -241,8 +243,8 @@ public class SlingContextImpl extends OsgiContextImpl {
         registerService(SlingSettingsService.class, new MockSlingSettingService(DEFAULT_RUN_MODES));
         registerService(MimeTypeService.class, new MockMimeTypeService());
         registerInjectActivateService(new ResourceBuilderFactoryService());
-        registerInjectActivateService(new JcrObjectsBindingsValuesProvider(),
-                SERVICE_PROPERTY_MOCK_SLING_BINDINGS_IGNORE, true);
+        registerInjectActivateService(
+                new JcrObjectsBindingsValuesProvider(), SERVICE_PROPERTY_MOCK_SLING_BINDINGS_IGNORE, true);
         registerInjectActivateService(new MockResourceBundleProvider());
         registerInjectActivateService(MockXSSFilter.class);
         registerInjectActivateService(XSSAPIImpl.class);
@@ -273,9 +275,9 @@ public class SlingContextImpl extends OsgiContextImpl {
     protected void tearDown() {
 
         if (this.request != null) {
-            SlingBindings slingBindings = (SlingBindings)this.request.getAttribute(SlingBindings.class.getName());
+            SlingBindings slingBindings = (SlingBindings) this.request.getAttribute(SlingBindings.class.getName());
             if (slingBindings instanceof MockSlingBindings) {
-                ((MockSlingBindings)slingBindings).tearDown();
+                ((MockSlingBindings) slingBindings).tearDown();
             }
         }
 
@@ -284,7 +286,7 @@ public class SlingContextImpl extends OsgiContextImpl {
             // revert potential unsaved changes in resource resolver/JCR session
             try {
                 this.resourceResolver.revert();
-            } catch (UnsupportedOperationException ex){
+            } catch (UnsupportedOperationException ex) {
                 // ignore - this may happen when jcr-mock is used
             }
             Session session = this.resourceResolver.adaptTo(Session.class);
@@ -293,7 +295,7 @@ public class SlingContextImpl extends OsgiContextImpl {
                     session.refresh(false);
                 } catch (RepositoryException ex) {
                     // ignore
-                } catch (UnsupportedOperationException ex){
+                } catch (UnsupportedOperationException ex) {
                     // ignore - this may happen when jcr-mock is used
                 }
             }
@@ -358,8 +360,11 @@ public class SlingContextImpl extends OsgiContextImpl {
             MockSlingBindings bindings = new MockSlingBindings(this);
 
             // register as OSGi event handler to get notified on events fired by BindingsValuesProvidersByContextImpl
-            this.registerService(EventHandler.class, bindings,
-                    EVENT_TOPIC, "org/apache/sling/scripting/core/BindingsValuesProvider/*");
+            this.registerService(
+                    EventHandler.class,
+                    bindings,
+                    EVENT_TOPIC,
+                    "org/apache/sling/scripting/core/BindingsValuesProvider/*");
 
             this.request.setAttribute(SlingBindings.class.getName(), bindings);
         }
@@ -372,7 +377,8 @@ public class SlingContextImpl extends OsgiContextImpl {
      * @param request Context request
      * @return Resolved object or null if no result found
      */
-    protected @Nullable Object resolveSlingBindingProperty(@NotNull String property, @NotNull SlingHttpServletRequest request) {
+    protected @Nullable Object resolveSlingBindingProperty(
+            @NotNull String property, @NotNull SlingHttpServletRequest request) {
         return MockSlingBindings.resolveSlingBindingProperty(this, property);
     }
 
@@ -391,7 +397,7 @@ public class SlingContextImpl extends OsgiContextImpl {
      * @return Request path info
      */
     public final @NotNull MockRequestPathInfo requestPathInfo() {
-        return (MockRequestPathInfo)request().getRequestPathInfo();
+        return (MockRequestPathInfo) request().getRequestPathInfo();
     }
 
     /**
@@ -409,8 +415,8 @@ public class SlingContextImpl extends OsgiContextImpl {
      */
     public final @NotNull SlingScriptHelper slingScriptHelper() {
         if (this.slingScriptHelper == null) {
-            this.slingScriptHelper = MockSling.newSlingScriptHelper(this.request(), this.response(),
-                    this.bundleContext());
+            this.slingScriptHelper =
+                    MockSling.newSlingScriptHelper(this.request(), this.response(), this.bundleContext());
         }
         return this.slingScriptHelper;
     }
@@ -429,13 +435,14 @@ public class SlingContextImpl extends OsgiContextImpl {
     public @NotNull ContentLoader load(boolean autoCommit) {
         if (autoCommit) {
             if (this.contentLoaderAutoCommit == null) {
-                this.contentLoaderAutoCommit = new ContentLoader(resourceResolver(), bundleContext(), true, this.resourceResolverType());
+                this.contentLoaderAutoCommit =
+                        new ContentLoader(resourceResolver(), bundleContext(), true, this.resourceResolverType());
             }
             return this.contentLoaderAutoCommit;
-        }
-        else {
+        } else {
             if (this.contentLoader == null) {
-                this.contentLoader = new ContentLoader(resourceResolver(), bundleContext(), false, this.resourceResolverType());
+                this.contentLoader =
+                        new ContentLoader(resourceResolver(), bundleContext(), false, this.resourceResolverType());
             }
             return this.contentLoader;
         }
@@ -488,7 +495,7 @@ public class SlingContextImpl extends OsgiContextImpl {
             }
             return currentResource(resource);
         } else {
-            return currentResource((Resource)null);
+            return currentResource((Resource) null);
         }
     }
 
@@ -508,7 +515,7 @@ public class SlingContextImpl extends OsgiContextImpl {
      * @param packageName Java package name
      */
     public final void addModelsForPackage(@NotNull String packageName) {
-        ModelAdapterFactoryUtil.addModelsForPackages(bundleContext(),  packageName);
+        ModelAdapterFactoryUtil.addModelsForPackages(bundleContext(), packageName);
     }
 
     /**
@@ -545,7 +552,8 @@ public class SlingContextImpl extends OsgiContextImpl {
         Set<String> newRunModes = new HashSet<>(Arrays.asList(runModes));
         ServiceReference<SlingSettingsService> ref = bundleContext().getServiceReference(SlingSettingsService.class);
         if (ref != null) {
-            MockSlingSettingService slingSettings = (MockSlingSettingService)bundleContext().getService(ref);
+            MockSlingSettingService slingSettings =
+                    (MockSlingSettingService) bundleContext().getService(ref);
             slingSettings.setRunModes(newRunModes);
         }
     }
@@ -570,8 +578,8 @@ public class SlingContextImpl extends OsgiContextImpl {
      * @param <T1> Adaptable type
      * @param <T2> Adapter type
      */
-    public final <T1, T2> void registerAdapter(@NotNull final Class<T1> adaptableClass, @NotNull final Class<T2> adapterClass,
-            @NotNull final T2 adapter) {
+    public final <T1, T2> void registerAdapter(
+            @NotNull final Class<T1> adaptableClass, @NotNull final Class<T2> adapterClass, @NotNull final T2 adapter) {
         registerAdapter(adaptableClass, adapterClass, new Function<T1, T2>() {
             @Override
             public T2 apply(@Nullable T1 input) {
@@ -589,26 +597,24 @@ public class SlingContextImpl extends OsgiContextImpl {
      * @param <T1> Adaptable type
      * @param <T2> Adapter type
      */
-    public final <T1, T2> void registerAdapter(@NotNull final Class<T1> adaptableClass, @NotNull final Class<T2> adapterClass,
-            @NotNull final Function<T1,T2> adaptHandler) {
+    public final <T1, T2> void registerAdapter(
+            @NotNull final Class<T1> adaptableClass,
+            @NotNull final Class<T2> adapterClass,
+            @NotNull final Function<T1, T2> adaptHandler) {
         AdapterFactory adapterFactory = new AdapterFactory() {
             @SuppressWarnings("unchecked")
             @Override
             public <AdapterType> AdapterType getAdapter(@NotNull Object adaptable, @NotNull Class<AdapterType> type) {
-                return (AdapterType)adaptHandler.apply((T1)adaptable);
+                return (AdapterType) adaptHandler.apply((T1) adaptable);
             }
         };
-        Map<String,Object> props = new HashMap<>();
-        props.put(AdapterFactory.ADAPTABLE_CLASSES, new String[] {
-                adaptableClass.getName()
-            });
-        props.put(AdapterFactory.ADAPTER_CLASSES, new String[] {
-                adapterClass.getName()
-            });
+        Map<String, Object> props = new HashMap<>();
+        props.put(AdapterFactory.ADAPTABLE_CLASSES, new String[] {adaptableClass.getName()});
+        props.put(AdapterFactory.ADAPTER_CLASSES, new String[] {adapterClass.getName()});
         // make sure this overlay has higher ranking than other adapter factories
-        // normally we should use Integer.MAX_VALUE for this - but due to SLING-7194 prefers lowest-ranking services first
+        // normally we should use Integer.MAX_VALUE for this - but due to SLING-7194 prefers lowest-ranking services
+        // first
         props.put(Constants.SERVICE_RANKING, Integer.MIN_VALUE);
         registerService(AdapterFactory.class, adapterFactory, props);
     }
-
 }

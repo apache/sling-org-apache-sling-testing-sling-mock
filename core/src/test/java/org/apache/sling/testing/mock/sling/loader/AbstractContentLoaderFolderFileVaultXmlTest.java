@@ -18,11 +18,6 @@
  */
 package org.apache.sling.testing.mock.sling.loader;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertTrue;
-
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.List;
@@ -37,6 +32,11 @@ import org.junit.After;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
+
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertTrue;
 
 @SuppressWarnings("null")
 public abstract class AbstractContentLoaderFolderFileVaultXmlTest {
@@ -80,7 +80,8 @@ public abstract class AbstractContentLoaderFolderFileVaultXmlTest {
 
     @Test
     public void testBinaryResource() throws IOException {
-        Resource fileResource = context.resourceResolver().getResource("/content/dam/talk.png/jcr:content/renditions/original");
+        Resource fileResource =
+                context.resourceResolver().getResource("/content/dam/talk.png/jcr:content/renditions/original");
         try (InputStream is = fileResource.adaptTo(InputStream.class)) {
             assertNotNull("InputSteam is null for " + fileResource.getPath(), is);
             byte[] binaryData = IOUtils.toByteArray(is);
@@ -112,5 +113,4 @@ public abstract class AbstractContentLoaderFolderFileVaultXmlTest {
         assertTrue(context.resourceResolver().isResourceType(resource, "app1/components/base"));
         assertTrue(context.resourceResolver().isResourceType(resource, "core/components/superResource"));
     }
-
 }

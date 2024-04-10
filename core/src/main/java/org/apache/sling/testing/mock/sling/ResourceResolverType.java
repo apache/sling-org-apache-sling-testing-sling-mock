@@ -74,8 +74,10 @@ public enum ResourceResolverType {
      * <li>The <code>MemoryNodeStore</code> implementation is used, with no customizations.</li>
      * </ul>
      */
-    JCR_OAK("org.apache.sling.testing.mock.sling.oak.OakMockResourceResolverAdapter",
-            "org.apache.sling:org.apache.sling.testing.sling-mock-oak", NodeTypeMode.NODETYPES_REQUIRED),
+    JCR_OAK(
+            "org.apache.sling.testing.mock.sling.oak.OakMockResourceResolverAdapter",
+            "org.apache.sling:org.apache.sling.testing.sling-mock-oak",
+            NodeTypeMode.NODETYPES_REQUIRED),
 
     /**
      * Provides resource resolver environment without any ResourceProvider.
@@ -87,13 +89,12 @@ public enum ResourceResolverType {
      */
     NONE(MockNoneResourceResolverAdapter.class.getName(), null, NodeTypeMode.NOT_SUPPORTED);
 
-
     private final @NotNull String resourceResolverTypeAdapterClass;
     private final @NotNull String artifactCoordinates;
     private final @NotNull NodeTypeMode nodeTypeMode;
 
-
-    private ResourceResolverType(@NotNull final String resourceResolverTypeAdapterClass,
+    private ResourceResolverType(
+            @NotNull final String resourceResolverTypeAdapterClass,
             @NotNull final String artifactCoordinates,
             @NotNull final NodeTypeMode nodeTypeMode) {
         this.resourceResolverTypeAdapterClass = resourceResolverTypeAdapterClass;
@@ -101,11 +102,13 @@ public enum ResourceResolverType {
         this.nodeTypeMode = nodeTypeMode;
     }
 
-    @NotNull String getResourceResolverTypeAdapterClass() {
+    @NotNull
+    String getResourceResolverTypeAdapterClass() {
         return this.resourceResolverTypeAdapterClass;
     }
 
-    @NotNull String getArtifactCoordinates() {
+    @NotNull
+    String getArtifactCoordinates() {
         return this.artifactCoordinates;
     }
 
@@ -115,5 +118,4 @@ public enum ResourceResolverType {
     public @NotNull NodeTypeMode getNodeTypeMode() {
         return nodeTypeMode;
     }
-
 }

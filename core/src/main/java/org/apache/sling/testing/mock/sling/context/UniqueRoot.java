@@ -70,11 +70,13 @@ public class UniqueRoot {
      */
     protected final Resource getOrCreateResource(@NotNull String path, @NotNull String primaryType) {
         try {
-            return ResourceUtil.getOrCreateResource(context.resourceResolver(), path,
+            return ResourceUtil.getOrCreateResource(
+                    context.resourceResolver(),
+                    path,
                     ImmutableValueMap.of(JcrConstants.JCR_PRIMARYTYPE, primaryType),
-                    null, true);
-        }
-        catch (PersistenceException ex) {
+                    null,
+                    true);
+        } catch (PersistenceException ex) {
             throw new RuntimeException("Unable to create resource at " + path + ": " + ex.getMessage(), ex);
         }
     }
@@ -132,19 +134,15 @@ public class UniqueRoot {
             if (resource != null && context.resourceResolver.getResource(resource.getPath()) != null) {
                 try {
                     context.resourceResolver().delete(resource);
-                }
-                catch (PersistenceException ex) {
+                } catch (PersistenceException ex) {
                     log.warn("Unable to delete root path " + resource.getPath(), ex);
                 }
             }
         }
         try {
             context.resourceResolver().commit();
-        }
-        catch (PersistenceException ex) {
+        } catch (PersistenceException ex) {
             log.warn("Unable to commit root path deletions.", ex);
         }
-
     }
-
 }

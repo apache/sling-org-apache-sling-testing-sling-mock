@@ -18,8 +18,6 @@
  */
 package org.apache.sling.testing.mock.sling;
 
-import static org.junit.Assert.assertNotNull;
-
 import javax.jcr.RepositoryException;
 import javax.jcr.Session;
 
@@ -29,6 +27,8 @@ import org.apache.sling.testing.mock.sling.junit.SlingContext;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
+
+import static org.junit.Assert.assertNotNull;
 
 public class MockJcrSlingRepositoryTest {
 
@@ -56,5 +56,4 @@ public class MockJcrSlingRepositoryTest {
         assertNotNull(session);
         session.logout();
     }
-
 }

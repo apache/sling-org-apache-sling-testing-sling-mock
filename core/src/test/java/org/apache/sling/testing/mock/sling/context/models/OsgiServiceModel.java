@@ -32,5 +32,4 @@ public interface OsgiServiceModel {
 
     @Inject
     MimeTypeService getMimeTypeService();
-
 }

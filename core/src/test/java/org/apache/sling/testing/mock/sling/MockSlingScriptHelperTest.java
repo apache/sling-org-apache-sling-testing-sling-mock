@@ -18,10 +18,6 @@
  */
 package org.apache.sling.testing.mock.sling;
 
-import static org.junit.Assert.assertArrayEquals;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertSame;
-
 import java.util.Arrays;
 
 import org.apache.sling.api.SlingHttpServletRequest;
@@ -35,6 +31,10 @@ import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 import org.osgi.framework.BundleContext;
+
+import static org.junit.Assert.assertArrayEquals;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertSame;
 
 public class MockSlingScriptHelperTest {
 
@@ -77,7 +77,7 @@ public class MockSlingScriptHelperTest {
 
     @Test
     public void testGetServices() {
-        Integer[] services = new Integer[] { 1, 2, 3 };
+        Integer[] services = new Integer[] {1, 2, 3};
         for (Integer service : services) {
             this.bundleContext.registerService(Integer.class.getName(), service, null);
         }
@@ -85,5 +85,4 @@ public class MockSlingScriptHelperTest {
         Arrays.sort(servicesResult);
         assertArrayEquals(services, servicesResult);
     }
-
 }

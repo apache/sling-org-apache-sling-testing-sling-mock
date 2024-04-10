@@ -198,8 +198,8 @@ public final class ImmutableValueMap implements ValueMap {
      * @return ImmutableValueMap
      * @throws IllegalArgumentException if duplicate keys are provided
      */
-    public static @NotNull ImmutableValueMap of(@NotNull String k1, @NotNull Object v1, @NotNull String k2,
-            @NotNull Object v2) {
+    public static @NotNull ImmutableValueMap of(
+            @NotNull String k1, @NotNull Object v1, @NotNull String k2, @NotNull Object v2) {
         Map<String, Object> map = new HashMap<>();
         map.put(k1, v1);
         map.put(k2, v2);
@@ -217,8 +217,13 @@ public final class ImmutableValueMap implements ValueMap {
      * @return ImmutableValueMap
      * @throws IllegalArgumentException if duplicate keys are provided
      */
-    public static @NotNull ImmutableValueMap of(@NotNull String k1, @NotNull Object v1, @NotNull String k2,
-            @NotNull Object v2, @NotNull String k3, @NotNull Object v3) {
+    public static @NotNull ImmutableValueMap of(
+            @NotNull String k1,
+            @NotNull Object v1,
+            @NotNull String k2,
+            @NotNull Object v2,
+            @NotNull String k3,
+            @NotNull Object v3) {
         Map<String, Object> map = new HashMap<>();
         map.put(k1, v1);
         map.put(k2, v2);
@@ -240,8 +245,14 @@ public final class ImmutableValueMap implements ValueMap {
      * @throws IllegalArgumentException if duplicate keys are provided
      */
     public static @NotNull ImmutableValueMap of( // NOPMD
-            @NotNull String k1, @NotNull Object v1, @NotNull String k2, @NotNull Object v2, @NotNull String k3,
-            @NotNull Object v3, @NotNull String k4, @NotNull Object v4) {
+            @NotNull String k1,
+            @NotNull Object v1,
+            @NotNull String k2,
+            @NotNull Object v2,
+            @NotNull String k3,
+            @NotNull Object v3,
+            @NotNull String k4,
+            @NotNull Object v4) {
         Map<String, Object> map = new HashMap<>();
         map.put(k1, v1);
         map.put(k2, v2);
@@ -266,8 +277,16 @@ public final class ImmutableValueMap implements ValueMap {
      * @throws IllegalArgumentException if duplicate keys are provided
      */
     public static ImmutableValueMap of( // NOPMD
-            @NotNull String k1, @NotNull Object v1, @NotNull String k2, @NotNull Object v2, @NotNull String k3,
-            @NotNull Object v3, @NotNull String k4, @NotNull Object v4, @NotNull String k5, @NotNull Object v5) {
+            @NotNull String k1,
+            @NotNull Object v1,
+            @NotNull String k2,
+            @NotNull Object v2,
+            @NotNull String k3,
+            @NotNull Object v3,
+            @NotNull String k4,
+            @NotNull Object v4,
+            @NotNull String k5,
+            @NotNull Object v5) {
         Map<String, Object> map = new HashMap<>();
         map.put(k1, v1);
         map.put(k2, v2);
@@ -368,5 +387,4 @@ public final class ImmutableValueMap implements ValueMap {
             }
         }
     }
-
 }

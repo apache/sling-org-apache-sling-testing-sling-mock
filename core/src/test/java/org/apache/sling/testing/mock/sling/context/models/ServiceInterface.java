@@ -24,5 +24,4 @@ package org.apache.sling.testing.mock.sling.context.models;
 public interface ServiceInterface {
 
     String getPropValue();
-
 }

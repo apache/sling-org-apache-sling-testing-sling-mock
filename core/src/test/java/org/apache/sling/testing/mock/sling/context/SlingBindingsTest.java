@@ -18,11 +18,6 @@
  */
 package org.apache.sling.testing.mock.sling.context;
 
-import static org.apache.sling.testing.mock.sling.context.MockSlingBindings.SERVICE_PROPERTY_MOCK_SLING_BINDINGS_IGNORE;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertNull;
-
 import javax.script.Bindings;
 
 import org.apache.sling.api.resource.Resource;
@@ -34,6 +29,11 @@ import org.apache.sling.testing.mock.sling.junit.SlingContext;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
+
+import static org.apache.sling.testing.mock.sling.context.MockSlingBindings.SERVICE_PROPERTY_MOCK_SLING_BINDINGS_IGNORE;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertNull;
 
 @SuppressWarnings("null")
 public class SlingBindingsTest {
@@ -54,12 +54,16 @@ public class SlingBindingsTest {
         });
 
         // setup another custom BindingsValuesProvider which should be ignored
-        context.registerService(BindingsValuesProvider.class, new BindingsValuesProvider() {
-            @Override
-            public void addBindings(Bindings bindings) {
-                bindings.put("custom-param-2", "value-2");
-            }
-        }, SERVICE_PROPERTY_MOCK_SLING_BINDINGS_IGNORE, true);
+        context.registerService(
+                BindingsValuesProvider.class,
+                new BindingsValuesProvider() {
+                    @Override
+                    public void addBindings(Bindings bindings) {
+                        bindings.put("custom-param-2", "value-2");
+                    }
+                },
+                SERVICE_PROPERTY_MOCK_SLING_BINDINGS_IGNORE,
+                true);
 
         context.addModelsForClasses(SlingBindingsModel.class);
         currentResource = context.create().resource("/content/testPage/testResource");
@@ -95,12 +99,11 @@ public class SlingBindingsTest {
 
     @Test
     public void testCustomBindingsValuesProvider() {
-        SlingBindings bindings = (SlingBindings)context.request().getAttribute(SlingBindings.class.getName());
+        SlingBindings bindings = (SlingBindings) context.request().getAttribute(SlingBindings.class.getName());
         assertNotNull(bindings);
         assertEquals(currentResource.getPath(), bindings.getResource().getPath());
         assertEquals("value-1", bindings.get("custom-param-1"));
         assertNull(bindings.get("custom-param-2"));
         assertEquals("value-3", bindings.get("custom-param-3"));
     }
-
 }

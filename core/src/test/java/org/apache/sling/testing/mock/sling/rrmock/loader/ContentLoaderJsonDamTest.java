@@ -27,5 +27,4 @@ public class ContentLoaderJsonDamTest extends AbstractContentLoaderJsonDamTest {
     protected ResourceResolverType getResourceResolverType() {
         return ResourceResolverType.RESOURCERESOLVER_MOCK;
     }
-
 }

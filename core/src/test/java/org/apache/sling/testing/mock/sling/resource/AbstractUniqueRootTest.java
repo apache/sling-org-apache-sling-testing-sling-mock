@@ -18,13 +18,13 @@
  */
 package org.apache.sling.testing.mock.sling.resource;
 
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertTrue;
-
 import org.apache.sling.testing.mock.sling.ResourceResolverType;
 import org.apache.sling.testing.mock.sling.junit.SlingContext;
 import org.junit.Rule;
 import org.junit.Test;
+
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertTrue;
 
 public abstract class AbstractUniqueRootTest {
 
@@ -53,5 +53,4 @@ public abstract class AbstractUniqueRootTest {
         assertNotNull(context.resourceResolver().getResource(path));
         assertTrue(path.matches("^/libs/[^/]+"));
     }
-
 }

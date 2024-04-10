@@ -32,5 +32,4 @@ public interface ClasspathRegisteredModel {
 
     @Inject
     String getProp1();
-
 }

@@ -39,7 +39,8 @@ public interface ResourceResolverTypeAdapter {
      * {@link #newSlingRepository()} has to return a value.
      * @return Resource resolver factory instance or null
      */
-    @Nullable ResourceResolverFactory newResourceResolverFactory();
+    @Nullable
+    ResourceResolverFactory newResourceResolverFactory();
 
     /**
      * Get SlingRepository instance. Can be null if a resource resolver factory
@@ -47,6 +48,6 @@ public interface ResourceResolverTypeAdapter {
      * {@link #newResourceResolverFactory()} has to return a value.
      * @return Sling repository instance or null
      */
-    @Nullable SlingRepository newSlingRepository();
-
+    @Nullable
+    SlingRepository newSlingRepository();
 }

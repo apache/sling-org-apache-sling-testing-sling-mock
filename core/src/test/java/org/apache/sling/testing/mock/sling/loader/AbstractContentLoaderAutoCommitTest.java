@@ -18,9 +18,6 @@
  */
 package org.apache.sling.testing.mock.sling.loader;
 
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertTrue;
-
 import java.io.ByteArrayInputStream;
 import java.io.InputStream;
 
@@ -30,14 +27,15 @@ import org.apache.sling.testing.mock.sling.junit.SlingContext;
 import org.junit.Rule;
 import org.junit.Test;
 
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertTrue;
+
 public abstract class AbstractContentLoaderAutoCommitTest {
 
     private static String DEST_RES_NAME = "dest";
     private static String MIME_TYPE_JSON = "application/json";
     private static String CLP_CONTENT = "/json-import-samples/content.json";
-    private static byte[] MEM_CONTENT = ("{"
-            + "\"jcr:primaryType\":\"sling:Folder\""
-            + "}").getBytes();
+    private static byte[] MEM_CONTENT = ("{" + "\"jcr:primaryType\":\"sling:Folder\"" + "}").getBytes();
 
     private int destResCount = 1;
 

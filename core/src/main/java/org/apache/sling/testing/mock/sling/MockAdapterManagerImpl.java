@@ -18,9 +18,6 @@
  */
 package org.apache.sling.testing.mock.sling;
 
-import static org.apache.sling.api.adapter.AdapterFactory.ADAPTABLE_CLASSES;
-import static org.apache.sling.api.adapter.AdapterFactory.ADAPTER_CLASSES;
-
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Dictionary;
@@ -51,19 +48,30 @@ import org.osgi.service.component.annotations.ReferencePolicy;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import static org.apache.sling.api.adapter.AdapterFactory.ADAPTABLE_CLASSES;
+import static org.apache.sling.api.adapter.AdapterFactory.ADAPTER_CLASSES;
+
 /**
  * This is a copy of org.apache.sling.adapter.internal.AdpaterManagerImpl from Sling Adapter 2.1.6,
  * with all calls to SyntheticResource.setAdapterManager/unsetAdapterManager disabled, because this would
  * break the {@link ThreadsafeMockAdapterManagerWrapper} concept.
  * Additionally the reference to PackageAdmin is disabled.
  */
-@Component(immediate=true, service=AdapterManager.class,
-        property={Constants.SERVICE_DESCRIPTION + "=Sling Adapter Manager",
-                Constants.SERVICE_VENDOR + "=The Apache Software Foundation"},
-        reference = @Reference(name="AdapterFactory", service=AdapterFactory.class,
-                cardinality=ReferenceCardinality.MULTIPLE, policy=ReferencePolicy.DYNAMIC,
-                bind="bindAdapterFactory", unbind="unbindAdapterFactory")
-)
+@Component(
+        immediate = true,
+        service = AdapterManager.class,
+        property = {
+            Constants.SERVICE_DESCRIPTION + "=Sling Adapter Manager",
+            Constants.SERVICE_VENDOR + "=The Apache Software Foundation"
+        },
+        reference =
+                @Reference(
+                        name = "AdapterFactory",
+                        service = AdapterFactory.class,
+                        cardinality = ReferenceCardinality.MULTIPLE,
+                        policy = ReferencePolicy.DYNAMIC,
+                        bind = "bindAdapterFactory",
+                        unbind = "unbindAdapterFactory"))
 public class MockAdapterManagerImpl implements AdapterManager {
 
     private final Logger log = LoggerFactory.getLogger(getClass());
@@ -79,7 +87,8 @@ public class MockAdapterManagerImpl implements AdapterManager {
      * the manager has been activated. These bound services will be accessed as
      * soon as the manager is being activated.
      */
-    private final List<ServiceReference<AdapterFactory>> boundAdapterFactories = new LinkedList<ServiceReference<AdapterFactory>>();
+    private final List<ServiceReference<AdapterFactory>> boundAdapterFactories =
+            new LinkedList<ServiceReference<AdapterFactory>>();
 
     /**
      * A map of {@link AdapterFactoryDescriptorMap} instances. The map is
@@ -89,7 +98,8 @@ public class MockAdapterManagerImpl implements AdapterManager {
      *
      * @see AdapterFactoryDescriptorMap
      */
-    private final Map<String, AdapterFactoryDescriptorMap> descriptors = new HashMap<String, AdapterFactoryDescriptorMap>();
+    private final Map<String, AdapterFactoryDescriptorMap> descriptors =
+            new HashMap<String, AdapterFactoryDescriptorMap>();
 
     /**
      * Matrix of {@link AdapterFactoryDescriptor} instances primarily indexed by the fully
@@ -100,8 +110,8 @@ public class MockAdapterManagerImpl implements AdapterManager {
      * {@link #getAdapterFactories(Class)} method. It is cleared
      * whenever an adapter factory is registered on unregistered.
      */
-    private final ConcurrentMap<String, Map<String, List<AdapterFactoryDescriptor>>> factoryCache
-    = new ConcurrentHashMap<String, Map<String, List<AdapterFactoryDescriptor>>>();
+    private final ConcurrentMap<String, Map<String, List<AdapterFactoryDescriptor>>> factoryCache =
+            new ConcurrentHashMap<String, Map<String, List<AdapterFactoryDescriptor>>>();
 
     // DISABLED IN THIS COPY OF CLASS
     /*
@@ -119,8 +129,8 @@ public class MockAdapterManagerImpl implements AdapterManager {
      */
     @Override
     @SuppressWarnings("null")
-    public <AdapterType> AdapterType getAdapter(@NotNull final Object adaptable,
-            @NotNull final Class<AdapterType> type) {
+    public <AdapterType> AdapterType getAdapter(
+            @NotNull final Object adaptable, @NotNull final Class<AdapterType> type) {
 
         // get the adapter factories for the type of adaptable object
         final Map<String, List<AdapterFactoryDescriptor>> factories = getAdapterFactories(adaptable.getClass());
@@ -134,13 +144,11 @@ public class MockAdapterManagerImpl implements AdapterManager {
 
                 // have the factory adapt the adaptable if the factory exists
                 if (factory != null) {
-                    log.debug("Trying adapter factory {} to map {} to {}",
-                            new Object [] { factory, adaptable, type });
+                    log.debug("Trying adapter factory {} to map {} to {}", new Object[] {factory, adaptable, type});
 
                     AdapterType adaptedObject = factory.getAdapter(adaptable, type);
                     if (adaptedObject != null) {
-                        log.debug("Using adapter factory {} to map {} to {}",
-                                new Object [] { factory, adaptable, type });
+                        log.debug("Using adapter factory {} to map {} to {}", new Object[] {factory, adaptable, type});
                         return adaptedObject;
                     }
                 }
@@ -165,7 +173,7 @@ public class MockAdapterManagerImpl implements AdapterManager {
 
         // register all adapter factories bound before activation
         final List<ServiceReference<AdapterFactory>> refs;
-        synchronized ( this.boundAdapterFactories ) {
+        synchronized (this.boundAdapterFactories) {
             refs = new ArrayList<ServiceReference<AdapterFactory>>(this.boundAdapterFactories);
             boundAdapterFactories.clear();
         }
@@ -175,7 +183,7 @@ public class MockAdapterManagerImpl implements AdapterManager {
 
         // final "enable" this manager by setting the instance
         // DISABLED IN THIS COPY OF CLASS
-        //SyntheticResource.setAdapterManager(this);
+        // SyntheticResource.setAdapterManager(this);
     }
 
     /**
@@ -184,7 +192,7 @@ public class MockAdapterManagerImpl implements AdapterManager {
      */
     protected void deactivate(final ComponentContext context) {
         // DISABLED IN THIS COPY OF CLASS
-        //SyntheticResource.unsetAdapterManager(this);
+        // SyntheticResource.unsetAdapterManager(this);
         this.context = null;
     }
 
@@ -195,14 +203,14 @@ public class MockAdapterManagerImpl implements AdapterManager {
     protected void bindAdapterFactory(final ServiceReference<AdapterFactory> reference) {
         boolean create = true;
         if (context == null) {
-            synchronized ( this.boundAdapterFactories ) {
+            synchronized (this.boundAdapterFactories) {
                 if (context == null) {
                     boundAdapterFactories.add(reference);
                     create = false;
                 }
             }
         }
-        if ( create ) {
+        if (create) {
             registerAdapterFactory(context, reference);
         }
     }
@@ -242,13 +250,12 @@ public class MockAdapterManagerImpl implements AdapterManager {
      * <code>reference</code> from the registry.
      */
     @SuppressWarnings("null")
-    private void registerAdapterFactory(final ComponentContext context,
-            final ServiceReference<AdapterFactory> reference) {
+    private void registerAdapterFactory(
+            final ComponentContext context, final ServiceReference<AdapterFactory> reference) {
         final String[] adaptables = PropertiesUtil.toStringArray(reference.getProperty(ADAPTABLE_CLASSES));
         final String[] adapters = PropertiesUtil.toStringArray(reference.getProperty(ADAPTER_CLASSES));
 
-        if (adaptables == null || adaptables.length == 0 || adapters == null
-                || adapters.length == 0) {
+        if (adaptables == null || adaptables.length == 0 || adapters == null || adapters.length == 0) {
             return;
         }
 
@@ -267,19 +274,18 @@ public class MockAdapterManagerImpl implements AdapterManager {
         }
         */
 
-        final AdapterFactoryDescriptor factoryDesc = new AdapterFactoryDescriptor(context,
-                reference, adapters);
+        final AdapterFactoryDescriptor factoryDesc = new AdapterFactoryDescriptor(context, reference, adapters);
 
         for (final String adaptable : adaptables) {
             AdapterFactoryDescriptorMap adfMap = null;
-            synchronized ( this.descriptors ) {
+            synchronized (this.descriptors) {
                 adfMap = descriptors.get(adaptable);
                 if (adfMap == null) {
                     adfMap = new AdapterFactoryDescriptorMap();
                     descriptors.put(adaptable, adfMap);
                 }
             }
-            synchronized ( adfMap ) {
+            synchronized (adfMap) {
                 adfMap.put(reference, factoryDesc);
             }
         }
@@ -292,11 +298,16 @@ public class MockAdapterManagerImpl implements AdapterManager {
         props.put(SlingConstants.PROPERTY_ADAPTABLE_CLASSES, adaptables);
         props.put(SlingConstants.PROPERTY_ADAPTER_CLASSES, adapters);
 
-        ServiceRegistration<Adaption> adaptionRegistration = this.context.getBundleContext().registerService(Adaption.class, AdaptionImpl.INSTANCE, props);
+        ServiceRegistration<Adaption> adaptionRegistration =
+                this.context.getBundleContext().registerService(Adaption.class, AdaptionImpl.INSTANCE, props);
         if (log.isDebugEnabled()) {
-            log.debug("Registered service {} with {} : {} and {} : {}", new Object[] { Adaption.class.getName(),
-                    SlingConstants.PROPERTY_ADAPTABLE_CLASSES, Arrays.toString(adaptables),
-                    SlingConstants.PROPERTY_ADAPTER_CLASSES, Arrays.toString(adapters) });
+            log.debug("Registered service {} with {} : {} and {} : {}", new Object[] {
+                Adaption.class.getName(),
+                SlingConstants.PROPERTY_ADAPTABLE_CLASSES,
+                Arrays.toString(adaptables),
+                SlingConstants.PROPERTY_ADAPTER_CLASSES,
+                Arrays.toString(adapters)
+            });
         }
         factoryDesc.setAdaption(adaptionRegistration);
     }
@@ -330,14 +341,13 @@ public class MockAdapterManagerImpl implements AdapterManager {
      * <code>reference</code> from the registry.
      */
     private void unregisterAdapterFactory(final ServiceReference reference) {
-        synchronized ( this.boundAdapterFactories ) {
+        synchronized (this.boundAdapterFactories) {
             boundAdapterFactories.remove(reference);
         }
         final String[] adaptables = PropertiesUtil.toStringArray(reference.getProperty(ADAPTABLE_CLASSES));
         final String[] adapters = PropertiesUtil.toStringArray(reference.getProperty(ADAPTER_CLASSES));
 
-        if (adaptables == null || adaptables.length == 0 || adapters == null
-                || adapters.length == 0) {
+        if (adaptables == null || adaptables.length == 0 || adapters == null || adapters.length == 0) {
             return;
         }
 
@@ -346,19 +356,20 @@ public class MockAdapterManagerImpl implements AdapterManager {
 
         AdapterFactoryDescriptor removedDescriptor = null;
         for (final String adaptable : adaptables) {
-            synchronized ( this.descriptors ) {
+            synchronized (this.descriptors) {
                 adfMap = this.descriptors.get(adaptable);
             }
             if (adfMap != null) {
-                synchronized ( adfMap ) {
+                synchronized (adfMap) {
                     AdapterFactoryDescriptor factoryDesc = adfMap.remove(reference);
                     if (factoryDesc != null) {
                         factoriesModified = true;
                         // A single ServiceReference should correspond to a single Adaption service being registered
                         // Since the code paths above does not fully guarantee it though, let's keep this check in place
                         if (removedDescriptor != null && removedDescriptor != factoryDesc) {
-                            log.error("When unregistering reference {} got duplicate service descriptors {} and {}. Unregistration of {} services may be incomplete.",
-                                    new Object[] { reference, removedDescriptor, factoryDesc, Adaption.class.getName()} );
+                            log.error(
+                                    "When unregistering reference {} got duplicate service descriptors {} and {}. Unregistration of {} services may be incomplete.",
+                                    new Object[] {reference, removedDescriptor, factoryDesc, Adaption.class.getName()});
                         }
                         removedDescriptor = factoryDesc;
                     }
@@ -376,9 +387,13 @@ public class MockAdapterManagerImpl implements AdapterManager {
         if (removedDescriptor != null) {
             removedDescriptor.getAdaption().unregister();
             if (log.isDebugEnabled()) {
-                log.debug("Unregistered service {} with {} : {} and {} : {}", new Object[] { Adaption.class.getName(),
-                        SlingConstants.PROPERTY_ADAPTABLE_CLASSES, Arrays.toString(adaptables),
-                        SlingConstants.PROPERTY_ADAPTER_CLASSES, Arrays.toString(adapters) });
+                log.debug("Unregistered service {} with {} : {} and {} : {}", new Object[] {
+                    Adaption.class.getName(),
+                    SlingConstants.PROPERTY_ADAPTABLE_CLASSES,
+                    Arrays.toString(adaptables),
+                    SlingConstants.PROPERTY_ADAPTER_CLASSES,
+                    Arrays.toString(adapters)
+                });
             }
         }
     }
@@ -423,12 +438,12 @@ public class MockAdapterManagerImpl implements AdapterManager {
 
         // AdapterFactories for this class
         AdapterFactoryDescriptorMap afdMap = null;
-        synchronized ( this.descriptors ) {
+        synchronized (this.descriptors) {
             afdMap = this.descriptors.get(clazz.getName());
         }
         if (afdMap != null) {
             final List<AdapterFactoryDescriptor> afdSet;
-            synchronized ( afdMap ) {
+            synchronized (afdMap) {
                 afdSet = new ArrayList<AdapterFactoryDescriptor>(afdMap.values());
             }
             for (final AdapterFactoryDescriptor afd : afdSet) {
@@ -472,8 +487,7 @@ public class MockAdapterManagerImpl implements AdapterManager {
      * @param clazz The adaptable class whose adapter factories are considered
      *            for adding into <code>dest</code>.
      */
-    private void copyAdapterFactories(final Map<String, List<AdapterFactoryDescriptor>> dest,
-            final Class<?> clazz) {
+    private void copyAdapterFactories(final Map<String, List<AdapterFactoryDescriptor>> dest, final Class<?> clazz) {
 
         // get the adapter factories for the adaptable clazz
         final Map<String, List<AdapterFactoryDescriptor>> scMap = getAdapterFactories(clazz);
@@ -511,11 +525,10 @@ public class MockAdapterManagerImpl implements AdapterManager {
      *   signature has changed in adapter impl 2.2.0.
      * </p>
      */
-    static class AdapterFactoryDescriptorMap extends
-            TreeMap<ServiceReference<AdapterFactory>, AdapterFactoryDescriptor> {
+    static class AdapterFactoryDescriptorMap
+            extends TreeMap<ServiceReference<AdapterFactory>, AdapterFactoryDescriptor> {
 
         private static final long serialVersionUID = 2L;
-
     }
 
     /**
@@ -549,9 +562,8 @@ public class MockAdapterManagerImpl implements AdapterManager {
         }
 
         public AdapterFactory getFactory() {
-            if ( factory == null ) {
-                factory = context.locateService(
-                        "AdapterFactory", reference);
+            if (factory == null) {
+                factory = context.locateService("AdapterFactory", reference);
             }
             return factory;
         }
@@ -568,5 +580,4 @@ public class MockAdapterManagerImpl implements AdapterManager {
             this.adaption = adaption;
         }
     }
-
 }

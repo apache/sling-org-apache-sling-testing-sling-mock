@@ -35,8 +35,12 @@ import org.junit.jupiter.api.extension.TestInstancePostProcessor;
  * it) parameters in test methods, and ensures that the context is set up and
  * teared down properly for each test method.
  */
-public final class SlingContextExtension implements ParameterResolver, TestInstancePostProcessor, BeforeEachCallback,
-        AfterEachCallback, AfterTestExecutionCallback {
+public final class SlingContextExtension
+        implements ParameterResolver,
+                TestInstancePostProcessor,
+                BeforeEachCallback,
+                AfterEachCallback,
+                AfterTestExecutionCallback {
 
     /**
      * Checks if test class has a {@link SlingContext} or derived field. If it has
@@ -67,7 +71,8 @@ public final class SlingContextExtension implements ParameterResolver, TestInsta
      */
     @Override
     public boolean supportsParameter(ParameterContext parameterContext, ExtensionContext extensionContext) {
-        return SlingContext.class.isAssignableFrom(parameterContext.getParameter().getType());
+        return SlingContext.class.isAssignableFrom(
+                parameterContext.getParameter().getType());
     }
 
     /**
@@ -110,8 +115,8 @@ public final class SlingContextExtension implements ParameterResolver, TestInsta
     }
 
     private void applySlingContext(ExtensionContext extensionContext, Consumer<SlingContext> consumer) {
-        SlingContext slingContext = SlingContextStore.getSlingContext(extensionContext,
-                extensionContext.getRequiredTestInstance());
+        SlingContext slingContext =
+                SlingContextStore.getSlingContext(extensionContext, extensionContext.getRequiredTestInstance());
         if (slingContext != null) {
             consumer.accept(slingContext);
         }
@@ -126,7 +131,9 @@ public final class SlingContextExtension implements ParameterResolver, TestInsta
             return null;
         }
         Field contextField = Arrays.stream(instanceClass.getDeclaredFields())
-                .filter(field -> type.isAssignableFrom(field.getType())).findFirst().orElse(null);
+                .filter(field -> type.isAssignableFrom(field.getType()))
+                .findFirst()
+                .orElse(null);
         if (contextField != null) {
             contextField.setAccessible(true);
         } else {
@@ -134,5 +141,4 @@ public final class SlingContextExtension implements ParameterResolver, TestInsta
         }
         return contextField;
     }
-
 }

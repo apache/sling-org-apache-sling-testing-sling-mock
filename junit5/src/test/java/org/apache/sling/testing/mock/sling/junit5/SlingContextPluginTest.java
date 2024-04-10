@@ -18,12 +18,6 @@
  */
 package org.apache.sling.testing.mock.sling.junit5;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertNotNull;
-import static org.junit.jupiter.api.Assertions.assertNull;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.verify;
-
 import java.util.Map;
 
 import org.apache.sling.testing.mock.sling.ResourceResolverType;
@@ -32,6 +26,12 @@ import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
+
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.verify;
 
 /**
  * Test with {@link SlingContext} with context plugins.
@@ -50,8 +50,9 @@ class SlingContextPluginTest {
             .afterSetUp(contextAfterSetup)
             .beforeTearDown(contextBeforeTeardown)
             .afterTearDown(contextAfterTeardown)
-            .resourceResolverFactoryActivatorProps(
-                    Map.<String, Object> of("resource.resolver.searchpath", new String[] { "/apps", "/libs", "/testpath", }))
+            .resourceResolverFactoryActivatorProps(Map.<String, Object>of("resource.resolver.searchpath", new String[] {
+                "/apps", "/libs", "/testpath",
+            }))
             .build();
 
     @BeforeEach
@@ -84,9 +85,13 @@ class SlingContextPluginTest {
         context.create().resource("/testpath/node2");
         context.create().resource("/testpath/node3");
 
-        assertEquals("/apps/node1", context.resourceResolver().getResource("node1").getPath());
-        assertEquals("/libs/node2", context.resourceResolver().getResource("node2").getPath());
-        assertEquals("/testpath/node3", context.resourceResolver().getResource("node3").getPath());
+        assertEquals(
+                "/apps/node1", context.resourceResolver().getResource("node1").getPath());
+        assertEquals(
+                "/libs/node2", context.resourceResolver().getResource("node2").getPath());
+        assertEquals(
+                "/testpath/node3",
+                context.resourceResolver().getResource("node3").getPath());
         assertNull(context.resourceResolver().getResource("node4"));
     }
 
@@ -101,5 +106,4 @@ class SlingContextPluginTest {
     public void tearDown() throws Exception {
         verify(contextBeforeTeardown).execute(context);
     }
-
 }

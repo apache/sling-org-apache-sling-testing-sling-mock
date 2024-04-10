@@ -18,21 +18,20 @@
  */
 package org.apache.sling.testing.mock.sling.context;
 
-import static org.junit.Assert.assertNull;
-
 import org.apache.sling.testing.mock.sling.context.modelsautoreg.ClasspathRegisteredModel;
 import org.apache.sling.testing.mock.sling.junit.SlingContext;
 import org.apache.sling.testing.mock.sling.junit.SlingContextBuilder;
 import org.junit.Rule;
 import org.junit.Test;
 
+import static org.junit.Assert.assertNull;
+
 @SuppressWarnings("null")
 public class NoSlingModelsRegistrationTest {
 
     @Rule
-    public SlingContext context = new SlingContextBuilder()
-            .registerSlingModelsFromClassPath(false)
-            .build();
+    public SlingContext context =
+            new SlingContextBuilder().registerSlingModelsFromClassPath(false).build();
 
     @Test
     public void testSlnigModelClasspathRegistered() {
@@ -41,5 +40,4 @@ public class NoSlingModelsRegistrationTest {
         // expect null because ClasspathRegisteredModel should not be registered automatically from classpath
         assertNull(model);
     }
-
 }

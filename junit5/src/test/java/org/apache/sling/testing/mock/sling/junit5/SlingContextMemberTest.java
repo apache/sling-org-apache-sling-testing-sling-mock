@@ -18,13 +18,13 @@
  */
 package org.apache.sling.testing.mock.sling.junit5;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-
 import org.apache.sling.api.resource.Resource;
 import org.apache.sling.testing.mock.sling.ResourceResolverType;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
+
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 /**
  * Test with {@link SlingContext} as class member variable.
@@ -47,5 +47,4 @@ class SlingContextMemberTest {
         Resource resource = context.resourceResolver().getResource("/content/test");
         assertEquals("value1", resource.getValueMap().get("prop1"));
     }
-
 }

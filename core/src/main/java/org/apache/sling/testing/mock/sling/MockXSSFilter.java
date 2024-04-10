@@ -47,5 +47,4 @@ public final class MockXSSFilter implements XSSFilter {
     public boolean isValidHref(String url) {
         return true;
     }
-
 }

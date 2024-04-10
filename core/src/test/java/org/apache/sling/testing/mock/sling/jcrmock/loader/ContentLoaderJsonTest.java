@@ -26,5 +26,4 @@ public class ContentLoaderJsonTest extends AbstractContentLoaderJsonTest {
     protected ResourceResolverType getResourceResolverType() {
         return ResourceResolverType.JCR_MOCK;
     }
-
 }

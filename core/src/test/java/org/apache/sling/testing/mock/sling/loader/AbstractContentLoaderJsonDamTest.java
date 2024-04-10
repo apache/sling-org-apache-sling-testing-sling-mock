@@ -18,17 +18,12 @@
  */
 package org.apache.sling.testing.mock.sling.loader;
 
-import static org.junit.Assert.assertArrayEquals;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertNotNull;
+import javax.jcr.RepositoryException;
+import javax.jcr.Session;
 
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.List;
-
-import javax.jcr.RepositoryException;
-import javax.jcr.Session;
 
 import org.apache.commons.io.IOUtils;
 import org.apache.jackrabbit.JcrConstants;
@@ -42,6 +37,11 @@ import org.junit.After;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
+
+import static org.junit.Assert.assertArrayEquals;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertNotNull;
 
 @SuppressWarnings("null")
 public abstract class AbstractContentLoaderJsonDamTest {
@@ -58,11 +58,12 @@ public abstract class AbstractContentLoaderJsonDamTest {
         path = context.uniqueRoot().content() + "/dam";
 
         try {
-            NodeTypeDefinitionScanner.get().register(context.resourceResolver().adaptTo(Session.class),
-                    List.of("SLING-INF/nodetypes/app.cnd"),
-                    getResourceResolverType().getNodeTypeMode());
-        }
-        catch (RepositoryException ex) {
+            NodeTypeDefinitionScanner.get()
+                    .register(
+                            context.resourceResolver().adaptTo(Session.class),
+                            List.of("SLING-INF/nodetypes/app.cnd"),
+                            getResourceResolverType().getNodeTypeMode());
+        } catch (RepositoryException ex) {
             throw new RuntimeException("Unable to register namespaces.", ex);
         }
 
@@ -86,8 +87,13 @@ public abstract class AbstractContentLoaderJsonDamTest {
         assertEquals((Integer) 595, props.get("tiff:ImageLength", Integer.class));
         assertEquals(4.64385986328125d, props.get("dam:ApertureValue", Double.class), 0.00000000001d);
 
-        assertArrayEquals(new String[] { "stockphotography:business/business_people", "properties:style/color",
-                "properties:orientation/landscape" }, props.get("app:tags", String[].class));
+        assertArrayEquals(
+                new String[] {
+                    "stockphotography:business/business_people",
+                    "properties:style/color",
+                    "properties:orientation/landscape"
+                },
+                props.get("app:tags", String[].class));
 
         // validate that a binary data node is present, but empty
         Resource binaryMetadata = context.resourceResolver()
@@ -98,5 +104,4 @@ public abstract class AbstractContentLoaderJsonDamTest {
         byte[] binaryData = IOUtils.toByteArray(is);
         assertEquals(0, binaryData.length);
     }
-
 }

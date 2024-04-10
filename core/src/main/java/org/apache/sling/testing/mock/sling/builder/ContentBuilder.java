@@ -76,8 +76,8 @@ public class ContentBuilder {
         }
 
         // check if properties map contains maps representing child resources
-        Map<String,Object> propertiesWihtoutChildren;
-        Map<String,Map<String,Object>> children = getChildMaps(properties);
+        Map<String, Object> propertiesWihtoutChildren;
+        Map<String, Map<String, Object>> children = getChildMaps(properties);
         if (!children.isEmpty()) {
             propertiesWihtoutChildren = new HashMap<>();
             for (Map.Entry<String, Object> entry : properties.entrySet()) {
@@ -85,8 +85,7 @@ public class ContentBuilder {
                     propertiesWihtoutChildren.put(entry.getKey(), entry.getValue());
                 }
             }
-        }
-        else {
+        } else {
             propertiesWihtoutChildren = properties;
         }
 
@@ -101,7 +100,7 @@ public class ContentBuilder {
         }
 
         // create child resources
-        for (Map.Entry<String,Map<String,Object>> entry : children.entrySet()) {
+        for (Map.Entry<String, Map<String, Object>> entry : children.entrySet()) {
             resource(newResource, entry.getKey(), entry.getValue());
         }
 
@@ -109,11 +108,11 @@ public class ContentBuilder {
     }
 
     @SuppressWarnings("unchecked")
-    private Map<String,Map<String,Object>> getChildMaps(Map<String,Object> properties) {
-        Map<String,Map<String,Object>> result = new LinkedHashMap<>();
+    private Map<String, Map<String, Object>> getChildMaps(Map<String, Object> properties) {
+        Map<String, Map<String, Object>> result = new LinkedHashMap<>();
         for (Map.Entry<String, Object> entry : properties.entrySet()) {
             if (entry.getValue() instanceof Map) {
-                result.put(entry.getKey(), (Map)entry.getValue());
+                result.put(entry.getKey(), (Map) entry.getValue());
             }
         }
         return result;
@@ -147,7 +146,8 @@ public class ContentBuilder {
      * @param properties Properties for resource.
      * @return Resource object
      */
-    public final @NotNull Resource resource(@NotNull Resource resource, @NotNull String name, @NotNull Map<String, Object> properties) {
+    public final @NotNull Resource resource(
+            @NotNull Resource resource, @NotNull String name, @NotNull Map<String, Object> properties) {
         String path = resource.getPath() + "/" + StringUtils.stripStart(name, "/");
         return resource(path, properties);
     }
@@ -159,7 +159,8 @@ public class ContentBuilder {
      * @param properties Properties for resource.
      * @return Resource object
      */
-    public final @NotNull Resource resource(@NotNull Resource resource, @NotNull String name, @NotNull Object @NotNull ... properties) {
+    public final @NotNull Resource resource(
+            @NotNull Resource resource, @NotNull String name, @NotNull Object @NotNull ... properties) {
         return resource(resource, name, MapUtil.toMap(properties));
     }
 
@@ -185,7 +186,9 @@ public class ContentBuilder {
         String name = ResourceUtil.getName(path);
         Resource parentResource = ensureResourceExists(parentPath);
         try {
-            resource = resourceResolver.create(parentResource, name,
+            resource = resourceResolver.create(
+                    parentResource,
+                    name,
                     ImmutableValueMap.of(JcrConstants.JCR_PRIMARYTYPE, JcrConstants.NT_UNSTRUCTURED));
             resourceResolver.commit();
             return resource;
@@ -193,5 +196,4 @@ public class ContentBuilder {
             throw new RuntimeException("Unable to create resource at " + path, ex);
         }
     }
-
 }

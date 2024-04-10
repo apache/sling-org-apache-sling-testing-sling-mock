@@ -18,14 +18,14 @@
  */
 package org.apache.sling.testing.mock.sling.context;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
-
 import org.apache.sling.featureflags.Features;
 import org.apache.sling.featureflags.impl.ConfiguredFeature;
 import org.apache.sling.testing.mock.sling.junit.SlingContext;
 import org.junit.Rule;
 import org.junit.Test;
+
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
 
 public class FeatureFlagsTest {
 
@@ -39,17 +39,13 @@ public class FeatureFlagsTest {
 
     @Test
     public void testFeatureFlag_Enabled() {
-        context.registerInjectActivateService(new ConfiguredFeature(),
-                "name", "feature.1",
-                "enabled", true);
+        context.registerInjectActivateService(new ConfiguredFeature(), "name", "feature.1", "enabled", true);
         assertEnabled("feature.1", true);
     }
 
     @Test
     public void testFeatureFlag__Disabled() {
-        context.registerInjectActivateService(new ConfiguredFeature(),
-                "name", "feature.1",
-                "enabled", false);
+        context.registerInjectActivateService(new ConfiguredFeature(), "name", "feature.1", "enabled", false);
         assertEnabled("feature.1", false);
     }
 
@@ -58,5 +54,4 @@ public class FeatureFlagsTest {
         assertNotNull(features);
         assertEquals("enabled", enabled, features.isEnabled("feature.1"));
     }
-
 }

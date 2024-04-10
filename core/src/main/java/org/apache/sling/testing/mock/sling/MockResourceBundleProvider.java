@@ -99,8 +99,7 @@ public final class MockResourceBundleProvider implements ResourceBundleProvider 
                 return true;
             } else if (obj instanceof Key) {
                 Key other = (Key) obj;
-                return equals(this.baseName, other.baseName)
-                    && equals(this.locale, other.locale);
+                return equals(this.baseName, other.baseName) && equals(this.locale, other.locale);
             }
 
             return false;
@@ -122,5 +121,4 @@ public final class MockResourceBundleProvider implements ResourceBundleProvider 
             return "Key(" + baseName + ", " + locale + ")";
         }
     }
-
 }

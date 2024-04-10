@@ -75,7 +75,8 @@ final class SlingContextStore {
      * @param testInstance Test instance
      * @param slingContext Sling context
      */
-    public static void storeSlingContext(ExtensionContext extensionContext, Object testInstance, SlingContext slingContext) {
+    public static void storeSlingContext(
+            ExtensionContext extensionContext, Object testInstance, SlingContext slingContext) {
         getStore(extensionContext).put(testInstance, slingContext);
     }
 
@@ -88,5 +89,4 @@ final class SlingContextStore {
         slingContext.setUpContext();
         return slingContext;
     }
-
 }

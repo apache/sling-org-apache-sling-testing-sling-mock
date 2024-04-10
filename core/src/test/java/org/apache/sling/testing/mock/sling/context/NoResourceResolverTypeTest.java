@@ -18,8 +18,6 @@
  */
 package org.apache.sling.testing.mock.sling.context;
 
-import static org.junit.Assert.assertTrue;
-
 import org.apache.sling.api.resource.Resource;
 import org.apache.sling.api.resource.SyntheticResource;
 import org.apache.sling.spi.resource.provider.ResourceProvider;
@@ -30,6 +28,8 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
 import org.mockito.junit.MockitoJUnitRunner;
+
+import static org.junit.Assert.assertTrue;
 
 @RunWith(MockitoJUnitRunner.class)
 public class NoResourceResolverTypeTest {
@@ -44,11 +44,9 @@ public class NoResourceResolverTypeTest {
     public void testRoot() {
         // register dummy resource provider because otherwise ResourceResolverFactory get's not activated
         // with latest sling resource resolver implementation
-        context.registerService(ResourceProvider.class, resourceProvider,
-                ResourceProvider.PROPERTY_ROOT, "/");
+        context.registerService(ResourceProvider.class, resourceProvider, ResourceProvider.PROPERTY_ROOT, "/");
 
         Resource root = context.resourceResolver().getResource("/");
         assertTrue(root instanceof SyntheticResource);
     }
-
 }

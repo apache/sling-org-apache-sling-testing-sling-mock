@@ -46,7 +46,7 @@ public final class SlingContext extends SlingContextImpl {
      * Initialize Sling context.
      */
     public SlingContext() {
-      this(new ContextPlugins(), null, MockSling.DEFAULT_RESOURCERESOLVER_TYPE, true);
+        this(new ContextPlugins(), null, MockSling.DEFAULT_RESOURCERESOLVER_TYPE, true);
     }
 
     /**
@@ -66,7 +66,8 @@ public final class SlingContext extends SlingContextImpl {
      *            Sling Models found in the classpath on startup.
      * @param resourceResolverType Resource resolver type.
      */
-    SlingContext(@NotNull final ContextPlugins contextPlugins,
+    SlingContext(
+            @NotNull final ContextPlugins contextPlugins,
             @Nullable final Map<String, Object> resourceResolverFactoryActivatorProps,
             @Nullable final ResourceResolverType resourceResolverType,
             final boolean registerSlingModelsFromClassPath) {
@@ -100,5 +101,4 @@ public final class SlingContext extends SlingContextImpl {
     boolean isSetUp() {
         return this.isSetUp;
     }
-
 }

@@ -18,11 +18,11 @@
  */
 package org.apache.sling.testing.mock.sling.junit5;
 
-import static org.junit.jupiter.api.Assertions.assertNull;
-
 import org.apache.sling.testing.mock.sling.context.modelsautoreg.ClasspathRegisteredModel;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
+
+import static org.junit.jupiter.api.Assertions.assertNull;
 
 /**
  * Test with {@link SlingContext} which uses by default
@@ -31,9 +31,8 @@ import org.junit.jupiter.api.extension.ExtendWith;
 @ExtendWith(SlingContextExtension.class)
 class NoSlingModelsRegistrationTest {
 
-    private final SlingContext context = new SlingContextBuilder()
-            .registerSlingModelsFromClassPath(false)
-            .build();
+    private final SlingContext context =
+            new SlingContextBuilder().registerSlingModelsFromClassPath(false).build();
 
     @Test
     @SuppressWarnings("null")
@@ -44,5 +43,4 @@ class NoSlingModelsRegistrationTest {
         // automatically from classpath
         assertNull(model);
     }
-
 }

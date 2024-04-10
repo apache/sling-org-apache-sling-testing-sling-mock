@@ -47,5 +47,4 @@ class RPMockMockResourceResolverAdapter implements ResourceResolverTypeAdapter {
     public SlingRepository newSlingRepository() {
         return null;
     }
-
 }

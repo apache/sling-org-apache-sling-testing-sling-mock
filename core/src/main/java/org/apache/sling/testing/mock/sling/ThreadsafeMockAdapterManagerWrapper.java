@@ -40,15 +40,16 @@ class ThreadsafeMockAdapterManagerWrapper implements AdapterManager {
 
     private static final InheritableThreadLocal<AdapterManagerBundleContextFactory> THREAD_LOCAL =
             new InheritableThreadLocal<AdapterManagerBundleContextFactory>() {
-        @Override
-        protected AdapterManagerBundleContextFactory initialValue() {
-            return new AdapterManagerBundleContextFactory();
-        }
-    };
+                @Override
+                protected AdapterManagerBundleContextFactory initialValue() {
+                    return new AdapterManagerBundleContextFactory();
+                }
+            };
 
     @Override
     @SuppressWarnings("null")
-    public <AdapterType> AdapterType getAdapter(@NotNull final Object adaptable, @NotNull final Class<AdapterType> type) {
+    public <AdapterType> AdapterType getAdapter(
+            @NotNull final Object adaptable, @NotNull final Class<AdapterType> type) {
         AdapterManager adapterManager = THREAD_LOCAL.get().getAdapterManager();
         return adapterManager.getAdapter(adaptable, type);
     }
@@ -70,7 +71,6 @@ class ThreadsafeMockAdapterManagerWrapper implements AdapterManager {
         adapterManager.clearBundleContext();
     }
 
-
     private static class AdapterManagerBundleContextFactory {
 
         private BundleContext bundleContext;
@@ -81,7 +81,7 @@ class ThreadsafeMockAdapterManagerWrapper implements AdapterManager {
 
             // register adapter manager
             MockAdapterManagerImpl adapterManagerImpl = new MockAdapterManagerImpl();
-            Dictionary<String,Object> properties = new Hashtable<String, Object>();
+            Dictionary<String, Object> properties = new Hashtable<String, Object>();
             MockOsgi.injectServices(adapterManagerImpl, bundleContext);
             MockOsgi.activate(adapterManagerImpl, bundleContext, properties);
             bundleContext.registerService(AdapterManager.class.getName(), adapterManagerImpl, properties);
@@ -95,18 +95,17 @@ class ThreadsafeMockAdapterManagerWrapper implements AdapterManager {
         public synchronized AdapterManager getAdapterManager() {
             if (bundleContext == null) {
                 BundleContext newBundleContext = MockOsgi.newBundleContext();
-                log.warn("Create new bundle context for adapter manager because it was null, bundleContext={}", bundleContext);
+                log.warn(
+                        "Create new bundle context for adapter manager because it was null, bundleContext={}",
+                        bundleContext);
                 setBundleContext(newBundleContext);
             }
             ServiceReference<AdapterManager> serviceReference = bundleContext.getServiceReference(AdapterManager.class);
             if (serviceReference != null) {
                 return bundleContext.getService(serviceReference);
-            }
-            else {
+            } else {
                 throw new RuntimeException("AdapterManager not registered in bundle context.");
             }
         }
-
     }
-
 }
