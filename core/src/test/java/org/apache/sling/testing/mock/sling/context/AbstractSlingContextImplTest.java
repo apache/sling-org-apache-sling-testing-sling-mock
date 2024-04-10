@@ -18,12 +18,6 @@
  */
 package org.apache.sling.testing.mock.sling.context;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertNull;
-import static org.junit.Assert.assertSame;
-import static org.junit.Assert.assertTrue;
-
 import java.util.Set;
 
 import org.apache.sling.api.resource.Resource;
@@ -42,6 +36,12 @@ import org.apache.sling.testing.mock.sling.services.MockMimeTypeService;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
+
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertNull;
+import static org.junit.Assert.assertSame;
+import static org.junit.Assert.assertTrue;
 
 @SuppressWarnings("null")
 public abstract class AbstractSlingContextImplTest {
@@ -93,10 +93,13 @@ public abstract class AbstractSlingContextImplTest {
     @Test
     public void testSetCurrentResource() {
         context.currentResource("/content/sample/en/jcr:content/par/colctrl");
-        assertEquals("/content/sample/en/jcr:content/par/colctrl", context.currentResource().getPath());
+        assertEquals(
+                "/content/sample/en/jcr:content/par/colctrl",
+                context.currentResource().getPath());
 
         context.currentResource(context.resourceResolver().getResource("/content/sample/en/jcr:content/par"));
-        assertEquals("/content/sample/en/jcr:content/par", context.currentResource().getPath());
+        assertEquals(
+                "/content/sample/en/jcr:content/par", context.currentResource().getPath());
 
         context.currentResource((Resource) null);
         assertNull(context.request().getResource());
@@ -165,5 +168,4 @@ public abstract class AbstractSlingContextImplTest {
         // so this should throw an IllegalStateException it this is detected
         MockSling.newResourceResolver(context.bundleContext());
     }
-
 }

@@ -38,8 +38,8 @@ final class ContextResourceResolverFactory {
         // static methods only
     }
 
-    public static @NotNull ResourceResolverFactory get(@Nullable final ResourceResolverType resourceResolverType,
-            @NotNull final BundleContext bundleContext) {
+    public static @NotNull ResourceResolverFactory get(
+            @Nullable final ResourceResolverType resourceResolverType, @NotNull final BundleContext bundleContext) {
         ResourceResolverType type = resourceResolverType;
         if (type == null) {
             type = MockSling.DEFAULT_RESOURCERESOLVER_TYPE;
@@ -51,8 +51,8 @@ final class ContextResourceResolverFactory {
             return factory;
         } catch (Throwable ex) {
             log.error("Failed initializing resource resolver factory, bundleContext={}", bundleContext, ex);
-            throw new RuntimeException("Unable to initialize " + type + " resource resolver factory: " + ex.getMessage(), ex);
+            throw new RuntimeException(
+                    "Unable to initialize " + type + " resource resolver factory: " + ex.getMessage(), ex);
         }
     }
-
 }

@@ -36,5 +36,4 @@ class MockNoneResourceResolverAdapter implements ResourceResolverTypeAdapter {
     public SlingRepository newSlingRepository() {
         return null;
     }
-
 }

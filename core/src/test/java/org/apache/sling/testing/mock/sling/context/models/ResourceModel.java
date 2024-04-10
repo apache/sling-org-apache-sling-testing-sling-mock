@@ -23,7 +23,7 @@ import org.apache.sling.models.annotations.Model;
 
 @Model(adaptables = Resource.class)
 public class ResourceModel {
-    
+
     private final Resource resource;
 
     public ResourceModel(Resource resource) {
@@ -33,5 +33,4 @@ public class ResourceModel {
     public Resource getAdaptable() {
         return resource;
     }
-
 }

@@ -81,7 +81,8 @@ public final class SlingContextBuilder {
      * @return this
      */
     @SafeVarargs
-    public final SlingContextBuilder beforeSetUp(@NotNull ContextCallback<? extends OsgiContextImpl> @NotNull ... beforeSetUpCallback) {
+    public final SlingContextBuilder beforeSetUp(
+            @NotNull ContextCallback<? extends OsgiContextImpl> @NotNull ... beforeSetUpCallback) {
         plugins.addBeforeSetUpCallback(beforeSetUpCallback);
         return this;
     }
@@ -93,7 +94,8 @@ public final class SlingContextBuilder {
      * @return this
      */
     @SafeVarargs
-    public final SlingContextBuilder afterSetUp(@NotNull ContextCallback<? extends OsgiContextImpl> @NotNull ... afterSetUpCallback) {
+    public final SlingContextBuilder afterSetUp(
+            @NotNull ContextCallback<? extends OsgiContextImpl> @NotNull ... afterSetUpCallback) {
         plugins.addAfterSetUpCallback(afterSetUpCallback);
         return this;
     }
@@ -105,7 +107,8 @@ public final class SlingContextBuilder {
      * @return this
      */
     @SafeVarargs
-    public final SlingContextBuilder beforeTearDown(@NotNull ContextCallback<? extends OsgiContextImpl> @NotNull ... beforeTearDownCallback) {
+    public final SlingContextBuilder beforeTearDown(
+            @NotNull ContextCallback<? extends OsgiContextImpl> @NotNull ... beforeTearDownCallback) {
         plugins.addBeforeTearDownCallback(beforeTearDownCallback);
         return this;
     }
@@ -117,7 +120,8 @@ public final class SlingContextBuilder {
      * @return this
      */
     @SafeVarargs
-    public final SlingContextBuilder afterTearDown(@NotNull ContextCallback<? extends OsgiContextImpl> @NotNull ... afterTearDownCallback) {
+    public final SlingContextBuilder afterTearDown(
+            @NotNull ContextCallback<? extends OsgiContextImpl> @NotNull ... afterTearDownCallback) {
         plugins.addAfterTearDownCallback(afterTearDownCallback);
         return this;
     }
@@ -149,8 +153,10 @@ public final class SlingContextBuilder {
      * @return Build {@link SlingContext} instance.
      */
     public @NotNull SlingContext build() {
-        return new SlingContext(this.plugins, this.resourceResolverFactoryActivatorProps,
-                this.resourceResolverType, this.registerSlingModelsFromClassPath);
+        return new SlingContext(
+                this.plugins,
+                this.resourceResolverFactoryActivatorProps,
+                this.resourceResolverType,
+                this.registerSlingModelsFromClassPath);
     }
-
 }

@@ -18,11 +18,11 @@
  */
 package org.apache.sling.testing.mock.sling.servlet;
 
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertTrue;
-
 import org.junit.Before;
 import org.junit.Test;
+
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertTrue;
 
 public class MockHttpSessionTest {
 
@@ -38,5 +38,4 @@ public class MockHttpSessionTest {
         assertNotNull(httpSession.getServletContext());
         assertTrue(httpSession.getServletContext() instanceof MockServletContext);
     }
-
 }

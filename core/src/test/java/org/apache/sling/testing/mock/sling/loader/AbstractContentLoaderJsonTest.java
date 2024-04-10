@@ -18,18 +18,13 @@
  */
 package org.apache.sling.testing.mock.sling.loader;
 
-import static org.junit.Assert.assertArrayEquals;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertNotNull;
+import javax.jcr.Node;
+import javax.jcr.RepositoryException;
+import javax.jcr.Session;
 
 import java.util.Calendar;
 import java.util.List;
 import java.util.TimeZone;
-
-import javax.jcr.Node;
-import javax.jcr.RepositoryException;
-import javax.jcr.Session;
 
 import org.apache.jackrabbit.JcrConstants;
 import org.apache.sling.api.resource.Resource;
@@ -42,6 +37,11 @@ import org.junit.After;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
+
+import static org.junit.Assert.assertArrayEquals;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertNotNull;
 
 @SuppressWarnings("null")
 public abstract class AbstractContentLoaderJsonTest {
@@ -58,11 +58,12 @@ public abstract class AbstractContentLoaderJsonTest {
         path = context.uniqueRoot().content();
 
         try {
-            NodeTypeDefinitionScanner.get().register(context.resourceResolver().adaptTo(Session.class),
-                    List.of("SLING-INF/nodetypes/app.cnd"),
-                    getResourceResolverType().getNodeTypeMode());
-        }
-        catch (RepositoryException ex) {
+            NodeTypeDefinitionScanner.get()
+                    .register(
+                            context.resourceResolver().adaptTo(Session.class),
+                            List.of("SLING-INF/nodetypes/app.cnd"),
+                            getResourceResolverType().getNodeTypeMode());
+        } catch (RepositoryException ex) {
             throw new RuntimeException("Unable to register namespaces.", ex);
         }
 
@@ -109,9 +110,9 @@ public abstract class AbstractContentLoaderJsonTest {
         assertEquals(1.2345d, props.get("decimalProp", Double.class), 0.00001d);
         assertEquals(true, props.get("booleanProp", Boolean.class));
 
-        assertArrayEquals(new Long[] { 1234567890123L, 55L }, props.get("longPropMulti", Long[].class));
-        assertArrayEquals(new Double[] { 1.2345d, 1.1d }, props.get("decimalPropMulti", Double[].class));
-        assertArrayEquals(new Boolean[] { true, false }, props.get("booleanPropMulti", Boolean[].class));
+        assertArrayEquals(new Long[] {1234567890123L, 55L}, props.get("longPropMulti", Long[].class));
+        assertArrayEquals(new Double[] {1.2345d, 1.1d}, props.get("decimalPropMulti", Double[].class));
+        assertArrayEquals(new Boolean[] {true, false}, props.get("booleanPropMulti", Boolean[].class));
     }
 
     @Test
@@ -191,7 +192,8 @@ public abstract class AbstractContentLoaderJsonTest {
 
     @Test
     public void testJcrUuid() {
-        Resource resource = context.resourceResolver().getResource(path + "/sample/en/jcr:content/par/image/file/jcr:content");
+        Resource resource =
+                context.resourceResolver().getResource(path + "/sample/en/jcr:content/par/image/file/jcr:content");
         ValueMap props = ResourceUtil.getValueMap(resource);
 
         assertEquals("eda76d00-b2cd-4b59-878f-c33f71ceaddc", props.get(JcrConstants.JCR_UUID));
@@ -204,5 +206,4 @@ public abstract class AbstractContentLoaderJsonTest {
 
         assertNotNull(props.get(JcrConstants.JCR_CREATED));
     }
-
 }

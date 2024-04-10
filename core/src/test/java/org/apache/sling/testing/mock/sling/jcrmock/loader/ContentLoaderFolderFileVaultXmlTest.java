@@ -27,5 +27,4 @@ public class ContentLoaderFolderFileVaultXmlTest extends AbstractContentLoaderFo
     protected ResourceResolverType getResourceResolverType() {
         return ResourceResolverType.JCR_MOCK;
     }
-
 }

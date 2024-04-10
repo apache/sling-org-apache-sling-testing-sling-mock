@@ -18,8 +18,6 @@
  */
 package org.apache.sling.testing.mock.sling.junit5;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-
 import org.apache.sling.api.resource.Resource;
 import org.apache.sling.testing.mock.sling.ResourceResolverType;
 import org.apache.sling.testing.mock.sling.context.modelsautoreg.ClasspathRegisteredModel;
@@ -27,6 +25,8 @@ import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
+
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 /**
  * Test with {@link SlingContext} as test method parameter.
@@ -62,5 +62,4 @@ class SlingContextTest {
 
         context.resourceResolver().delete(resource);
     }
-
 }

@@ -44,9 +44,12 @@ public final class MockSling {
     /**
      * Default resource resolver type is {@link ResourceResolverType#RESOURCERESOLVER_MOCK}.
      */
-    public static final @NotNull ResourceResolverType DEFAULT_RESOURCERESOLVER_TYPE = ResourceResolverType.RESOURCERESOLVER_MOCK;
+    public static final @NotNull ResourceResolverType DEFAULT_RESOURCERESOLVER_TYPE =
+            ResourceResolverType.RESOURCERESOLVER_MOCK;
 
-    private static final ThreadsafeMockAdapterManagerWrapper ADAPTER_MANAGER = new ThreadsafeMockAdapterManagerWrapper();
+    private static final ThreadsafeMockAdapterManagerWrapper ADAPTER_MANAGER =
+            new ThreadsafeMockAdapterManagerWrapper();
+
     static {
         // register mocked adapter manager
         SlingAdaptable.setAdapterManager(ADAPTER_MANAGER);
@@ -61,7 +64,8 @@ public final class MockSling {
      * @param bundleContext Bundle context
      * @return Resource resolver factory instance
      */
-    public static @NotNull ResourceResolverFactory newResourceResolverFactory(@NotNull final BundleContext bundleContext) {
+    public static @NotNull ResourceResolverFactory newResourceResolverFactory(
+            @NotNull final BundleContext bundleContext) {
         return newResourceResolverFactory(DEFAULT_RESOURCERESOLVER_TYPE, bundleContext);
     }
 
@@ -72,12 +76,14 @@ public final class MockSling {
      * @return Resource resolver factory instance
      */
     @SuppressWarnings("null")
-    public static @NotNull ResourceResolverFactory newResourceResolverFactory(@NotNull final ResourceResolverType type,
-            @NotNull final BundleContext bundleContext) {
+    public static @NotNull ResourceResolverFactory newResourceResolverFactory(
+            @NotNull final ResourceResolverType type, @NotNull final BundleContext bundleContext) {
 
-        ServiceReference<ResourceResolverFactory> existingReference = bundleContext.getServiceReference(ResourceResolverFactory.class);
+        ServiceReference<ResourceResolverFactory> existingReference =
+                bundleContext.getServiceReference(ResourceResolverFactory.class);
         if (existingReference != null) {
-            throw new IllegalStateException("A ResourceResolverFactory is already registered in this BundleContext - please get the existing service instance.");
+            throw new IllegalStateException(
+                    "A ResourceResolverFactory is already registered in this BundleContext - please get the existing service instance.");
         }
 
         ResourceResolverTypeAdapter adapter = getResourceResolverTypeAdapter(type, bundleContext);
@@ -85,33 +91,37 @@ public final class MockSling {
         if (factory == null) {
             SlingRepository repository = adapter.newSlingRepository();
             factory = ResourceResolverFactoryInitializer.setUp(repository, bundleContext, type.getNodeTypeMode());
-        }
-        else {
+        } else {
             bundleContext.registerService(ResourceResolverFactory.class.getName(), factory, null);
         }
         return factory;
     }
 
     @SuppressWarnings("unchecked")
-    private static ResourceResolverTypeAdapter getResourceResolverTypeAdapter(final ResourceResolverType type,
-            @NotNull final BundleContext bundleContext) {
+    private static ResourceResolverTypeAdapter getResourceResolverTypeAdapter(
+            final ResourceResolverType type, @NotNull final BundleContext bundleContext) {
         try {
             Class clazz = Class.forName(type.getResourceResolverTypeAdapterClass());
             try {
-                Constructor<ResourceResolverTypeAdapter> bundleContextConstructor = clazz.getConstructor(BundleContext.class);
+                Constructor<ResourceResolverTypeAdapter> bundleContextConstructor =
+                        clazz.getConstructor(BundleContext.class);
                 // use constructor with bundle context
                 return bundleContextConstructor.newInstance(bundleContext);
-            }
-            catch (NoSuchMethodException ex) {
+            } catch (NoSuchMethodException ex) {
                 // fallback to default constructor
-                return (ResourceResolverTypeAdapter)clazz.newInstance();
+                return (ResourceResolverTypeAdapter) clazz.newInstance();
             }
-        }
-        catch (ClassNotFoundException | InstantiationException | IllegalAccessException | InvocationTargetException ex) {
-            throw new RuntimeException("Unable to instantiate resourcer resolver: "
-                    + type.getResourceResolverTypeAdapterClass()
-                    + (type.getArtifactCoordinates() != null ? ". Make sure this maven dependency is included: "
-                            + type.getArtifactCoordinates() : ""), ex);
+        } catch (ClassNotFoundException
+                | InstantiationException
+                | IllegalAccessException
+                | InvocationTargetException ex) {
+            throw new RuntimeException(
+                    "Unable to instantiate resourcer resolver: "
+                            + type.getResourceResolverTypeAdapterClass()
+                            + (type.getArtifactCoordinates() != null
+                                    ? ". Make sure this maven dependency is included: " + type.getArtifactCoordinates()
+                                    : ""),
+                    ex);
         }
     }
 
@@ -122,7 +132,8 @@ public final class MockSling {
      * @return Resource resolver instance
      */
     @SuppressWarnings("deprecation")
-    public static @NotNull ResourceResolver newResourceResolver(@NotNull final ResourceResolverType type, @NotNull BundleContext bundleContext) {
+    public static @NotNull ResourceResolver newResourceResolver(
+            @NotNull final ResourceResolverType type, @NotNull BundleContext bundleContext) {
         ResourceResolverFactory factory = newResourceResolverFactory(type, bundleContext);
         try {
             return factory.getAdministrativeResourceResolver(null);
@@ -148,8 +159,10 @@ public final class MockSling {
      * @param bundleContext Bundle context
      * @return Sling script helper instance
      */
-    public static @NotNull SlingScriptHelper newSlingScriptHelper(@NotNull final SlingHttpServletRequest request,
-            @NotNull final SlingHttpServletResponse response, @NotNull final BundleContext bundleContext) {
+    public static @NotNull SlingScriptHelper newSlingScriptHelper(
+            @NotNull final SlingHttpServletRequest request,
+            @NotNull final SlingHttpServletResponse response,
+            @NotNull final BundleContext bundleContext) {
         return new MockSlingScriptHelper(request, response, bundleContext);
     }
 
@@ -160,7 +173,8 @@ public final class MockSling {
      * @return Sling script helper instance
      */
     public static @NotNull SlingScriptHelper newSlingScriptHelper(@NotNull BundleContext bundleContext) {
-        SlingHttpServletRequest request = new MockSlingHttpServletRequest(newResourceResolver(bundleContext), bundleContext);
+        SlingHttpServletRequest request =
+                new MockSlingHttpServletRequest(newResourceResolver(bundleContext), bundleContext);
         SlingHttpServletResponse response = new MockSlingHttpServletResponse();
         return newSlingScriptHelper(request, response, bundleContext);
     }
@@ -180,5 +194,4 @@ public final class MockSling {
     public static void clearAdapterManagerBundleContext() {
         ADAPTER_MANAGER.clearBundleContext();
     }
-
 }

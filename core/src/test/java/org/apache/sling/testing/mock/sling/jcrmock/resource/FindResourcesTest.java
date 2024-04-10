@@ -18,13 +18,13 @@
  */
 package org.apache.sling.testing.mock.sling.jcrmock.resource;
 
-import java.util.Collections;
-import java.util.Iterator;
-import java.util.Map;
-
 import javax.jcr.Node;
 import javax.jcr.Session;
 import javax.jcr.query.Query;
+
+import java.util.Collections;
+import java.util.Iterator;
+import java.util.Map;
 
 import org.apache.sling.api.resource.Resource;
 import org.apache.sling.testing.mock.jcr.MockJcr;
@@ -38,32 +38,32 @@ import org.junit.Test;
 @SuppressWarnings("null")
 public class FindResourcesTest {
 
-  @Rule
-  public SlingContext context = new SlingContext(ResourceResolverType.JCR_MOCK);
+    @Rule
+    public SlingContext context = new SlingContext(ResourceResolverType.JCR_MOCK);
 
-  @Before
-  public void setUp() {
-    Resource resource = context.create().resource(
-        "/test",
-        Map.<String, Object>of(
-            "prop1", "value1",
-            "prop2", "value2"));
-    Node node = resource.adaptTo(Node.class);
-    Session session = context.resourceResolver().adaptTo(Session.class);
+    @Before
+    public void setUp() {
+        Resource resource = context.create()
+                .resource(
+                        "/test",
+                        Map.<String, Object>of(
+                                "prop1", "value1",
+                                "prop2", "value2"));
+        Node node = resource.adaptTo(Node.class);
+        Session session = context.resourceResolver().adaptTo(Session.class);
 
-    MockJcr.setQueryResult(session, Collections.singletonList(node));
-  }
+        MockJcr.setQueryResult(session, Collections.singletonList(node));
+    }
 
-  @Test
+    @Test
     @SuppressWarnings("deprecation")
-  public void testFindResources() {
-    Resource resource = context.resourceResolver().getResource("/test");
-    Assert.assertNotNull("Resource with name 'test' should be there", resource);
+    public void testFindResources() {
+        Resource resource = context.resourceResolver().getResource("/test");
+        Assert.assertNotNull("Resource with name 'test' should be there", resource);
 
         Iterator<Resource> result = context.resourceResolver().findResources("/test", Query.XPATH);
-    Assert.assertTrue("At least one result expected", result.hasNext());
-    Assert.assertEquals("/test", result.next().getPath());
-    Assert.assertFalse("At most one result expected", result.hasNext());
-  }
-
+        Assert.assertTrue("At least one result expected", result.hasNext());
+        Assert.assertEquals("/test", result.next().getPath());
+        Assert.assertFalse("At most one result expected", result.hasNext());
+    }
 }

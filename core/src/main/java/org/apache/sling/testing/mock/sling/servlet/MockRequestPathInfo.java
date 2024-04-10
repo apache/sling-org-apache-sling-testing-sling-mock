@@ -39,5 +39,4 @@ public final class MockRequestPathInfo extends org.apache.sling.servlethelpers.M
     public MockRequestPathInfo(ResourceResolver resourceResolver) {
         super(resourceResolver);
     }
-
 }

@@ -31,5 +31,4 @@ public interface RequestAttributeModel {
 
     @Inject
     String getProp1();
-
 }

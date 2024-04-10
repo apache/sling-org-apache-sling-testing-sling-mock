@@ -37,5 +37,4 @@ public enum NodeTypeMode {
      * Nodetypes including namespaces have to be registered.
      */
     NODETYPES_REQUIRED
-
 }

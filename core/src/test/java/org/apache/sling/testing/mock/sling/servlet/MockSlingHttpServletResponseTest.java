@@ -18,10 +18,10 @@
  */
 package org.apache.sling.testing.mock.sling.servlet;
 
-import static org.junit.Assert.assertNull;
-
 import org.junit.Before;
 import org.junit.Test;
+
+import static org.junit.Assert.assertNull;
 
 public class MockSlingHttpServletResponseTest {
 
@@ -37,5 +37,4 @@ public class MockSlingHttpServletResponseTest {
         assertNull(response.getContentType());
         assertNull(response.getCharacterEncoding());
     }
-
 }

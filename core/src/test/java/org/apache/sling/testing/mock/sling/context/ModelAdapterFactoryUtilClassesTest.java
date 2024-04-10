@@ -38,15 +38,10 @@ public class ModelAdapterFactoryUtilClassesTest extends AbstractModelAdapterFact
     @Before
     public void setUp() throws Exception {
         // add Model classes individually
-        // although this is not supported before Sling Models Impl 1.3.4 in mocks this works even with older sling models versions
+        // although this is not supported before Sling Models Impl 1.3.4 in mocks this works even with older sling
+        // models versions
         // because the class path scanning is implemented differently
-        context.addModelsForClasses(
-                OsgiServiceModel.class.getName()
-                );
-        context.addModelsForClasses(
-                RequestAttributeModel.class,
-                ServiceInterfaceImpl.class
-                );
+        context.addModelsForClasses(OsgiServiceModel.class.getName());
+        context.addModelsForClasses(RequestAttributeModel.class, ServiceInterfaceImpl.class);
     }
-
 }

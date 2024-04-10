@@ -18,14 +18,6 @@
  */
 package org.apache.sling.testing.mock.sling;
 
-import java.io.InputStream;
-import java.io.InputStreamReader;
-import java.io.Reader;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-
 import javax.jcr.NamespaceRegistry;
 import javax.jcr.RepositoryException;
 import javax.jcr.Session;
@@ -41,6 +33,14 @@ import javax.jcr.nodetype.NodeTypeManager;
 import javax.jcr.nodetype.NodeTypeTemplate;
 import javax.jcr.nodetype.PropertyDefinition;
 import javax.jcr.nodetype.PropertyDefinitionTemplate;
+
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.io.Reader;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 import org.apache.jackrabbit.commons.cnd.CompactNodeTypeDefReader;
 import org.apache.jackrabbit.commons.cnd.DefinitionBuilderFactory;
@@ -80,8 +80,8 @@ public final class NodeTypeDefinitionScanner {
      * @throws RepositoryException Repository exception
      */
     public void register(Session session, NodeTypeMode nodeTypeMode) throws RepositoryException {
-      List<String> nodeTypeResources = getNodeTypeDefinitions();
-      register(session, nodeTypeResources, nodeTypeMode);
+        List<String> nodeTypeResources = getNodeTypeDefinitions();
+        register(session, nodeTypeResources, nodeTypeMode);
     }
 
     /**
@@ -91,20 +91,21 @@ public final class NodeTypeDefinitionScanner {
      * @param nodeTypeMode Node type mode
      * @throws RepositoryException Repository exception
      */
-    public void register(Session session, List<String> nodeTypeResources, NodeTypeMode nodeTypeMode) throws RepositoryException {
-      switch (nodeTypeMode) {
-      case NOT_SUPPORTED:
-          // do nothing
-          break;
-      case NAMESPACES_ONLY:
-          registerNamespaces(session, nodeTypeResources);
-          break;
-      case NODETYPES_REQUIRED:
-          registerNodeTypes(session, nodeTypeResources);
-          break;
-         default:
-             throw new IllegalArgumentException("Node type mode not supported: " + nodeTypeMode);
-      }
+    public void register(Session session, List<String> nodeTypeResources, NodeTypeMode nodeTypeMode)
+            throws RepositoryException {
+        switch (nodeTypeMode) {
+            case NOT_SUPPORTED:
+                // do nothing
+                break;
+            case NAMESPACES_ONLY:
+                registerNamespaces(session, nodeTypeResources);
+                break;
+            case NODETYPES_REQUIRED:
+                registerNodeTypes(session, nodeTypeResources);
+                break;
+            default:
+                throw new IllegalArgumentException("Node type mode not supported: " + nodeTypeMode);
+        }
     }
 
     /**
@@ -118,34 +119,31 @@ public final class NodeTypeDefinitionScanner {
         NamespaceRegistry namespaceRegistry = workspace.getNamespaceRegistry();
         ValueFactory valueFactory = session.getValueFactory();
 
-      DefinitionBuilderFactory<NodeTypeTemplate, NamespaceRegistry> factory =
-              new TemplateBuilderFactory(new DummyNodeTypeManager(), valueFactory, namespaceRegistry);
+        DefinitionBuilderFactory<NodeTypeTemplate, NamespaceRegistry> factory =
+                new TemplateBuilderFactory(new DummyNodeTypeManager(), valueFactory, namespaceRegistry);
 
-      for (String nodeTypeResource : nodeTypeResources) {
-          try (InputStream is = classLoader.getResourceAsStream(nodeTypeResource)) {
-              if (is == null) {
-                  continue;
-              }
-              Reader reader = new InputStreamReader(is);
-              CompactNodeTypeDefReader<NodeTypeTemplate, NamespaceRegistry> cndReader
-                      = new CompactNodeTypeDefReader<NodeTypeTemplate, NamespaceRegistry>(reader, nodeTypeResource, factory);
-              NamespaceRegistry mapping = cndReader.getNamespaceMapping();
-              for (int i=0; i<mapping.getURIs().length; i++) {
-                  String uri = mapping.getURIs()[i];
-                  String prefix = mapping.getPrefix(uri);
-                  try {
-                      namespaceRegistry.registerNamespace(prefix, uri);
-                  }
-                  catch (RepositoryException ex) {
-                      // ignore
-                  }
-              }
-          }
-          catch (Throwable ex) {
-              log.warn("Unable to parse node type definition: " + nodeTypeResource, ex);
-          }
-      }
-
+        for (String nodeTypeResource : nodeTypeResources) {
+            try (InputStream is = classLoader.getResourceAsStream(nodeTypeResource)) {
+                if (is == null) {
+                    continue;
+                }
+                Reader reader = new InputStreamReader(is);
+                CompactNodeTypeDefReader<NodeTypeTemplate, NamespaceRegistry> cndReader = new CompactNodeTypeDefReader<
+                        NodeTypeTemplate, NamespaceRegistry>(reader, nodeTypeResource, factory);
+                NamespaceRegistry mapping = cndReader.getNamespaceMapping();
+                for (int i = 0; i < mapping.getURIs().length; i++) {
+                    String uri = mapping.getURIs()[i];
+                    String prefix = mapping.getPrefix(uri);
+                    try {
+                        namespaceRegistry.registerNamespace(prefix, uri);
+                    } catch (RepositoryException ex) {
+                        // ignore
+                    }
+                }
+            } catch (Throwable ex) {
+                log.warn("Unable to parse node type definition: " + nodeTypeResource, ex);
+            }
+        }
     }
 
     /**
@@ -154,20 +152,20 @@ public final class NodeTypeDefinitionScanner {
      * @param nodeTypeResources List of classpath resource URLs pointing to node type definitions
      */
     private void registerNodeTypes(Session session, List<String> nodeTypeResources) throws RepositoryException {
-      ClassLoader classLoader = getClass().getClassLoader();
-      Workspace workspace = session.getWorkspace();
-      NodeTypeManager nodeTypeManager = workspace.getNodeTypeManager();
-      NamespaceRegistry namespaceRegistry = workspace.getNamespaceRegistry();
-      ValueFactory valueFactory = session.getValueFactory();
-      DefinitionBuilderFactory<NodeTypeTemplate, NamespaceRegistry> factory =
-            new TemplateBuilderFactory(nodeTypeManager, valueFactory, namespaceRegistry);
+        ClassLoader classLoader = getClass().getClassLoader();
+        Workspace workspace = session.getWorkspace();
+        NodeTypeManager nodeTypeManager = workspace.getNodeTypeManager();
+        NamespaceRegistry namespaceRegistry = workspace.getNamespaceRegistry();
+        ValueFactory valueFactory = session.getValueFactory();
+        DefinitionBuilderFactory<NodeTypeTemplate, NamespaceRegistry> factory =
+                new TemplateBuilderFactory(nodeTypeManager, valueFactory, namespaceRegistry);
 
-      Map<String, NodeTypeTemplate> nodeTypes = new HashMap<>();
-      for (String resource : nodeTypeResources) {
-          nodeTypes.putAll(parseNodeTypesFromResource(resource, classLoader, factory));
-      }
+        Map<String, NodeTypeTemplate> nodeTypes = new HashMap<>();
+        for (String resource : nodeTypeResources) {
+            nodeTypes.putAll(parseNodeTypesFromResource(resource, classLoader, factory));
+        }
 
-      nodeTypeManager.registerNodeTypes(nodeTypes.values().toArray(new NodeTypeTemplate[0]), true);
+        nodeTypeManager.registerNodeTypes(nodeTypes.values().toArray(new NodeTypeTemplate[0]), true);
     }
 
     /**
@@ -177,14 +175,16 @@ public final class NodeTypeDefinitionScanner {
      * @param factory The factory to build node type definitions with.
      * @return A mapping from node type names to node type definitions.
      */
-    private Map<String, NodeTypeTemplate> parseNodeTypesFromResource(String resource, ClassLoader classLoader,
+    private Map<String, NodeTypeTemplate> parseNodeTypesFromResource(
+            String resource,
+            ClassLoader classLoader,
             DefinitionBuilderFactory<NodeTypeTemplate, NamespaceRegistry> factory) {
         try (InputStream is = classLoader.getResourceAsStream(resource)) {
             if (is == null) {
                 return Map.of();
             }
             CompactNodeTypeDefReader<NodeTypeTemplate, NamespaceRegistry> cndReader =
-                new CompactNodeTypeDefReader<>(new InputStreamReader(is), resource, factory);
+                    new CompactNodeTypeDefReader<>(new InputStreamReader(is), resource, factory);
             Map<String, NodeTypeTemplate> result = new HashMap<>();
             for (NodeTypeTemplate template : cndReader.getNodeTypeDefinitions()) {
                 result.put(template.getName(), template);
@@ -214,7 +214,6 @@ public final class NodeTypeDefinitionScanner {
         return SINGLETON;
     }
 
-
     /**
      * Some dummy classes to allow usage of CompactNodeTypeDefReader with underlying JCR mock
      */
@@ -223,52 +222,62 @@ public final class NodeTypeDefinitionScanner {
         public NodeType getNodeType(String nodeTypeName) {
             return null;
         }
+
         @Override
         public boolean hasNodeType(String name) {
             return false;
         }
+
         @Override
         public NodeTypeIterator getAllNodeTypes() {
             return null;
         }
+
         @Override
         public NodeTypeIterator getPrimaryNodeTypes() {
             return null;
         }
+
         @Override
         public NodeTypeIterator getMixinNodeTypes() {
             return null;
         }
+
         @Override
         public NodeTypeTemplate createNodeTypeTemplate() {
             return new DummyNodeTypeTemplate();
         }
+
         @Override
         public NodeTypeTemplate createNodeTypeTemplate(NodeTypeDefinition ntd) {
             return new DummyNodeTypeTemplate();
         }
+
         @Override
         public NodeDefinitionTemplate createNodeDefinitionTemplate() {
             return new DummyNodeDefinitionTemplate();
         }
+
         @Override
         public PropertyDefinitionTemplate createPropertyDefinitionTemplate() {
             return new DummyPropertyDefinitionTemplate();
         }
+
         @Override
         public NodeType registerNodeType(NodeTypeDefinition ntd, boolean allowUpdate) {
             return null;
         }
+
         @Override
         public NodeTypeIterator registerNodeTypes(NodeTypeDefinition[] ntds, boolean allowUpdate) {
             return null;
         }
+
         @Override
-        public void unregisterNodeType(String name) {
-        }
+        public void unregisterNodeType(String name) {}
+
         @Override
-        public void unregisterNodeTypes(String[] names) {
-        }
+        public void unregisterNodeTypes(String[] names) {}
     }
 
     private static class DummyNodeTypeTemplate implements NodeTypeTemplate {
@@ -276,63 +285,73 @@ public final class NodeTypeDefinitionScanner {
         public String getName() {
             return null;
         }
+
         @Override
         public String[] getDeclaredSupertypeNames() {
             return null;
         }
+
         @Override
         public boolean isAbstract() {
             return false;
         }
+
         @Override
         public boolean isMixin() {
             return false;
         }
+
         @Override
         public boolean hasOrderableChildNodes() {
             return false;
         }
+
         @Override
         public boolean isQueryable() {
             return false;
         }
+
         @Override
         public String getPrimaryItemName() {
             return null;
         }
+
         @Override
         public PropertyDefinition[] getDeclaredPropertyDefinitions() {
             return null;
         }
+
         @Override
         public NodeDefinition[] getDeclaredChildNodeDefinitions() {
             return null;
         }
+
         @Override
-        public void setName(String name) {
-        }
+        public void setName(String name) {}
+
         @Override
-        public void setDeclaredSuperTypeNames(String[] names) {
-        }
+        public void setDeclaredSuperTypeNames(String[] names) {}
+
         @Override
-        public void setAbstract(boolean abstractStatus) {
-        }
+        public void setAbstract(boolean abstractStatus) {}
+
         @Override
-        public void setMixin(boolean mixin) {
-        }
+        public void setMixin(boolean mixin) {}
+
         @Override
-        public void setOrderableChildNodes(boolean orderable) {
-        }
+        public void setOrderableChildNodes(boolean orderable) {}
+
         @Override
-        public void setPrimaryItemName(String name) {
-        }
+        public void setPrimaryItemName(String name) {}
+
         @Override
-        public void setQueryable(boolean queryable) {
-        }
+        public void setQueryable(boolean queryable) {}
+
         @Override
         public List getPropertyDefinitionTemplates() {
             return new ArrayList();
         }
+
         @Override
         public List getNodeDefinitionTemplates() {
             return new ArrayList();
@@ -344,70 +363,80 @@ public final class NodeTypeDefinitionScanner {
         public NodeType[] getRequiredPrimaryTypes() {
             return null;
         }
+
         @Override
         public String[] getRequiredPrimaryTypeNames() {
             return null;
         }
+
         @Override
         public NodeType getDefaultPrimaryType() {
             return null;
         }
+
         @Override
         public String getDefaultPrimaryTypeName() {
             return null;
         }
+
         @Override
         public boolean allowsSameNameSiblings() {
             return false;
         }
+
         @Override
         public NodeType getDeclaringNodeType() {
             return null;
         }
+
         @Override
         public String getName() {
             return null;
         }
+
         @Override
         public boolean isAutoCreated() {
             return false;
         }
+
         @Override
         public boolean isMandatory() {
             return false;
         }
+
         @Override
         public int getOnParentVersion() {
             return 0;
         }
+
         @Override
         public boolean isProtected() {
             return false;
         }
+
         @Override
-        public void setName(String name) {
-        }
+        public void setName(String name) {}
+
         @Override
-        public void setAutoCreated(boolean autoCreated) {
-        }
+        public void setAutoCreated(boolean autoCreated) {}
+
         @Override
-        public void setMandatory(boolean mandatory) {
-        }
+        public void setMandatory(boolean mandatory) {}
+
         @Override
-        public void setOnParentVersion(int opv) {
-        }
+        public void setOnParentVersion(int opv) {}
+
         @Override
-        public void setProtected(boolean protectedStatus) {
-        }
+        public void setProtected(boolean protectedStatus) {}
+
         @Override
-        public void setRequiredPrimaryTypeNames(String[] names) {
-        }
+        public void setRequiredPrimaryTypeNames(String[] names) {}
+
         @Override
-        public void setDefaultPrimaryTypeName(String name) {
-        }
+        public void setDefaultPrimaryTypeName(String name) {}
+
         @Override
-        public void setSameNameSiblings(boolean allowSameNameSiblings) {
-        }
+        public void setSameNameSiblings(boolean allowSameNameSiblings) {}
     }
 
     private static class DummyPropertyDefinitionTemplate implements PropertyDefinitionTemplate {
@@ -415,90 +444,101 @@ public final class NodeTypeDefinitionScanner {
         public int getRequiredType() {
             return 0;
         }
+
         @Override
         public String[] getValueConstraints() {
             return null;
         }
+
         @Override
         public Value[] getDefaultValues() {
             return null;
         }
+
         @Override
         public boolean isMultiple() {
             return false;
         }
+
         @Override
         public String[] getAvailableQueryOperators() {
             return null;
         }
+
         @Override
         public boolean isFullTextSearchable() {
             return false;
         }
+
         @Override
         public boolean isQueryOrderable() {
             return false;
         }
+
         @Override
         public NodeType getDeclaringNodeType() {
             return null;
         }
+
         @Override
         public String getName() {
             return null;
         }
+
         @Override
         public boolean isAutoCreated() {
             return false;
         }
+
         @Override
         public boolean isMandatory() {
             return false;
         }
+
         @Override
         public int getOnParentVersion() {
             return 0;
         }
+
         @Override
         public boolean isProtected() {
             return false;
         }
-        @Override
-        public void setName(String name) {
-        }
-        @Override
-        public void setAutoCreated(boolean autoCreated) {
-        }
-        @Override
-        public void setMandatory(boolean mandatory) {
-        }
-        @Override
-        public void setOnParentVersion(int opv) {
-        }
-        @Override
-        public void setProtected(boolean protectedStatus) {
-        }
-        @Override
-        public void setRequiredType(int type) {
-        }
-        @Override
-        public void setValueConstraints(String[] constraints) {
-        }
-        @Override
-        public void setDefaultValues(Value[] defaultValues) {
-        }
-        @Override
-        public void setMultiple(boolean multiple) {
-        }
-        @Override
-        public void setAvailableQueryOperators(String[] operators) {
-        }
-        @Override
-        public void setFullTextSearchable(boolean fullTextSearchable) {
-        }
-        @Override
-        public void setQueryOrderable(boolean queryOrderable) {
-        }
-    }
 
+        @Override
+        public void setName(String name) {}
+
+        @Override
+        public void setAutoCreated(boolean autoCreated) {}
+
+        @Override
+        public void setMandatory(boolean mandatory) {}
+
+        @Override
+        public void setOnParentVersion(int opv) {}
+
+        @Override
+        public void setProtected(boolean protectedStatus) {}
+
+        @Override
+        public void setRequiredType(int type) {}
+
+        @Override
+        public void setValueConstraints(String[] constraints) {}
+
+        @Override
+        public void setDefaultValues(Value[] defaultValues) {}
+
+        @Override
+        public void setMultiple(boolean multiple) {}
+
+        @Override
+        public void setAvailableQueryOperators(String[] operators) {}
+
+        @Override
+        public void setFullTextSearchable(boolean fullTextSearchable) {}
+
+        @Override
+        public void setQueryOrderable(boolean queryOrderable) {}
+    }
 }

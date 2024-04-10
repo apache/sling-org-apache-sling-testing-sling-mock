@@ -55,7 +55,7 @@ public final class MockResourceBundle extends ResourceBundle {
 
     @Override
     protected Object handleGetObject(String key) {
-        return mappings.getOrDefault(key,  key);
+        return mappings.getOrDefault(key, key);
     }
 
     @Override
@@ -91,5 +91,4 @@ public final class MockResourceBundle extends ResourceBundle {
     public void putAll(@NotNull Map<? extends String, ? extends String> map) {
         mappings.putAll(map);
     }
-
 }

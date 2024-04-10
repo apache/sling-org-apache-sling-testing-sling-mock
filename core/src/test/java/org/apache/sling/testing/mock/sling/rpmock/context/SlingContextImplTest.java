@@ -27,5 +27,4 @@ public class SlingContextImplTest extends AbstractSlingContextImplTest {
     protected ResourceResolverType getResourceResolverType() {
         return ResourceResolverType.RESOURCEPROVIDER_MOCK;
     }
-
 }

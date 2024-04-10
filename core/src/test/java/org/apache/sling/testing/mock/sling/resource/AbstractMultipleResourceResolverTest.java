@@ -18,11 +18,6 @@
  */
 package org.apache.sling.testing.mock.sling.resource;
 
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertNull;
-import static org.junit.Assert.assertTrue;
-
 import java.util.Collections;
 import java.util.Map;
 
@@ -37,6 +32,11 @@ import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 import org.osgi.framework.BundleContext;
+
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertNull;
+import static org.junit.Assert.assertTrue;
 
 /**
  * Tests content access accross multiple resource resolvers.
@@ -99,11 +99,14 @@ public abstract class AbstractMultipleResourceResolverTest {
         createResourceAndCheckResourceType(resourceResolver);
     }
 
-    private static void createResourceAndCheckResourceType(ResourceResolver serviceResolver) throws PersistenceException {
+    private static void createResourceAndCheckResourceType(ResourceResolver serviceResolver)
+            throws PersistenceException {
         Resource root = serviceResolver.getResource("/");
-        Resource resource = serviceResolver.create(root, "testResource", Collections.singletonMap("sling:resourceType", "testResourceType"));
+        Resource resource = serviceResolver.create(
+                root, "testResource", Collections.singletonMap("sling:resourceType", "testResourceType"));
         assertTrue("is expected resource type 'testResourceType'", resource.isResourceType("testResourceType"));
-        assertFalse("is not unexpected resource type 'anotherResourceType'", resource.isResourceType("anotherResourceType"));
+        assertFalse(
+                "is not unexpected resource type 'anotherResourceType'",
+                resource.isResourceType("anotherResourceType"));
     }
-
 }

@@ -54,48 +54,55 @@ public final class MockMimeTypeService extends MimeTypeServiceImpl {
 
             // activate service in simulated OSGi environment (for MimeTypeService impl < 2.0.0)
             try {
-                Method bindLogServiceMethod = MimeTypeServiceImpl.class.getDeclaredMethod("bindLogService", LogService.class);
+                Method bindLogServiceMethod =
+                        MimeTypeServiceImpl.class.getDeclaredMethod("bindLogService", LogService.class);
                 bindLogServiceMethod.invoke(this, MockOsgi.newLogService(getClass()));
-            }
-            catch (NoSuchMethodException ex) {
+            } catch (NoSuchMethodException ex) {
                 // ignore
-            }
-            catch (IllegalAccessException | IllegalArgumentException | InvocationTargetException ex) {
+            } catch (IllegalAccessException | IllegalArgumentException | InvocationTargetException ex) {
                 throw new RuntimeException("Unableo to set log service.", ex);
             }
 
             // call activate method of MimeTypeServiceImpl
-            // via reflection because the method signature changed between org.apache.sling.commons.mime 2.1.8 and 2.1.10 and 2.2.0
+            // via reflection because the method signature changed between org.apache.sling.commons.mime 2.1.8 and
+            // 2.1.10 and 2.2.0
             try {
                 Method activateMethod;
                 try {
-                    Class<?> mimeTypeServiceConfigClass = Class.forName(MimeTypeServiceImpl.class.getName() + "$Config");
-                    activateMethod = MimeTypeServiceImpl.class.getDeclaredMethod("activate", BundleContext.class, mimeTypeServiceConfigClass);
-                    Object configProxy = Proxy.newProxyInstance(getClass().getClassLoader(), new Class[] { mimeTypeServiceConfigClass }, new InvocationHandler() {
-                        @Override
-                        public Object invoke(Object proxy, Method method, Object[] args) throws Throwable {
-                            return null;
-                        }
-                    });
+                    Class<?> mimeTypeServiceConfigClass =
+                            Class.forName(MimeTypeServiceImpl.class.getName() + "$Config");
+                    activateMethod = MimeTypeServiceImpl.class.getDeclaredMethod(
+                            "activate", BundleContext.class, mimeTypeServiceConfigClass);
+                    Object configProxy = Proxy.newProxyInstance(
+                            getClass().getClassLoader(),
+                            new Class[] {mimeTypeServiceConfigClass},
+                            new InvocationHandler() {
+                                @Override
+                                public Object invoke(Object proxy, Method method, Object[] args) throws Throwable {
+                                    return null;
+                                }
+                            });
                     activateMethod.invoke(this, componentContext.getBundleContext(), configProxy);
-                }
-                catch (NoSuchMethodException | ClassNotFoundException ex1) {
+                } catch (NoSuchMethodException | ClassNotFoundException ex1) {
                     try {
-                        activateMethod = MimeTypeServiceImpl.class.getDeclaredMethod("activate", ComponentContext.class);
+                        activateMethod =
+                                MimeTypeServiceImpl.class.getDeclaredMethod("activate", ComponentContext.class);
                         activateMethod.invoke(this, componentContext);
-                    }
-                    catch (NoSuchMethodException ex2) {
+                    } catch (NoSuchMethodException ex2) {
                         try {
-                            activateMethod = MimeTypeServiceImpl.class.getDeclaredMethod("activate", BundleContext.class, Map.class);
-                            activateMethod.invoke(this, componentContext.getBundleContext(), MapUtil.toMap(componentContext.getProperties()));
-                        }
-                        catch (NoSuchMethodException ex3) {
-                            throw new RuntimeException("Did not found activate method of MimeTypeServiceImpl with any matching signature.");
+                            activateMethod = MimeTypeServiceImpl.class.getDeclaredMethod(
+                                    "activate", BundleContext.class, Map.class);
+                            activateMethod.invoke(
+                                    this,
+                                    componentContext.getBundleContext(),
+                                    MapUtil.toMap(componentContext.getProperties()));
+                        } catch (NoSuchMethodException ex3) {
+                            throw new RuntimeException(
+                                    "Did not found activate method of MimeTypeServiceImpl with any matching signature.");
                         }
                     }
                 }
-            }
-            catch (SecurityException | InvocationTargetException | IllegalAccessException ex) {
+            } catch (SecurityException | InvocationTargetException | IllegalAccessException ex) {
                 throw new RuntimeException("Unable to activate MimeTypeServiceImpl.", ex);
             }
         }
@@ -124,5 +131,4 @@ public final class MockMimeTypeService extends MimeTypeServiceImpl {
         lazyInitialization();
         super.registerMimeType(mimeTabStream);
     }
-
 }

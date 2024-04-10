@@ -18,10 +18,6 @@
  */
 package org.apache.sling.testing.mock.sling.context;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertNull;
-
 import org.apache.sling.commons.mime.MimeTypeService;
 import org.apache.sling.testing.mock.sling.context.models.OsgiServiceModel;
 import org.apache.sling.testing.mock.sling.context.models.RequestAttributeModel;
@@ -29,6 +25,10 @@ import org.apache.sling.testing.mock.sling.context.models.ServiceInterface;
 import org.apache.sling.testing.mock.sling.junit.SlingContext;
 import org.apache.sling.testing.mock.sling.services.MockMimeTypeService;
 import org.junit.Test;
+
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertNull;
 
 @SuppressWarnings("null")
 public abstract class AbstractModelAdapterFactoryUtilTest {
@@ -66,5 +66,4 @@ public abstract class AbstractModelAdapterFactoryUtilTest {
         assertNotNull(model);
         assertEquals("myValue", model.getPropValue());
     }
-
 }

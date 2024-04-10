@@ -70,26 +70,24 @@ public final class ContentLoader {
 
     // set of resource or property names that are ignored for all resource resolver types
     private static final Set<String> SHARED_IGNORED_NAMES = Stream.of(
-            JcrConstants.JCR_BASEVERSION,
-            JcrConstants.JCR_PREDECESSORS,
-            JcrConstants.JCR_SUCCESSORS,
-            JcrConstants.JCR_VERSIONHISTORY,
-            "jcr:checkedOut",
-            "jcr:isCheckedOut",
-            "rep:policy")
+                    JcrConstants.JCR_BASEVERSION,
+                    JcrConstants.JCR_PREDECESSORS,
+                    JcrConstants.JCR_SUCCESSORS,
+                    JcrConstants.JCR_VERSIONHISTORY,
+                    "jcr:checkedOut",
+                    "jcr:isCheckedOut",
+                    "rep:policy")
             .collect(Collectors.toSet());
 
     // set of resource or property names that are ignored when other resource resolver types than JCR_OAK are used
     private static final Set<String> MOCK_IGNORED_NAMES = Stream.concat(
-            SHARED_IGNORED_NAMES.stream(), Stream.of(
-            JcrConstants.JCR_MIXINTYPES))
+                    SHARED_IGNORED_NAMES.stream(), Stream.of(JcrConstants.JCR_MIXINTYPES))
             .collect(Collectors.toSet());
 
-    // set of resource or property names that are ignored when JCR_OAK resource resolver type (= a real repo impl) is used
+    // set of resource or property names that are ignored when JCR_OAK resource resolver type (= a real repo impl) is
+    // used
     private static final Set<String> OAK_IGNORED_NAMES = Stream.concat(
-            SHARED_IGNORED_NAMES.stream(), Stream.of(
-            JcrConstants.JCR_UUID,
-            JcrConstants.JCR_CREATED))
+                    SHARED_IGNORED_NAMES.stream(), Stream.of(JcrConstants.JCR_UUID, JcrConstants.JCR_CREATED))
             .collect(Collectors.toSet());
 
     private final ResourceResolver resourceResolver;
@@ -121,7 +119,8 @@ public final class ContentLoader {
      * @param bundleContext Bundle context
      * @param autoCommit Automatically commit changes after loading content (default: true)
      */
-    public ContentLoader(@NotNull ResourceResolver resourceResolver, @Nullable BundleContext bundleContext, boolean autoCommit) {
+    public ContentLoader(
+            @NotNull ResourceResolver resourceResolver, @Nullable BundleContext bundleContext, boolean autoCommit) {
         this(resourceResolver, bundleContext, autoCommit, null);
     }
 
@@ -131,7 +130,10 @@ public final class ContentLoader {
      * @param autoCommit Automatically commit changes after loading content (default: true)
      * @param resourceResolverType Resource resolver type.
      */
-    public ContentLoader(@NotNull ResourceResolver resourceResolver, @Nullable BundleContext bundleContext, boolean autoCommit,
+    public ContentLoader(
+            @NotNull ResourceResolver resourceResolver,
+            @Nullable BundleContext bundleContext,
+            boolean autoCommit,
             @Nullable ResourceResolverType resourceResolverType) {
         this.resourceResolver = resourceResolver;
         this.bundleContext = bundleContext;
@@ -139,10 +141,10 @@ public final class ContentLoader {
         this.ignoredNames = getIgnoredNamesForResourceResolverType(resourceResolverType);
 
         this.jsonParserOptions = new JSONParserOptions()
-            .withFeatures(EnumSet.of(JSONParserFeature.COMMENTS, JSONParserFeature.QUOTE_TICK))
-            .detectCalendarValues(true)
-            .ignorePropertyNames(this.ignoredNames)
-            .ignoreResourceNames(this.ignoredNames);
+                .withFeatures(EnumSet.of(JSONParserFeature.COMMENTS, JSONParserFeature.QUOTE_TICK))
+                .detectCalendarValues(true)
+                .ignorePropertyNames(this.ignoredNames)
+                .ignoreResourceNames(this.ignoredNames);
         this.jsonParser = new JSONContentParser();
 
         this.fileVaultXmlParserOptions = new ParserOptions()
@@ -155,8 +157,7 @@ public final class ContentLoader {
     private final Set<String> getIgnoredNamesForResourceResolverType(ResourceResolverType resourceResolverType) {
         if (resourceResolverType == null || resourceResolverType == ResourceResolverType.JCR_OAK) {
             return OAK_IGNORED_NAMES;
-        }
-        else {
+        } else {
             return MOCK_IGNORED_NAMES;
         }
     }
@@ -171,7 +172,8 @@ public final class ContentLoader {
      * @param childName Name of child resource to create with JSON content
      * @return Resource
      */
-    public @NotNull Resource json(@NotNull String classpathResourceOrFile, @NotNull Resource parentResource, @NotNull String childName) {
+    public @NotNull Resource json(
+            @NotNull String classpathResourceOrFile, @NotNull Resource parentResource, @NotNull String childName) {
         return json(classpathResourceOrFile, parentResource.getPath() + "/" + childName);
     }
 
@@ -199,7 +201,8 @@ public final class ContentLoader {
      * @param childName Name of child resource to create with JSON content
      * @return Resource
      */
-    public @NotNull Resource json(@NotNull InputStream inputStream, @NotNull Resource parentResource, @NotNull String childName) {
+    public @NotNull Resource json(
+            @NotNull InputStream inputStream, @NotNull Resource parentResource, @NotNull String childName) {
         return json(inputStream, parentResource.getPath() + "/" + childName);
     }
 
@@ -227,7 +230,8 @@ public final class ContentLoader {
      * @param childName Name of child resource to create with Filevault content
      * @return Resource
      */
-    public @NotNull Resource fileVaultXml(@NotNull String classpathResourceOrFile, @NotNull Resource parentResource, @NotNull String childName) {
+    public @NotNull Resource fileVaultXml(
+            @NotNull String classpathResourceOrFile, @NotNull Resource parentResource, @NotNull String childName) {
         return fileVaultXml(classpathResourceOrFile, parentResource.getPath() + "/" + childName);
     }
 
@@ -255,7 +259,8 @@ public final class ContentLoader {
      * @param childName Name of child resource to create with Filevault content
      * @return Resource
      */
-    public @NotNull Resource fileVaultXml(@NotNull InputStream inputStream, @NotNull Resource parentResource, @NotNull String childName) {
+    public @NotNull Resource fileVaultXml(
+            @NotNull InputStream inputStream, @NotNull Resource parentResource, @NotNull String childName) {
         return fileVaultXml(inputStream, parentResource.getPath() + "/" + childName);
     }
 
@@ -274,8 +279,11 @@ public final class ContentLoader {
     }
 
     @SuppressWarnings("null")
-    private @NotNull Resource mountParsedFile(@NotNull InputStream inputStream, @NotNull String destPath,
-            @NotNull ContentParser contentParser, @NotNull ParserOptions parserOptions) {
+    private @NotNull Resource mountParsedFile(
+            @NotNull InputStream inputStream,
+            @NotNull String destPath,
+            @NotNull ContentParser contentParser,
+            @NotNull ParserOptions parserOptions) {
         try {
             String parentPath = ResourceUtil.getParent(destPath);
             String childName = ResourceUtil.getName(destPath);
@@ -298,8 +306,7 @@ public final class ContentLoader {
                 resourceResolver.commit();
             }
             return resourceResolver.getResource(destPath);
-        }
-        catch (IOException ex) {
+        } catch (IOException ex) {
             throw new RuntimeException(ex);
         }
     }
@@ -350,8 +357,10 @@ public final class ContentLoader {
      * @param mimeType Mime type of binary data
      * @return Resource with binary data
      */
-    public @NotNull Resource binaryFile(@NotNull String classpathResourceOrFile, @NotNull String path, @NotNull String mimeType) {
-        return processInputStreamFromClasspathOrFilesystem(classpathResourceOrFile, is -> binaryFile(is, path, mimeType));
+    public @NotNull Resource binaryFile(
+            @NotNull String classpathResourceOrFile, @NotNull String path, @NotNull String mimeType) {
+        return processInputStreamFromClasspathOrFilesystem(
+                classpathResourceOrFile, is -> binaryFile(is, path, mimeType));
     }
 
     /**
@@ -382,7 +391,8 @@ public final class ContentLoader {
      * @param mimeType Mime type of binary data
      * @return Resource with binary data
      */
-    public @NotNull Resource binaryFile(@NotNull InputStream inputStream, @NotNull String path, @NotNull String mimeType) {
+    public @NotNull Resource binaryFile(
+            @NotNull InputStream inputStream, @NotNull String path, @NotNull String mimeType) {
         String parentPath = ResourceUtil.getParent(path, 1);
         String name = ResourceUtil.getName(path);
         if (parentPath == null) {
@@ -407,7 +417,8 @@ public final class ContentLoader {
      * @param name Resource name for nt:file
      * @return Resource with binary data
      */
-    public @NotNull Resource binaryFile(@NotNull InputStream inputStream, @NotNull Resource parentResource, @NotNull String name) {
+    public @NotNull Resource binaryFile(
+            @NotNull InputStream inputStream, @NotNull Resource parentResource, @NotNull String name) {
         return binaryFile(inputStream, parentResource, name, detectMimeTypeFromNames(name));
     }
 
@@ -423,14 +434,24 @@ public final class ContentLoader {
      * @param mimeType Mime type of binary data
      * @return Resource with binary data
      */
-    public @NotNull Resource binaryFile(@NotNull InputStream inputStream, @NotNull Resource parentResource, @NotNull String name, @NotNull String mimeType) {
+    public @NotNull Resource binaryFile(
+            @NotNull InputStream inputStream,
+            @NotNull Resource parentResource,
+            @NotNull String name,
+            @NotNull String mimeType) {
         try {
-            Resource file = resourceResolver.create(parentResource, name,
-                    ImmutableValueMap.of(JcrConstants.JCR_PRIMARYTYPE, JcrConstants.NT_FILE));
-            resourceResolver.create(file, JcrConstants.JCR_CONTENT,
-                    ImmutableValueMap.of(JcrConstants.JCR_PRIMARYTYPE, JcrConstants.NT_RESOURCE,
-                            JcrConstants.JCR_DATA, inputStream,
-                            JcrConstants.JCR_MIMETYPE, mimeType));
+            Resource file = resourceResolver.create(
+                    parentResource, name, ImmutableValueMap.of(JcrConstants.JCR_PRIMARYTYPE, JcrConstants.NT_FILE));
+            resourceResolver.create(
+                    file,
+                    JcrConstants.JCR_CONTENT,
+                    ImmutableValueMap.of(
+                            JcrConstants.JCR_PRIMARYTYPE,
+                            JcrConstants.NT_RESOURCE,
+                            JcrConstants.JCR_DATA,
+                            inputStream,
+                            JcrConstants.JCR_MIMETYPE,
+                            mimeType));
             if (autoCommit) {
                 resourceResolver.commit();
             }
@@ -466,8 +487,10 @@ public final class ContentLoader {
      * @param mimeType Mime type of binary data
      * @return Resource with binary data
      */
-    public @NotNull Resource binaryResource(@NotNull String classpathResourceOrFile, @NotNull String path, @NotNull String mimeType) {
-        return processInputStreamFromClasspathOrFilesystem(classpathResourceOrFile, is -> binaryResource(is, path, mimeType));
+    public @NotNull Resource binaryResource(
+            @NotNull String classpathResourceOrFile, @NotNull String path, @NotNull String mimeType) {
+        return processInputStreamFromClasspathOrFilesystem(
+                classpathResourceOrFile, is -> binaryResource(is, path, mimeType));
     }
 
     /**
@@ -498,7 +521,8 @@ public final class ContentLoader {
      * @param mimeType Mime type of binary data
      * @return Resource with binary data
      */
-    public @NotNull Resource binaryResource(@NotNull InputStream inputStream, @NotNull String path, @NotNull String mimeType) {
+    public @NotNull Resource binaryResource(
+            @NotNull InputStream inputStream, @NotNull String path, @NotNull String mimeType) {
         String parentPath = ResourceUtil.getParent(path, 1);
         String name = ResourceUtil.getName(path);
         if (parentPath == null) {
@@ -523,7 +547,8 @@ public final class ContentLoader {
      * @param name Resource name for nt:resource
      * @return Resource with binary data
      */
-    public @NotNull Resource binaryResource(@NotNull InputStream inputStream, @NotNull Resource parentResource, @NotNull String name) {
+    public @NotNull Resource binaryResource(
+            @NotNull InputStream inputStream, @NotNull Resource parentResource, @NotNull String name) {
         return binaryResource(inputStream, parentResource, name, detectMimeTypeFromNames(name));
     }
 
@@ -539,12 +564,22 @@ public final class ContentLoader {
      * @param mimeType Mime type of binary data
      * @return Resource with binary data
      */
-    public @NotNull Resource binaryResource(@NotNull InputStream inputStream, @NotNull Resource parentResource, @NotNull String name, @NotNull String mimeType) {
+    public @NotNull Resource binaryResource(
+            @NotNull InputStream inputStream,
+            @NotNull Resource parentResource,
+            @NotNull String name,
+            @NotNull String mimeType) {
         try {
-            Resource resource = resourceResolver.create(parentResource, name,
-                    ImmutableValueMap.of(JcrConstants.JCR_PRIMARYTYPE, JcrConstants.NT_RESOURCE,
-                            JcrConstants.JCR_DATA, inputStream,
-                            JcrConstants.JCR_MIMETYPE, mimeType));
+            Resource resource = resourceResolver.create(
+                    parentResource,
+                    name,
+                    ImmutableValueMap.of(
+                            JcrConstants.JCR_PRIMARYTYPE,
+                            JcrConstants.NT_RESOURCE,
+                            JcrConstants.JCR_DATA,
+                            inputStream,
+                            JcrConstants.JCR_MIMETYPE,
+                            mimeType));
             if (autoCommit) {
                 resourceResolver.commit();
             }
@@ -587,7 +622,8 @@ public final class ContentLoader {
      * @param parentResource Parent resource
      * @param childName Name of child resource to mount folder into
      */
-    public void folderJson(@NotNull String mountFolderPath, @NotNull Resource parentResource, @NotNull String childName) {
+    public void folderJson(
+            @NotNull String mountFolderPath, @NotNull Resource parentResource, @NotNull String childName) {
         folderJson(new File(mountFolderPath), parentResource, childName);
     }
 
@@ -629,11 +665,16 @@ public final class ContentLoader {
      */
     public void folderJson(@NotNull File mountFolder, @NotNull String destPath) {
         registerFileSystemResourceProvider(
-                "provider.file", mountFolder.getAbsolutePath(),
-                "provider.root", destPath,
-                "provider.fs.mode", "INITIAL_CONTENT",
-                "provider.initial.content.import.options", "overwrite:=true;ignoreImportProviders:=\"xml\"",
-                "provider.checkinterval", 0);
+                "provider.file",
+                mountFolder.getAbsolutePath(),
+                "provider.root",
+                destPath,
+                "provider.fs.mode",
+                "INITIAL_CONTENT",
+                "provider.initial.content.import.options",
+                "overwrite:=true;ignoreImportProviders:=\"xml\"",
+                "provider.checkinterval",
+                0);
     }
 
     /**
@@ -646,7 +687,8 @@ public final class ContentLoader {
      * @param parentResource Parent resource
      * @param childName Name of child resource of subtree path that should be mounted from FileVault XML structure
      */
-    public void folderFileVaultXml(@NotNull String mountFolderPath, @NotNull Resource parentResource, @NotNull String childName) {
+    public void folderFileVaultXml(
+            @NotNull String mountFolderPath, @NotNull Resource parentResource, @NotNull String childName) {
         folderFileVaultXml(new File(mountFolderPath), parentResource, childName);
     }
 
@@ -673,7 +715,8 @@ public final class ContentLoader {
      * @param parentResource Parent resource
      * @param childName Name of child resource of subtree path that should be mounted from FileVault XML structure
      */
-    public void folderFileVaultXml(@NotNull File mountFolder, @NotNull Resource parentResource, @NotNull String childName) {
+    public void folderFileVaultXml(
+            @NotNull File mountFolder, @NotNull Resource parentResource, @NotNull String childName) {
         folderFileVaultXml(mountFolder, parentResource.getPath() + "/" + childName);
     }
 
@@ -688,10 +731,14 @@ public final class ContentLoader {
      */
     public void folderFileVaultXml(@NotNull File mountFolder, @NotNull String destPath) {
         registerFileSystemResourceProvider(
-                "provider.file", mountFolder.getAbsolutePath(),
-                "provider.root", destPath,
-                "provider.fs.mode", "FILEVAULT_XML",
-                "provider.checkinterval", 0);
+                "provider.file",
+                mountFolder.getAbsolutePath(),
+                "provider.root",
+                destPath,
+                "provider.fs.mode",
+                "FILEVAULT_XML",
+                "provider.checkinterval",
+                0);
     }
 
     /**
@@ -700,20 +747,19 @@ public final class ContentLoader {
      * @param processor Processes input stream
      */
     @SuppressWarnings("null")
-    private <T> @NotNull T processInputStreamFromClasspathOrFilesystem(@NotNull String classpathResourceOrFile, @NotNull Function<InputStream,T> processor) {
+    private <T> @NotNull T processInputStreamFromClasspathOrFilesystem(
+            @NotNull String classpathResourceOrFile, @NotNull Function<InputStream, T> processor) {
         InputStream is = ContentLoader.class.getResourceAsStream(classpathResourceOrFile);
         if (is == null) {
             try {
                 is = new FileInputStream(classpathResourceOrFile);
-            }
-            catch (FileNotFoundException ex) {
+            } catch (FileNotFoundException ex) {
                 throw new IllegalArgumentException("Classpath resource or file not found: " + classpathResourceOrFile);
             }
         }
         try {
             return processor.apply(is);
-        }
-        finally {
+        } finally {
             IOUtils.closeQuietly(is);
         }
     }
@@ -724,26 +770,26 @@ public final class ContentLoader {
             throw new IllegalStateException("No bundle context given for content loader.");
         }
         if (isUsingMockResourceResolverFactory()) {
-            throw new IllegalStateException("Loading folder content is not supported with RESOURCERESOLVER_MOCK resource resolver type. "
-                    + "Use RESOURCEPROVIDER_MOCK or one of the other types.");
+            throw new IllegalStateException(
+                    "Loading folder content is not supported with RESOURCERESOLVER_MOCK resource resolver type. "
+                            + "Use RESOURCEPROVIDER_MOCK or one of the other types.");
         }
-        Dictionary<String,Object> props = MapUtil.toDictionary(serviceProperties);
+        Dictionary<String, Object> props = MapUtil.toDictionary(serviceProperties);
         FsResourceProvider service = MockOsgi.activateInjectServices(FsResourceProvider.class, bundleContext, props);
         bundleContext.registerService(ResourceProvider.class, service, props);
     }
 
     private boolean isUsingMockResourceResolverFactory() {
-        ServiceReference<ResourceResolverFactory> serviceReference = bundleContext.getServiceReference(ResourceResolverFactory.class);
+        ServiceReference<ResourceResolverFactory> serviceReference =
+                bundleContext.getServiceReference(ResourceResolverFactory.class);
         if (serviceReference == null) {
             throw new IllegalStateException("No resource resolver factory service present.");
         }
         try {
             ResourceResolverFactory resourceResolverFactory = bundleContext.getService(serviceReference);
             return resourceResolverFactory instanceof MockResourceResolverFactory;
-        }
-        finally {
+        } finally {
             bundleContext.ungetService(serviceReference);
         }
     }
-
 }

@@ -23,7 +23,8 @@ import org.apache.sling.testing.mock.sling.loader.AbstractContentLoaderAutoCommi
 
 public class ContentLoaderAutoCommitTest extends AbstractContentLoaderAutoCommitTest {
 
-    @Override protected ResourceResolverType getResourceResolverType() {
+    @Override
+    protected ResourceResolverType getResourceResolverType() {
         return ResourceResolverType.JCR_MOCK;
     }
 }

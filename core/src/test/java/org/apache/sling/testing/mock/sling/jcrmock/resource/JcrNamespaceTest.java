@@ -27,5 +27,4 @@ public class JcrNamespaceTest extends AbstractJcrNamespaceTest {
     protected ResourceResolverType getResourceResolverType() {
         return ResourceResolverType.JCR_MOCK;
     }
-
 }

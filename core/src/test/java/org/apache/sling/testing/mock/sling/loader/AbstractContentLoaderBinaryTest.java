@@ -18,11 +18,6 @@
  */
 package org.apache.sling.testing.mock.sling.loader;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertThrows;
-
 import java.io.IOException;
 import java.io.InputStream;
 
@@ -38,6 +33,11 @@ import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.junit.MockitoJUnitRunner;
+
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertThrows;
 
 @RunWith(MockitoJUnitRunner.class)
 @SuppressWarnings("null")
@@ -118,5 +118,4 @@ public abstract class AbstractContentLoaderBinaryTest {
         assertNotNull(resource);
         assertEquals(mimeType, ResourceUtil.getValueMap(resource).get(JcrConstants.JCR_MIMETYPE, String.class));
     }
-
 }

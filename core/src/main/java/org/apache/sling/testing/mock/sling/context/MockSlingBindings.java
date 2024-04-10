@@ -62,7 +62,7 @@ class MockSlingBindings extends SlingBindings implements EventHandler {
             return null;
         }
         if (key instanceof String) {
-            Object result = context.resolveSlingBindingProperty((String)key, context.request());
+            Object result = context.resolveSlingBindingProperty((String) key, context.request());
             if (result != null) {
                 return result;
             }
@@ -75,8 +75,8 @@ class MockSlingBindings extends SlingBindings implements EventHandler {
      */
     private void populateFromBindingsValuesProvider() {
         Bindings bindings = new LazyBindings();
-        for (BindingsValuesProvider provider : context.getServices(BindingsValuesProvider.class,
-                "(!(" + SERVICE_PROPERTY_MOCK_SLING_BINDINGS_IGNORE + "=true))")) {
+        for (BindingsValuesProvider provider : context.getServices(
+                BindingsValuesProvider.class, "(!(" + SERVICE_PROPERTY_MOCK_SLING_BINDINGS_IGNORE + "=true))")) {
             provider.addBindings(bindings);
         }
         this.clear();
@@ -89,7 +89,8 @@ class MockSlingBindings extends SlingBindings implements EventHandler {
         if (this.context == null) {
             return;
         }
-        // is triggered by OSGi events fired by {@link org.apache.sling.scripting.core.impl.BindingsValuesProvidersByContextImpl}
+        // is triggered by OSGi events fired by {@link
+        // org.apache.sling.scripting.core.impl.BindingsValuesProvidersByContextImpl}
         // whenever a new bindings value provider is added or removed
         populateFromBindingsValuesProvider();
     }
@@ -137,5 +138,4 @@ class MockSlingBindings extends SlingBindings implements EventHandler {
     public void tearDown() {
         this.context = null;
     }
-
 }

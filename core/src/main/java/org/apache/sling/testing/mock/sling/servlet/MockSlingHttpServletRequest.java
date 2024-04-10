@@ -47,7 +47,8 @@ public class MockSlingHttpServletRequest extends org.apache.sling.servlethelpers
      * @param resourceResolver Resource resolver
      * @param bundleContext Bundle context
      */
-    public MockSlingHttpServletRequest(@NotNull ResourceResolver resourceResolver, @NotNull BundleContext bundleContext) {
+    public MockSlingHttpServletRequest(
+            @NotNull ResourceResolver resourceResolver, @NotNull BundleContext bundleContext) {
         super(resourceResolver);
         this.bundleContext = bundleContext;
     }
@@ -65,9 +66,10 @@ public class MockSlingHttpServletRequest extends org.apache.sling.servlethelpers
     public ResourceBundle getResourceBundle(String baseName, Locale locale) {
         // check of ResourceBundleProvider is registered in mock OSGI context
         ResourceBundle resourceBundle = null;
-        ServiceReference<ResourceBundleProvider> serviceReference = bundleContext.getServiceReference(ResourceBundleProvider.class);
+        ServiceReference<ResourceBundleProvider> serviceReference =
+                bundleContext.getServiceReference(ResourceBundleProvider.class);
         if (serviceReference != null) {
-            ResourceBundleProvider provider = (ResourceBundleProvider)bundleContext.getService(serviceReference);
+            ResourceBundleProvider provider = (ResourceBundleProvider) bundleContext.getService(serviceReference);
             resourceBundle = provider.getResourceBundle(baseName, locale);
         }
         // if no ResourceBundleProvider exists return empty bundle
@@ -76,5 +78,4 @@ public class MockSlingHttpServletRequest extends org.apache.sling.servlethelpers
         }
         return resourceBundle;
     }
-
 }

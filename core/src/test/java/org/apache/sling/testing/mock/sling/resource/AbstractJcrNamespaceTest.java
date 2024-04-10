@@ -18,8 +18,6 @@
  */
 package org.apache.sling.testing.mock.sling.resource;
 
-import static org.junit.Assert.assertEquals;
-
 import javax.jcr.RepositoryException;
 
 import org.apache.sling.api.resource.Resource;
@@ -34,6 +32,8 @@ import org.apache.sling.testing.mock.sling.loader.ContentLoader;
 import org.junit.Rule;
 import org.junit.Test;
 import org.osgi.framework.BundleContext;
+
+import static org.junit.Assert.assertEquals;
 
 /**
  * Validates correct registering and mapping of JCR namespaces, esp. the sling namespace.
@@ -52,7 +52,8 @@ public abstract class AbstractJcrNamespaceTest {
         ResourceResolver resolver = MockSling.newResourceResolver(getResourceResolverType(), bundleContext);
 
         ContentLoader contentLoader = new ContentLoader(resolver);
-        contentLoader.json("/json-import-samples/SLING-4362.json", context.uniqueRoot().content() + "/foo");
+        contentLoader.json(
+                "/json-import-samples/SLING-4362.json", context.uniqueRoot().content() + "/foo");
 
         Resource resource = resolver.getResource(context.uniqueRoot().content() + "/foo");
 
@@ -68,7 +69,8 @@ public abstract class AbstractJcrNamespaceTest {
         ResourceResolver resolver = context.resourceResolver();
 
         ContentLoader contentLoader = new ContentLoader(resolver);
-        contentLoader.json("/json-import-samples/SLING-4362.json", context.uniqueRoot().content() + "/foo");
+        contentLoader.json(
+                "/json-import-samples/SLING-4362.json", context.uniqueRoot().content() + "/foo");
 
         Resource resource = resolver.getResource(context.uniqueRoot().content() + "/foo");
 
@@ -76,5 +78,4 @@ public abstract class AbstractJcrNamespaceTest {
         assertEquals("fooType", props.get("sling:resourceType"));
         assertEquals("fooType", resource.getResourceType());
     }
-
 }

@@ -18,12 +18,6 @@
  */
 package org.apache.sling.testing.mock.sling.junit;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertNull;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.verify;
-
 import java.util.function.Function;
 
 import org.apache.sling.api.adapter.AdapterFactory;
@@ -39,6 +33,12 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.junit.MockitoJUnitRunner;
 
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertNull;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.verify;
+
 @RunWith(MockitoJUnitRunner.class)
 @SuppressWarnings("null")
 public class SlingContextTest {
@@ -51,15 +51,14 @@ public class SlingContextTest {
     // Run all unit tests for each resource resolver types listed here
     @Rule
     public SlingContext context = new SlingContextBuilder(ResourceResolverType.JCR_MOCK)
-        .beforeSetUp(contextBeforeSetup)
-        .afterSetUp(contextAfterSetup)
-        .beforeTearDown(contextBeforeTeardown)
-        .afterTearDown(contextAfterTeardown)
-        .resourceResolverFactoryActivatorProps(ImmutableValueMap.of(
-                "resource.resolver.searchpath", new String[] {"/apps","/libs","/testpath"},
-                "resource.resolver.mapping", new String[] {"/:/", "/content/test/</"}
-                ))
-        .build();
+            .beforeSetUp(contextBeforeSetup)
+            .afterSetUp(contextAfterSetup)
+            .beforeTearDown(contextBeforeTeardown)
+            .afterTearDown(contextAfterTeardown)
+            .resourceResolverFactoryActivatorProps(ImmutableValueMap.of(
+                    "resource.resolver.searchpath", new String[] {"/apps", "/libs", "/testpath"},
+                    "resource.resolver.mapping", new String[] {"/:/", "/content/test/</"}))
+            .build();
 
     @Before
     public void setUp() throws Exception {
@@ -77,19 +76,23 @@ public class SlingContextTest {
      */
     @Test
     public void testResourceResolverFactoryActivatorProps() {
-      context.create().resource("/apps/node1");
+        context.create().resource("/apps/node1");
 
-      context.create().resource("/libs/node1");
-      context.create().resource("/libs/node2");
+        context.create().resource("/libs/node1");
+        context.create().resource("/libs/node2");
 
-      context.create().resource("/testpath/node1");
-      context.create().resource("/testpath/node2");
-      context.create().resource("/testpath/node3");
+        context.create().resource("/testpath/node1");
+        context.create().resource("/testpath/node2");
+        context.create().resource("/testpath/node3");
 
-      assertEquals("/apps/node1", context.resourceResolver().getResource("node1").getPath());
-      assertEquals("/libs/node2", context.resourceResolver().getResource("node2").getPath());
-      assertEquals("/testpath/node3", context.resourceResolver().getResource("node3").getPath());
-      assertNull(context.resourceResolver().getResource("node4"));
+        assertEquals(
+                "/apps/node1", context.resourceResolver().getResource("node1").getPath());
+        assertEquals(
+                "/libs/node2", context.resourceResolver().getResource("node2").getPath());
+        assertEquals(
+                "/testpath/node3",
+                context.resourceResolver().getResource("node3").getPath());
+        assertNull(context.resourceResolver().getResource("node4"));
     }
 
     @Test
@@ -97,7 +100,7 @@ public class SlingContextTest {
 
         // prepare some adapter factories
         context.registerAdapter(ResourceResolver.class, Integer.class, 5);
-        context.registerAdapter(ResourceResolver.class, String.class, new Function<ResourceResolver,String>() {
+        context.registerAdapter(ResourceResolver.class, String.class, new Function<ResourceResolver, String>() {
             @Override
             public String apply(ResourceResolver input) {
                 return ">" + input.toString();
@@ -106,7 +109,9 @@ public class SlingContextTest {
 
         // test adaption
         assertEquals(Integer.valueOf(5), context.resourceResolver().adaptTo(Integer.class));
-        assertEquals(">" + context.resourceResolver().toString(), context.resourceResolver().adaptTo(String.class));
+        assertEquals(
+                ">" + context.resourceResolver().toString(),
+                context.resourceResolver().adaptTo(String.class));
         assertNull(context.resourceResolver().adaptTo(Double.class));
     }
 
@@ -140,10 +145,11 @@ public class SlingContextTest {
     @Test
     public void testResourceBuilder() {
 
-        context.build().resource("/test1", "prop1", "value1")
-            .siblingsMode()
-            .resource("a")
-            .resource("b");
+        context.build()
+                .resource("/test1", "prop1", "value1")
+                .siblingsMode()
+                .resource("a")
+                .resource("b");
 
         Resource test1 = context.resourceResolver().getResource("/test1");
         assertNotNull(test1);
@@ -163,18 +169,20 @@ public class SlingContextTest {
             @SuppressWarnings("unchecked")
             @Override
             public <AdapterType> AdapterType getAdapter(@NotNull Object adaptable, @NotNull Class<AdapterType> type) {
-                return (AdapterType)(((TestAdaptable)adaptable).getMessage() + "-initial");
+                return (AdapterType) (((TestAdaptable) adaptable).getMessage() + "-initial");
             }
         };
-        context.registerService(AdapterFactory.class, adapterFactory, ImmutableValueMap.builder()
-                .put(AdapterFactory.ADAPTABLE_CLASSES, new String[] { TestAdaptable.class.getName() })
-                .put(AdapterFactory.ADAPTER_CLASSES, new String[] { String.class.getName() })
-                .build());
+        context.registerService(
+                AdapterFactory.class,
+                adapterFactory,
+                ImmutableValueMap.builder()
+                        .put(AdapterFactory.ADAPTABLE_CLASSES, new String[] {TestAdaptable.class.getName()})
+                        .put(AdapterFactory.ADAPTER_CLASSES, new String[] {String.class.getName()})
+                        .build());
 
         // test initial adapter factory
         assertEquals("testMessage1-initial", new TestAdaptable("testMessage1").adaptTo(String.class));
     }
-
 
     private static class TestAdaptable extends SlingAdaptable {
 
@@ -187,7 +195,5 @@ public class SlingContextTest {
         public String getMessage() {
             return message;
         }
-
     }
-
 }

@@ -18,20 +18,11 @@
  */
 package org.apache.sling.testing.mock.sling.servlet;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertNull;
-import static org.junit.Assert.assertSame;
-import static org.junit.Assert.assertTrue;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.when;
+import javax.servlet.http.HttpSession;
 
 import java.util.ListResourceBundle;
 import java.util.Locale;
 import java.util.ResourceBundle;
-
-import javax.servlet.http.HttpSession;
 
 import org.apache.sling.api.resource.Resource;
 import org.apache.sling.api.resource.ResourceResolver;
@@ -47,14 +38,25 @@ import org.mockito.Mock;
 import org.mockito.junit.MockitoJUnitRunner;
 import org.osgi.framework.BundleContext;
 
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertNull;
+import static org.junit.Assert.assertSame;
+import static org.junit.Assert.assertTrue;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.when;
+
 @RunWith(MockitoJUnitRunner.class)
 @SuppressWarnings("null")
 public class MockSlingHttpServletRequestTest {
 
     @Mock
     private ResourceResolver resourceResolver;
+
     @Mock
     private Resource resource;
+
     private BundleContext bundleContext = MockOsgi.newBundleContext();
 
     private MockSlingHttpServletRequest request;
@@ -106,9 +108,7 @@ public class MockSlingHttpServletRequestTest {
         when(provider.getResourceBundle("base1", Locale.US)).thenReturn(new ListResourceBundle() {
             @Override
             protected Object[][] getContents() {
-                return new Object[][] {
-                        { "key1", "value1" }
-                };
+                return new Object[][] {{"key1", "value1"}};
             }
         });
 
@@ -125,11 +125,10 @@ public class MockSlingHttpServletRequestTest {
     public void testGetSuffixResource() {
         assertNull(request.getRequestPathInfo().getSuffixResource());
 
-        ((MockRequestPathInfo)request.getRequestPathInfo()).setSuffix("/suffix");
+        ((MockRequestPathInfo) request.getRequestPathInfo()).setSuffix("/suffix");
         Resource resource = mock(Resource.class);
         when(resourceResolver.getResource("/suffix")).thenReturn(resource);
 
         assertSame(resource, request.getRequestPathInfo().getSuffixResource());
     }
-
 }

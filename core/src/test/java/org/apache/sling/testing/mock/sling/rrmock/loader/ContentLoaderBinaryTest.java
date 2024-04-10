@@ -27,5 +27,4 @@ public class ContentLoaderBinaryTest extends AbstractContentLoaderBinaryTest {
     protected ResourceResolverType getResourceResolverType() {
         return ResourceResolverType.RESOURCERESOLVER_MOCK;
     }
-
 }

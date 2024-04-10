@@ -18,14 +18,14 @@
  */
 package org.apache.sling.testing.mock.sling;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNull;
-
 import org.apache.sling.testing.mock.sling.junit.SlingContext;
 import org.apache.sling.xss.XSSAPI;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
+
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNull;
 
 public class XSSAPIImplTest {
 
@@ -41,28 +41,28 @@ public class XSSAPIImplTest {
 
     @Test
     public void testGetValidInteger() {
-        assertEquals((Integer)123, underTest.getValidInteger("123", -1));
-        assertEquals((Integer)(-123), underTest.getValidInteger("-123", -1));
-        assertEquals((Integer)(-1), underTest.getValidInteger("invalid", -1));
-        assertEquals((Integer)(-1), underTest.getValidInteger("", -1));
-        assertEquals((Integer)(-1), underTest.getValidInteger(null, -1));
+        assertEquals((Integer) 123, underTest.getValidInteger("123", -1));
+        assertEquals((Integer) (-123), underTest.getValidInteger("-123", -1));
+        assertEquals((Integer) (-1), underTest.getValidInteger("invalid", -1));
+        assertEquals((Integer) (-1), underTest.getValidInteger("", -1));
+        assertEquals((Integer) (-1), underTest.getValidInteger(null, -1));
     }
 
     @Test
     public void testGetValidLong() throws Exception {
-        assertEquals((Long)123L, underTest.getValidLong("123", -1L));
-        assertEquals((Long)(-123L), underTest.getValidLong("-123", -1L));
-        assertEquals((Long)(-1L), underTest.getValidLong("invalid", -1L));
-        assertEquals((Long)(-1L), underTest.getValidLong("", -1L));
-        assertEquals((Long)(-1L), underTest.getValidLong(null, -1L));
+        assertEquals((Long) 123L, underTest.getValidLong("123", -1L));
+        assertEquals((Long) (-123L), underTest.getValidLong("-123", -1L));
+        assertEquals((Long) (-1L), underTest.getValidLong("invalid", -1L));
+        assertEquals((Long) (-1L), underTest.getValidLong("", -1L));
+        assertEquals((Long) (-1L), underTest.getValidLong(null, -1L));
     }
 
     @Test
     public void testGetValidDouble() throws Exception {
-        assertEquals((Double)1.23d, underTest.getValidDouble("1.23", -1d));
-        assertEquals((Double)(-1d), underTest.getValidDouble("invalid", -1d));
-        assertEquals((Double)(-1.5d), underTest.getValidDouble("", -1.5d));
-        assertEquals((Double)(-1d), underTest.getValidDouble(null, -1d));
+        assertEquals((Double) 1.23d, underTest.getValidDouble("1.23", -1d));
+        assertEquals((Double) (-1d), underTest.getValidDouble("invalid", -1d));
+        assertEquals((Double) (-1.5d), underTest.getValidDouble("", -1.5d));
+        assertEquals((Double) (-1d), underTest.getValidDouble(null, -1d));
     }
 
     @Test
@@ -167,5 +167,4 @@ public class XSSAPIImplTest {
         assertEquals("val", underTest.filterHTML("val"));
         assertEquals("", underTest.filterHTML(null));
     }
-
 }

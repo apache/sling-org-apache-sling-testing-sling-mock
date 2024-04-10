@@ -29,5 +29,4 @@ class MockDynamicClassLoaderManager implements DynamicClassLoaderManager {
     public ClassLoader getDynamicClassLoader() {
         return MockDynamicClassLoaderManager.class.getClassLoader();
     }
-
 }

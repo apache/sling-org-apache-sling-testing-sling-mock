@@ -18,11 +18,11 @@
  */
 package org.apache.sling.testing.mock.sling.services;
 
-import static org.junit.Assert.assertEquals;
-
 import org.apache.sling.commons.mime.MimeTypeService;
 import org.junit.Before;
 import org.junit.Test;
+
+import static org.junit.Assert.assertEquals;
 
 public class MockMimeTypeServiceTest {
 
@@ -47,5 +47,4 @@ public class MockMimeTypeServiceTest {
         assertEquals("json", this.mimeTypeService.getExtension("application/json"));
         assertEquals("jpeg", this.mimeTypeService.getExtension("image/jpeg"));
     }
-
 }

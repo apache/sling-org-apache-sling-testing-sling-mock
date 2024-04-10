@@ -18,14 +18,11 @@
  */
 package org.apache.sling.testing.mock.sling.loader;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
-
-import java.util.List;
-
 import javax.jcr.Node;
 import javax.jcr.RepositoryException;
 import javax.jcr.Session;
+
+import java.util.List;
 
 import org.apache.jackrabbit.JcrConstants;
 import org.apache.sling.api.resource.Resource;
@@ -38,6 +35,9 @@ import org.junit.After;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
+
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
 
 @SuppressWarnings("null")
 public abstract class AbstractContentLoaderFileVaultXmlTest {
@@ -54,15 +54,19 @@ public abstract class AbstractContentLoaderFileVaultXmlTest {
         path = context.uniqueRoot().content();
 
         try {
-            NodeTypeDefinitionScanner.get().register(context.resourceResolver().adaptTo(Session.class),
-                    List.of("SLING-INF/nodetypes/app.cnd"),
-                    getResourceResolverType().getNodeTypeMode());
-        }
-        catch (RepositoryException ex) {
+            NodeTypeDefinitionScanner.get()
+                    .register(
+                            context.resourceResolver().adaptTo(Session.class),
+                            List.of("SLING-INF/nodetypes/app.cnd"),
+                            getResourceResolverType().getNodeTypeMode());
+        } catch (RepositoryException ex) {
             throw new RuntimeException("Unable to register namespaces.", ex);
         }
 
-        context.load().fileVaultXml("src/test/resources/xml-jcr-import-samples/content/samples/en/.content.xml", path + "/sample/en");
+        context.load()
+                .fileVaultXml(
+                        "src/test/resources/xml-jcr-import-samples/content/samples/en/.content.xml",
+                        path + "/sample/en");
     }
 
     @After
@@ -112,5 +116,4 @@ public abstract class AbstractContentLoaderFileVaultXmlTest {
             assertEquals(nodeType, props.get(JcrConstants.JCR_PRIMARYTYPE));
         }
     }
-
 }

@@ -26,5 +26,4 @@ public final class MockHttpSession extends org.apache.sling.servlethelpers.MockH
     protected MockServletContext newMockServletContext() {
         return new MockServletContext();
     }
-
 }

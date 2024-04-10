@@ -18,12 +18,6 @@
  */
 package org.apache.sling.testing.mock.sling.resource;
 
-import static org.junit.Assert.assertArrayEquals;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertTrue;
-
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.InputStream;
@@ -52,6 +46,12 @@ import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
 
+import static org.junit.Assert.assertArrayEquals;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertTrue;
+
 /**
  * Implements simple write and read resource and values test. Sling CRUD API is
  * used to create the test data.
@@ -63,7 +63,7 @@ public abstract class AbstractSlingCrudResourceResolverTest {
     public SlingContext context = new SlingContext(getResourceResolverType());
 
     private static final String STRING_VALUE = "value1";
-    private static final String[] STRING_ARRAY_VALUE = new String[] { "value1", "value2" };
+    private static final String[] STRING_ARRAY_VALUE = new String[] {"value1", "value2"};
     private static final int INTEGER_VALUE = 25;
     private static final long LONG_VALUE = 250L;
     private static final double DOUBLE_VALUE = 3.555d;
@@ -71,9 +71,10 @@ public abstract class AbstractSlingCrudResourceResolverTest {
     private static final boolean BOOLEAN_VALUE = true;
     private static final Date DATE_VALUE = new Date(10000);
     private static final Calendar CALENDAR_VALUE = Calendar.getInstance();
-    private static final byte[] BINARY_VALUE = new byte[] { 0x01, 0x02, 0x03, 0x04, 0x05, 0x06 };
+    private static final byte[] BINARY_VALUE = new byte[] {0x01, 0x02, 0x03, 0x04, 0x05, 0x06};
 
     protected Resource testRoot;
+
     protected abstract ResourceResolverType getResourceResolverType();
 
     @Before
@@ -96,8 +97,7 @@ public abstract class AbstractSlingCrudResourceResolverTest {
         props.put("binaryProp", new ByteArrayInputStream(BINARY_VALUE));
         Resource node1 = context.resourceResolver().create(rootNode, "node1", props);
 
-        context.resourceResolver().create(node1, "node11", Map.<String, Object>of(
-                "stringProp11", STRING_VALUE));
+        context.resourceResolver().create(node1, "node11", Map.<String, Object>of("stringProp11", STRING_VALUE));
         context.resourceResolver().create(node1, "node12", ValueMap.EMPTY);
 
         context.resourceResolver().commit();
@@ -109,22 +109,24 @@ public abstract class AbstractSlingCrudResourceResolverTest {
      */
     protected Resource getTestRootResource() throws PersistenceException {
         if (this.testRoot == null) {
-            this.testRoot = context.resourceResolver().getResource(context.uniqueRoot().content());
+            this.testRoot =
+                    context.resourceResolver().getResource(context.uniqueRoot().content());
         }
         return this.testRoot;
     }
 
     @Test
     public void testSimpleProperties() throws IOException {
-        Resource resource1 = context.resourceResolver().getResource(getTestRootResource().getPath() + "/node1");
+        Resource resource1 =
+                context.resourceResolver().getResource(getTestRootResource().getPath() + "/node1");
         assertNotNull(resource1);
         assertEquals("node1", resource1.getName());
 
         ValueMap props = ResourceUtil.getValueMap(resource1);
         assertEquals(STRING_VALUE, props.get("stringProp", String.class));
         assertArrayEquals(STRING_ARRAY_VALUE, props.get("stringArrayProp", String[].class));
-        assertEquals((Integer)INTEGER_VALUE, props.get("integerProp", Integer.class));
-        assertEquals((Long)LONG_VALUE, props.get("longProp", Long.class));
+        assertEquals((Integer) INTEGER_VALUE, props.get("integerProp", Integer.class));
+        assertEquals((Long) LONG_VALUE, props.get("longProp", Long.class));
         assertEquals(DOUBLE_VALUE, props.get("doubleProp", Double.class), 0.0001);
         assertEquals(BIGDECIMAL_VALUE, props.get("bigDecimalProp", BigDecimal.class));
         assertEquals(BOOLEAN_VALUE, props.get("booleanProp", Boolean.class));
@@ -132,20 +134,25 @@ public abstract class AbstractSlingCrudResourceResolverTest {
 
     @Test
     public void testSimpleProperties_IntegerLongConversion() throws IOException {
-        Resource resource1 = context.resourceResolver().getResource(getTestRootResource().getPath() + "/node1");
+        Resource resource1 =
+                context.resourceResolver().getResource(getTestRootResource().getPath() + "/node1");
         ValueMap props = ResourceUtil.getValueMap(resource1);
 
-        assertEquals((Integer)(int)LONG_VALUE, props.get("longProp", Integer.class));
-        assertEquals((Long)(long)INTEGER_VALUE, props.get("integerProp", Long.class));
+        assertEquals((Integer) (int) LONG_VALUE, props.get("longProp", Integer.class));
+        assertEquals((Long) (long) INTEGER_VALUE, props.get("integerProp", Long.class));
     }
 
     @Test
     public void testSimpleProperties_DecimalConversion() throws IOException {
-        Resource resource1 = context.resourceResolver().getResource(getTestRootResource().getPath() + "/node1");
+        Resource resource1 =
+                context.resourceResolver().getResource(getTestRootResource().getPath() + "/node1");
         ValueMap props = ResourceUtil.getValueMap(resource1);
 
-        assertEquals(new BigDecimal(DOUBLE_VALUE).doubleValue(), props.get("doubleProp", BigDecimal.class).doubleValue(), 0.0001d);
-        assertEquals(BIGDECIMAL_VALUE.doubleValue() , props.get("bigDecimalProp", Double.class), 0.0001d);
+        assertEquals(
+                new BigDecimal(DOUBLE_VALUE).doubleValue(),
+                props.get("doubleProp", BigDecimal.class).doubleValue(),
+                0.0001d);
+        assertEquals(BIGDECIMAL_VALUE.doubleValue(), props.get("bigDecimalProp", Double.class), 0.0001d);
     }
 
     @Test
@@ -157,8 +164,8 @@ public abstract class AbstractSlingCrudResourceResolverTest {
         ValueMap props = ResourceUtil.getValueMap(resource1);
         assertEquals(STRING_VALUE, props.get("node1/stringProp", String.class));
         assertArrayEquals(STRING_ARRAY_VALUE, props.get("node1/stringArrayProp", String[].class));
-        assertEquals((Integer)INTEGER_VALUE, props.get("node1/integerProp", Integer.class));
-        assertEquals((Long)LONG_VALUE, props.get("node1/longProp", Long.class));
+        assertEquals((Integer) INTEGER_VALUE, props.get("node1/integerProp", Integer.class));
+        assertEquals((Long) LONG_VALUE, props.get("node1/longProp", Long.class));
         assertEquals(DOUBLE_VALUE, props.get("node1/doubleProp", Double.class), 0.0001);
         assertEquals(BIGDECIMAL_VALUE, props.get("node1/bigDecimalProp", BigDecimal.class));
         assertEquals(BOOLEAN_VALUE, props.get("node1/booleanProp", Boolean.class));
@@ -167,14 +174,16 @@ public abstract class AbstractSlingCrudResourceResolverTest {
 
     @Test
     public void testDateProperty() throws IOException {
-        Resource resource1 = context.resourceResolver().getResource(getTestRootResource().getPath() + "/node1");
+        Resource resource1 =
+                context.resourceResolver().getResource(getTestRootResource().getPath() + "/node1");
         ValueMap props = ResourceUtil.getValueMap(resource1);
         assertEquals(DATE_VALUE, props.get("dateProp", Date.class));
     }
 
     @Test
     public void testDatePropertyToCalendar() throws IOException {
-        Resource resource1 = context.resourceResolver().getResource(getTestRootResource().getPath() + "/node1");
+        Resource resource1 =
+                context.resourceResolver().getResource(getTestRootResource().getPath() + "/node1");
         ValueMap props = ResourceUtil.getValueMap(resource1);
         Calendar calendarValue = props.get("dateProp", Calendar.class);
         assertNotNull(calendarValue);
@@ -183,14 +192,18 @@ public abstract class AbstractSlingCrudResourceResolverTest {
 
     @Test
     public void testCalendarProperty() throws IOException {
-        Resource resource1 = context.resourceResolver().getResource(getTestRootResource().getPath() + "/node1");
+        Resource resource1 =
+                context.resourceResolver().getResource(getTestRootResource().getPath() + "/node1");
         ValueMap props = ResourceUtil.getValueMap(resource1);
-        assertEquals(CALENDAR_VALUE.getTime(), props.get("calendarProp", Calendar.class).getTime());
+        assertEquals(
+                CALENDAR_VALUE.getTime(),
+                props.get("calendarProp", Calendar.class).getTime());
     }
 
     @Test
     public void testCalendarPropertyToDate() throws IOException {
-        Resource resource1 = context.resourceResolver().getResource(getTestRootResource().getPath() + "/node1");
+        Resource resource1 =
+                context.resourceResolver().getResource(getTestRootResource().getPath() + "/node1");
         ValueMap props = ResourceUtil.getValueMap(resource1);
         Date dateValue = props.get("calendarProp", Date.class);
         assertNotNull(dateValue);
@@ -199,7 +212,8 @@ public abstract class AbstractSlingCrudResourceResolverTest {
 
     @Test
     public void testListChildren() throws IOException {
-        Resource resource1 = context.resourceResolver().getResource(getTestRootResource().getPath() + "/node1");
+        Resource resource1 =
+                context.resourceResolver().getResource(getTestRootResource().getPath() + "/node1");
 
         List<Resource> children = IteratorUtils.toList(resource1.listChildren());
         assertEquals(2, children.size());
@@ -231,7 +245,8 @@ public abstract class AbstractSlingCrudResourceResolverTest {
 
     @Test
     public void testBinaryData() throws IOException {
-        Resource resource1 = context.resourceResolver().getResource(getTestRootResource().getPath() + "/node1");
+        Resource resource1 =
+                context.resourceResolver().getResource(getTestRootResource().getPath() + "/node1");
 
         Resource binaryPropResource = resource1.getChild("binaryProp");
         InputStream is = binaryPropResource.adaptTo(InputStream.class);
@@ -249,13 +264,14 @@ public abstract class AbstractSlingCrudResourceResolverTest {
 
     @Test
     public void testPrimaryTypeResourceType() throws PersistenceException {
-        Resource resource = context.resourceResolver().getResource(getTestRootResource().getPath() + "/node1");
+        Resource resource =
+                context.resourceResolver().getResource(getTestRootResource().getPath() + "/node1");
         assertEquals(JcrConstants.NT_UNSTRUCTURED, resource.getResourceType());
     }
 
     @Test
     public void testGetRootResourceByNullPath() {
-        Resource rootResource = context.resourceResolver().resolve((String)null);
+        Resource rootResource = context.resourceResolver().resolve((String) null);
         assertNotNull(rootResource);
         assertEquals("/", rootResource.getPath());
     }
@@ -280,7 +296,7 @@ public abstract class AbstractSlingCrudResourceResolverTest {
     public void testPendingChangesCommit() throws PersistenceException {
 
         // skip this test for JCR_MOCK because it does not track pending changes
-        if (getResourceResolverType()==ResourceResolverType.JCR_MOCK) {
+        if (getResourceResolverType() == ResourceResolverType.JCR_MOCK) {
             return;
         }
 
@@ -293,19 +309,19 @@ public abstract class AbstractSlingCrudResourceResolverTest {
 
     @Test
     public void testCreateNestedResources() throws IOException {
-        Resource nested = context.create().resource(getTestRootResource().getPath() + "/nested",
-                new TreeMap<>(Map.<String,Object>of(
-                        "prop1", "value1",
-                        "child1", new TreeMap<>(Map.<String,Object>of(
-                            "prop2","value2",
-                            "child1a", Map.<String,Object>of(
-                                "prop3", "value3"),
-                            "child1b", Map.<String,Object>of(
-                                "prop4", "value4")
-                        )),
-                        "child2", Map.<String,Object>of(
-                            "prop5","value5"
-                        ))));
+        Resource nested = context.create()
+                .resource(
+                        getTestRootResource().getPath() + "/nested",
+                        new TreeMap<>(Map.<String, Object>of(
+                                "prop1",
+                                "value1",
+                                "child1",
+                                new TreeMap<>(Map.<String, Object>of(
+                                        "prop2", "value2",
+                                        "child1a", Map.<String, Object>of("prop3", "value3"),
+                                        "child1b", Map.<String, Object>of("prop4", "value4"))),
+                                "child2",
+                                Map.<String, Object>of("prop5", "value5"))));
 
         assertNotNull(nested);
         assertEquals("value1", nested.getValueMap().get("prop1", String.class));
@@ -335,7 +351,8 @@ public abstract class AbstractSlingCrudResourceResolverTest {
 
     @Test
     public void testResourceWithoutResourceType() throws PersistenceException {
-        Resource noResourceType = context.create().resource(getTestRootResource().getPath() + "/noResourceType");
+        Resource noResourceType =
+                context.create().resource(getTestRootResource().getPath() + "/noResourceType");
         assertNotNull(noResourceType.getResourceType());
     }
 
@@ -348,5 +365,4 @@ public abstract class AbstractSlingCrudResourceResolverTest {
         assertNotNull(model);
         assertEquals(resource, model.getAdaptable());
     }
-
 }

@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="ISO-8859-1"?>
+<?xml version="1.0" encoding="UTF-8"?>
 <!--
   Licensed to the Apache Software Foundation (ASF) under one
   or more contributor license agreements.  See the NOTICE file
@@ -31,6 +31,20 @@
     <packaging>jar</packaging>
 
     <name>Apache Sling Testing Sling Mock JUnit 5</name>
+
+    <dependencyManagement>
+        <dependencies>
+
+            <dependency>
+                <groupId>org.junit</groupId>
+                <artifactId>junit-bom</artifactId>
+                <version>5.10.1</version>
+                <type>pom</type>
+                <scope>import</scope>
+            </dependency>
+
+        </dependencies>
+    </dependencyManagement>
 
     <dependencies>
 
@@ -83,20 +97,6 @@
 
     </dependencies>
 
-    <dependencyManagement>
-        <dependencies>
-
-            <dependency>
-                <groupId>org.junit</groupId>
-                <artifactId>junit-bom</artifactId>
-                <version>5.10.1</version>
-                <type>pom</type>
-                <scope>import</scope>
-            </dependency>
-
-        </dependencies>
-    </dependencyManagement>
-
     <build>
         <plugins>
 
@@ -117,7 +117,7 @@
                         <exclude>src/test/resources/**</exclude>
                     </excludes>
                 </configuration>
-             </plugin>
+            </plugin>
 
         </plugins>
     </build>

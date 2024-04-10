@@ -96,8 +96,8 @@ public final class MockJcrSlingRepository implements SlingRepository {
     }
 
     @Override
-    public Session login(final Credentials credentials, final String workspaceName) throws LoginException,
-            NoSuchWorkspaceException, RepositoryException {
+    public Session login(final Credentials credentials, final String workspaceName)
+            throws LoginException, NoSuchWorkspaceException, RepositoryException {
         return this.repository.login(credentials, workspaceName);
     }
 
@@ -107,8 +107,8 @@ public final class MockJcrSlingRepository implements SlingRepository {
     }
 
     @Override
-    public Session login(final String workspaceName) throws LoginException, NoSuchWorkspaceException,
-            RepositoryException {
+    public Session login(final String workspaceName)
+            throws LoginException, NoSuchWorkspaceException, RepositoryException {
         return this.repository.login(workspaceName);
     }
 
@@ -122,5 +122,4 @@ public final class MockJcrSlingRepository implements SlingRepository {
             throws LoginException, RepositoryException {
         return this.repository.login(credentials);
     }
-
 }
