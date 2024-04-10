@@ -94,25 +94,31 @@ public final class MockSling {
         ResourceResolverTypeAdapter adapter = getResourceResolverTypeAdapter(type, bundleContext);
         ResourceResolverFactory factory = adapter.newResourceResolverFactory();
         if (factory == null) {
-            Object existingSnapshot = SNAPSHOTS.get(adapter.getClass());
-            SlingRepository repository;
-            if (existingSnapshot == null) {
-                repository = adapter.newSlingRepository();
-            } else {
-                repository = adapter.newSlingRepositoryFromSnapshot(existingSnapshot);
-            }
-            factory = ResourceResolverFactoryInitializer.setUp(
-                    repository,
-                    bundleContext,
-                    existingSnapshot == null ? type.getNodeTypeMode() : NodeTypeMode.NOT_SUPPORTED);
-            if (existingSnapshot == null) {
-                Object newSnapshot = adapter.snapshot(repository);
-                if (newSnapshot != null) {
-                    SNAPSHOTS.putIfAbsent(adapter.getClass(), newSnapshot);
-                }
-            }
+            factory = buildFactoryFromRepository(type.getNodeTypeMode(), bundleContext, adapter);
         } else {
             bundleContext.registerService(ResourceResolverFactory.class.getName(), factory, null);
+        }
+        return factory;
+    }
+
+    @NotNull
+    static ResourceResolverFactory buildFactoryFromRepository(
+            @NotNull NodeTypeMode mode, @NotNull BundleContext bundleContext, ResourceResolverTypeAdapter adapter) {
+        ResourceResolverFactory factory;
+        Object existingSnapshot = SNAPSHOTS.get(adapter.getClass());
+        SlingRepository repository;
+        if (existingSnapshot == null) {
+            repository = adapter.newSlingRepository();
+        } else {
+            repository = adapter.newSlingRepositoryFromSnapshot(existingSnapshot);
+        }
+        factory = ResourceResolverFactoryInitializer.setUp(
+                repository, bundleContext, existingSnapshot == null ? mode : NodeTypeMode.NOT_SUPPORTED);
+        if (existingSnapshot == null) {
+            Object newSnapshot = adapter.snapshot(repository);
+            if (newSnapshot != null) {
+                SNAPSHOTS.putIfAbsent(adapter.getClass(), newSnapshot);
+            }
         }
         return factory;
     }
