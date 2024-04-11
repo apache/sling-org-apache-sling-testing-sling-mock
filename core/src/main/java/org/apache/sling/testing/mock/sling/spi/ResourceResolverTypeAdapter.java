@@ -50,4 +50,28 @@ public interface ResourceResolverTypeAdapter {
      */
     @Nullable
     SlingRepository newSlingRepository();
+
+    /**
+     * Make a snapshot of the current state of the given repository, or return
+     * null if snapshots are not supported.
+     * Returning non-null implies that calling {@link #newSlingRepositoryFromSnapshot(Object)}
+     * with the same object will succeed when called on objects of the same implementation type.
+     * The returned object must capture the whole state of the repository, and must not reflect
+     * any future changes made to the repository after this method returns.
+     * @param repository The repository to snapshot.
+     * @return A snapshot object.
+     */
+    @Nullable
+    default Object snapshot(SlingRepository repository) {
+        return null;
+    }
+
+    /**
+     * Get a SlingRepository instance based on a snapshot taken from another repository.
+     * @param snapshot A snapshot object, returned by an earlier call to {@link #snapshot(SlingRepository)}.
+     * @return A Sling repository instance.
+     */
+    default SlingRepository newSlingRepositoryFromSnapshot(Object snapshot) {
+        throw new UnsupportedOperationException("Snapshots not supported");
+    }
 }
