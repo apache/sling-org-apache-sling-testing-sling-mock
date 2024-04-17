@@ -23,7 +23,7 @@
     <parent>
         <groupId>org.apache.sling</groupId>
         <artifactId>org.apache.sling.testing.sling-mock.parent</artifactId>
-        <version>3.5.0</version>
+        <version>3.5.1-SNAPSHOT</version>
         <relativePath>parent/pom.xml</relativePath>
     </parent>
 
@@ -43,7 +43,7 @@
     <scm>
         <connection>scm:git:https://gitbox.apache.org/repos/asf/sling-org-apache-sling-testing-sling-mock.git</connection>
         <developerConnection>scm:git:https://gitbox.apache.org/repos/asf/sling-org-apache-sling-testing-sling-mock.git</developerConnection>
-        <tag>org.apache.sling.testing.sling-mock.reactor-3.5.0</tag>
+        <tag>org.apache.sling.testing.sling-mock.reactor-3.3.2</tag>
         <url>https://github.com/apache/sling-org-apache-sling-testing-sling-mock.git</url>
     </scm>
 
