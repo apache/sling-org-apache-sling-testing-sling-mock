@@ -96,12 +96,12 @@ public final class ContentLoader {
     private final Set<String> ignoredNames;
 
     @Nullable
-    private final ContentParser jsonParser;
+    private ContentParser jsonParser;
 
     private final ParserOptions jsonParserOptions;
 
     @Nullable
-    private final ContentParser fileVaultXmlParser;
+    private ContentParser fileVaultXmlParser;
 
     private final ParserOptions fileVaultXmlParserOptions;
 
