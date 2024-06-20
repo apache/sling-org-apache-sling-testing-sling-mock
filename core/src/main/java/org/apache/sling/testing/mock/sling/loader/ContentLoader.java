@@ -94,9 +94,15 @@ public final class ContentLoader {
     private final BundleContext bundleContext;
     private final boolean autoCommit;
     private final Set<String> ignoredNames;
-    private final ContentParser jsonParser;
+
+    @Nullable
+    private ContentParser jsonParser;
+
     private final ParserOptions jsonParserOptions;
-    private final ContentParser fileVaultXmlParser;
+
+    @Nullable
+    private ContentParser fileVaultXmlParser;
+
     private final ParserOptions fileVaultXmlParserOptions;
 
     /**
@@ -145,13 +151,10 @@ public final class ContentLoader {
                 .detectCalendarValues(true)
                 .ignorePropertyNames(this.ignoredNames)
                 .ignoreResourceNames(this.ignoredNames);
-        this.jsonParser = new JSONContentParser();
-
         this.fileVaultXmlParserOptions = new ParserOptions()
                 .detectCalendarValues(true)
                 .ignorePropertyNames(this.ignoredNames)
                 .ignoreResourceNames(this.ignoredNames);
-        this.fileVaultXmlParser = new JCRXMLContentParser();
     }
 
     private final Set<String> getIgnoredNamesForResourceResolverType(ResourceResolverType resourceResolverType) {
@@ -217,7 +220,7 @@ public final class ContentLoader {
      * @return Resource
      */
     public @NotNull Resource json(@NotNull InputStream inputStream, @NotNull String destPath) {
-        return mountParsedFile(inputStream, destPath, jsonParser, jsonParserOptions);
+        return mountParsedFile(inputStream, destPath, getJsonParser(), jsonParserOptions);
     }
 
     /**
@@ -275,7 +278,23 @@ public final class ContentLoader {
      * @return Resource
      */
     public @NotNull Resource fileVaultXml(@NotNull InputStream inputStream, @NotNull String destPath) {
-        return mountParsedFile(inputStream, destPath, fileVaultXmlParser, fileVaultXmlParserOptions);
+        return mountParsedFile(inputStream, destPath, getFileVaultXmlParser(), fileVaultXmlParserOptions);
+    }
+
+    @NotNull
+    private ContentParser getJsonParser() {
+        if (jsonParser == null) {
+            jsonParser = new JSONContentParser();
+        }
+        return jsonParser;
+    }
+
+    @NotNull
+    private ContentParser getFileVaultXmlParser() {
+        if (fileVaultXmlParser == null) {
+            fileVaultXmlParser = new JCRXMLContentParser();
+        }
+        return fileVaultXmlParser;
     }
 
     @SuppressWarnings("null")
