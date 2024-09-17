@@ -26,6 +26,7 @@ import java.lang.reflect.Proxy;
 import java.util.HashMap;
 import java.util.Map;
 
+import org.apache.commons.lang3.math.NumberUtils;
 import org.apache.sling.api.resource.ResourceResolverFactory;
 import org.apache.sling.commons.classloader.DynamicClassLoaderManager;
 import org.apache.sling.jcr.api.SlingRepository;
@@ -51,7 +52,14 @@ class ResourceResolverFactoryInitializer {
 
     private static final Logger log = LoggerFactory.getLogger(ResourceResolverFactoryInitializer.class);
 
-    private static final long RESOURCERESOLVER_FACTORY_ACTIVATOR_TIMEOUT_MS = 250;
+    private static final String SYSTEM_PROPERTY_RESOURCERESOLVER_FACTORY_ACTIVATOR_TIMEOUT_MS =
+            "sling.mock.resourceresolverfactoryactivator.timeout.ms";
+    private static final long RESOURCERESOLVER_FACTORY_ACTIVATOR_TIMEOUT_MS;
+
+    static {
+        RESOURCERESOLVER_FACTORY_ACTIVATOR_TIMEOUT_MS = NumberUtils.toLong(
+                System.getProperty(SYSTEM_PROPERTY_RESOURCERESOLVER_FACTORY_ACTIVATOR_TIMEOUT_MS, "250"));
+    }
 
     private ResourceResolverFactoryInitializer() {
         // static methods only
