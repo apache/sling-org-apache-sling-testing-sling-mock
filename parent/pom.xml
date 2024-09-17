@@ -355,22 +355,22 @@
                     <dependency>
                         <groupId>org.apache.sling</groupId>
                         <artifactId>org.apache.sling.models.api</artifactId>
-                        <version>1.5.0</version>
+                        <version>1.5.4</version>
                     </dependency>
                     <dependency>
                         <groupId>org.apache.sling</groupId>
                         <artifactId>org.apache.sling.models.impl</artifactId>
-                        <version>1.6.4</version>
+                        <version>1.7.0</version>
                     </dependency>
                     <dependency>
                         <groupId>org.apache.sling</groupId>
                         <artifactId>org.apache.sling.api</artifactId>
-                        <version>2.27.2</version>
+                        <version>2.27.6</version>
                     </dependency>
                     <dependency>
                         <groupId>org.apache.sling</groupId>
                         <artifactId>org.apache.sling.resourceresolver</artifactId>
-                        <version>1.11.4</version>
+                        <version>1.12.0</version>
                     </dependency>
                     <dependency>
                         <groupId>org.apache.sling</groupId>
@@ -385,7 +385,7 @@
                     <dependency>
                         <groupId>org.apache.sling</groupId>
                         <artifactId>org.apache.sling.jcr.resource</artifactId>
-                        <version>3.2.4</version>
+                        <version>3.3.2</version>
                     </dependency>
                     <dependency>
                         <groupId>org.apache.sling</groupId>
@@ -395,7 +395,7 @@
                     <dependency>
                         <groupId>org.apache.sling</groupId>
                         <artifactId>org.apache.sling.scripting.core</artifactId>
-                        <version>2.4.8</version>
+                        <version>2.4.10</version>
                     </dependency>
                     <dependency>
                         <groupId>org.apache.sling</groupId>
@@ -415,7 +415,7 @@
                     <dependency>
                         <groupId>org.apache.sling</groupId>
                         <artifactId>org.apache.sling.i18n</artifactId>
-                        <version>2.6.2</version>
+                        <version>2.6.4</version>
                     </dependency>
                     <dependency>
                         <groupId>org.apache.sling</groupId>
@@ -425,7 +425,7 @@
                     <dependency>
                         <groupId>org.apache.sling</groupId>
                         <artifactId>org.apache.sling.xss</artifactId>
-                        <version>2.4.0</version>
+                        <version>2.4.2</version>
                     </dependency>
                     <dependency>
                         <groupId>org.apache.sling</groupId>
