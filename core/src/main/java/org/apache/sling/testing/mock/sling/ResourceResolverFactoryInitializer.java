@@ -58,7 +58,7 @@ class ResourceResolverFactoryInitializer {
 
     static {
         RESOURCERESOLVER_FACTORY_ACTIVATOR_TIMEOUT_MS = NumberUtils.toLong(
-                System.getProperty(SYSTEM_PROPERTY_RESOURCERESOLVER_FACTORY_ACTIVATOR_TIMEOUT_MS, "250"));
+                System.getProperty(SYSTEM_PROPERTY_RESOURCERESOLVER_FACTORY_ACTIVATOR_TIMEOUT_MS, "500"));
     }
 
     private ResourceResolverFactoryInitializer() {
