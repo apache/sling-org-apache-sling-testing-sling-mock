@@ -21,8 +21,10 @@ package org.apache.sling.testing.mock.sling.loader;
 import javax.jcr.Node;
 import javax.jcr.RepositoryException;
 import javax.jcr.Session;
+import javax.jcr.nodetype.NodeType;
 
 import java.util.List;
+import java.util.stream.Stream;
 
 import org.apache.jackrabbit.JcrConstants;
 import org.apache.sling.api.resource.Resource;
@@ -36,6 +38,7 @@ import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
 
+import static org.junit.Assert.assertArrayEquals;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 
@@ -100,6 +103,12 @@ public abstract class AbstractContentLoaderFileVaultXmlTest {
     }
 
     @Test
+    public void testPageContentMixinTypes() throws RepositoryException {
+        Resource resource = context.resourceResolver().getResource(path + "/sample/en/jcr:content");
+        assertMixinTypes(resource, "app:TestMixin");
+    }
+
+    @Test
     public void testPageContentProperties() {
         Resource resource = context.resourceResolver().getResource(path + "/sample/en/jcr:content");
         ValueMap props = ResourceUtil.getValueMap(resource);
@@ -114,6 +123,18 @@ public abstract class AbstractContentLoaderFileVaultXmlTest {
         } else {
             ValueMap props = ResourceUtil.getValueMap(resource);
             assertEquals(nodeType, props.get(JcrConstants.JCR_PRIMARYTYPE));
+        }
+    }
+
+    private void assertMixinTypes(final Resource resource, String... mixinTypes) throws RepositoryException {
+        Node node = resource.adaptTo(Node.class);
+        if (node != null) {
+            assertArrayEquals(
+                    mixinTypes,
+                    Stream.of(node.getMixinNodeTypes()).map(NodeType::getName).toArray(String[]::new));
+        } else {
+            ValueMap props = ResourceUtil.getValueMap(resource);
+            assertArrayEquals(mixinTypes, props.get(JcrConstants.JCR_MIXINTYPES, String[].class));
         }
     }
 }

@@ -24,6 +24,7 @@
       app:deviceGroups="[/etc/mobile/groups/responsive]"
       app:template="samples/sample-app/templates/content/homepage"
       jcr:primaryType="app:PageContent"
+      jcr:mixinTypes="app:TestMixin"
       jcr:title="en"
       sling:resourceType="samples/sample-app/components/content/page/homepage"
       includeAside="{Boolean}true"

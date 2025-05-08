@@ -80,9 +80,7 @@ public final class ContentLoader {
             .collect(Collectors.toSet());
 
     // set of resource or property names that are ignored when other resource resolver types than JCR_OAK are used
-    private static final Set<String> MOCK_IGNORED_NAMES = Stream.concat(
-                    SHARED_IGNORED_NAMES.stream(), Stream.of(JcrConstants.JCR_MIXINTYPES))
-            .collect(Collectors.toSet());
+    private static final Set<String> MOCK_IGNORED_NAMES = SHARED_IGNORED_NAMES;
 
     // set of resource or property names that are ignored when JCR_OAK resource resolver type (= a real repo impl) is
     // used
