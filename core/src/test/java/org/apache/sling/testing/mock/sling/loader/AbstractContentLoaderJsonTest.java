@@ -21,10 +21,12 @@ package org.apache.sling.testing.mock.sling.loader;
 import javax.jcr.Node;
 import javax.jcr.RepositoryException;
 import javax.jcr.Session;
+import javax.jcr.nodetype.NodeType;
 
 import java.util.Calendar;
 import java.util.List;
 import java.util.TimeZone;
+import java.util.stream.Stream;
 
 import org.apache.jackrabbit.JcrConstants;
 import org.apache.sling.api.resource.Resource;
@@ -89,6 +91,12 @@ public abstract class AbstractContentLoaderJsonTest {
     }
 
     @Test
+    public void testPageContentMixinTypes() throws RepositoryException {
+        Resource resource = context.resourceResolver().getResource(path + "/sample/en/jcr:content");
+        assertMixinTypes(resource, "app:TestMixin");
+    }
+
+    @Test
     public void testPageContentResourceType() {
         Resource resource = context.resourceResolver().getResource(path + "/sample/en/toolbar/profiles/jcr:content");
         assertEquals("sample/components/contentpage", resource.getResourceType());
@@ -141,6 +149,18 @@ public abstract class AbstractContentLoaderJsonTest {
         } else {
             ValueMap props = ResourceUtil.getValueMap(resource);
             assertEquals(nodeType, props.get(JcrConstants.JCR_PRIMARYTYPE));
+        }
+    }
+
+    private void assertMixinTypes(final Resource resource, String... mixinTypes) throws RepositoryException {
+        Node node = resource.adaptTo(Node.class);
+        if (node != null) {
+            assertArrayEquals(
+                    mixinTypes,
+                    Stream.of(node.getMixinNodeTypes()).map(NodeType::getName).toArray(String[]::new));
+        } else {
+            ValueMap props = ResourceUtil.getValueMap(resource);
+            assertArrayEquals(mixinTypes, props.get(JcrConstants.JCR_MIXINTYPES, String[].class));
         }
     }
 

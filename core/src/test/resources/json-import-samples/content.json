@@ -4,6 +4,7 @@
   "jcr:created": "Thu Aug 07 2014 16:32:59 GMT+0200",
   "jcr:content": {
     "jcr:primaryType": "app:PageContent",
+    "jcr:mixinTypes": ["app:TestMixin"],
     "jcr:createdBy": "admin",
     "jcr:title": "English",
     "app:template": "/apps/sample/templates/homepage",
