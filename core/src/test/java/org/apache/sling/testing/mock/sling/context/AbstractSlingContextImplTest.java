@@ -62,21 +62,27 @@ public abstract class AbstractSlingContextImplTest {
 
     protected abstract ResourceResolverType getResourceResolverType();
 
+    @SuppressWarnings("deprecation")
     @Test
     public void testContextObjects() {
         assertNotNull(context.componentContext());
         assertNotNull(context.bundleContext());
         assertNotNull(context.resourceResolver());
+        assertNotNull(context.jakartaRequest());
         assertNotNull(context.request());
         assertNotNull(context.requestPathInfo());
+        assertNotNull(context.jakartaResponse());
         assertNotNull(context.response());
         assertNotNull(context.slingScriptHelper());
     }
 
+    @SuppressWarnings("deprecation")
     @Test
     public void testSlingBindings() {
         SlingBindings bindings = (SlingBindings) context.request().getAttribute(SlingBindings.class.getName());
         assertNotNull(bindings);
+        assertSame(context.jakartaRequest(), bindings.get(SlingBindings.JAKARTA_REQUEST));
+        assertSame(context.jakartaResponse(), bindings.get(SlingBindings.JAKARTA_RESPONSE));
         assertSame(context.request(), bindings.get(SlingBindings.REQUEST));
         assertSame(context.response(), bindings.get(SlingBindings.RESPONSE));
         assertSame(context.slingScriptHelper(), bindings.get(SlingBindings.SLING));
@@ -85,8 +91,8 @@ public abstract class AbstractSlingContextImplTest {
     @Test
     public void testNonMockedSlingBindings() {
         final SlingBindings slingBindings = new SlingBindings();
-        context.request().setAttribute(SlingBindings.class.getName(), slingBindings);
-        SlingBindings bindings = (SlingBindings) context.request().getAttribute(SlingBindings.class.getName());
+        context.jakartaRequest().setAttribute(SlingBindings.class.getName(), slingBindings);
+        SlingBindings bindings = (SlingBindings) context.jakartaRequest().getAttribute(SlingBindings.class.getName());
         assertNotNull(bindings);
     }
 
@@ -102,10 +108,10 @@ public abstract class AbstractSlingContextImplTest {
                 "/content/sample/en/jcr:content/par", context.currentResource().getPath());
 
         context.currentResource((Resource) null);
-        assertNull(context.request().getResource());
+        assertNull(context.jakartaRequest().getResource());
 
         context.currentResource((String) null);
-        assertNull(context.request().getResource());
+        assertNull(context.jakartaRequest().getResource());
     }
 
     @Test(expected = IllegalArgumentException.class)
@@ -115,8 +121,8 @@ public abstract class AbstractSlingContextImplTest {
 
     @Test
     public void testSlingModelsRequestAttribute() {
-        context.request().setAttribute("prop1", "myValue");
-        RequestAttributeModel model = context.request().adaptTo(RequestAttributeModel.class);
+        context.jakartaRequest().setAttribute("prop1", "myValue");
+        RequestAttributeModel model = context.jakartaRequest().adaptTo(RequestAttributeModel.class);
         assertEquals("myValue", model.getProp1());
     }
 
@@ -131,21 +137,21 @@ public abstract class AbstractSlingContextImplTest {
 
     @Test
     public void testSlingModelsInvalidAdapt() {
-        OsgiServiceModel model = context.request().adaptTo(OsgiServiceModel.class);
+        OsgiServiceModel model = context.jakartaRequest().adaptTo(OsgiServiceModel.class);
         assertNull(model);
     }
 
     @Test
-    public void testSlnigModelClasspathRegistered() {
-        context.request().setAttribute("prop1", "myValue");
-        ClasspathRegisteredModel model = context.request().adaptTo(ClasspathRegisteredModel.class);
+    public void testSlingModelClasspathRegistered() {
+        context.jakartaRequest().setAttribute("prop1", "myValue");
+        ClasspathRegisteredModel model = context.jakartaRequest().adaptTo(ClasspathRegisteredModel.class);
         assertEquals("myValue", model.getProp1());
     }
 
     @Test
     public void testAdaptToInterface() {
-        context.request().setAttribute("prop1", "myValue");
-        ServiceInterface model = context.request().adaptTo(ServiceInterface.class);
+        context.jakartaRequest().setAttribute("prop1", "myValue");
+        ServiceInterface model = context.jakartaRequest().adaptTo(ServiceInterface.class);
         assertNotNull(model);
         assertEquals("myValue", model.getPropValue());
     }

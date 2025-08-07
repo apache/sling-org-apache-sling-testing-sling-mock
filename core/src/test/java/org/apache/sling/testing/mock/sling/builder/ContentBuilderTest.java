@@ -20,22 +20,44 @@ package org.apache.sling.testing.mock.sling.builder;
 
 import java.util.Map;
 
+import org.apache.sling.api.resource.PersistenceException;
 import org.apache.sling.api.resource.Resource;
+import org.apache.sling.api.resource.ResourceResolver;
 import org.apache.sling.api.resource.ResourceUtil;
 import org.apache.sling.api.resource.ValueMap;
 import org.apache.sling.testing.mock.sling.ResourceResolverType;
 import org.apache.sling.testing.mock.sling.junit.SlingContext;
 import org.junit.Rule;
 import org.junit.Test;
+import org.mockito.Mockito;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertThrows;
 import static org.junit.Assert.assertTrue;
+import static org.mockito.ArgumentMatchers.anyMap;
+import static org.mockito.ArgumentMatchers.anyString;
+import static org.mockito.ArgumentMatchers.nullable;
 
 public class ContentBuilderTest {
 
     @Rule
     public SlingContext context = new SlingContext(ResourceResolverType.RESOURCERESOLVER_MOCK);
+
+    @Test
+    public void testResourceWithInvalidParent() {
+        ContentBuilder create = context.create();
+        assertThrows(IllegalArgumentException.class, () -> create.resource("/"));
+    }
+
+    @Test
+    public void testResourceWithPersistenceException() throws PersistenceException {
+        ResourceResolver mockRR = Mockito.mock(ResourceResolver.class);
+        Mockito.when(mockRR.create(nullable(Resource.class), anyString(), anyMap()))
+                .thenThrow(PersistenceException.class);
+        ContentBuilder create = new ContentBuilder(mockRR);
+        assertThrows(RuntimeException.class, () -> create.resource("/content"));
+    }
 
     @Test
     public void testResource() {
@@ -85,5 +107,24 @@ public class ContentBuilderTest {
         assertEquals("child2", child2.getName());
         ValueMap props = ResourceUtil.getValueMap(child2);
         assertEquals("value1", props.get("prop1", String.class));
+    }
+
+    @Test
+    public void testEnsureResourceExists() {
+        ContentBuilder create = context.create();
+        assertNotNull(create.ensureResourceExists(null));
+        assertNotNull(create.ensureResourceExists(""));
+        assertNotNull(create.ensureResourceExists("/"));
+
+        assertThrows(IllegalArgumentException.class, () -> create.ensureResourceExists("invalid"));
+    }
+
+    @Test
+    public void testEnsureResourceExistsWithPersistenceException() throws PersistenceException {
+        ResourceResolver mockRR = Mockito.mock(ResourceResolver.class);
+        Mockito.when(mockRR.create(nullable(Resource.class), anyString(), anyMap()))
+                .thenThrow(PersistenceException.class);
+        ContentBuilder create = new ContentBuilder(mockRR);
+        assertThrows(RuntimeException.class, () -> create.ensureResourceExists("/content/node1"));
     }
 }

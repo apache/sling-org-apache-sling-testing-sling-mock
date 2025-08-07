@@ -25,6 +25,7 @@ import org.junit.Test;
 import static org.hamcrest.CoreMatchers.notNullValue;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertThrows;
 import static org.junit.Assert.assertTrue;
 
 public class MockSlingSettingServiceTest {
@@ -53,5 +54,59 @@ public class MockSlingSettingServiceTest {
     @Test
     public void slingId() {
         assertThat(new MockSlingSettingService().getSlingId(), notNullValue());
+    }
+
+    /**
+     * Test method for {@link org.apache.sling.testing.mock.sling.services.MockSlingSettingService#getAbsolutePathWithinSlingHome(java.lang.String)}.
+     */
+    @Test()
+    public void testGetAbsolutePathWithinSlingHome() {
+        MockSlingSettingService underTest = new MockSlingSettingService();
+        assertThrows(UnsupportedOperationException.class, () -> underTest.getAbsolutePathWithinSlingHome("relPath1"));
+    }
+
+    /**
+     * Test method for {@link org.apache.sling.testing.mock.sling.services.MockSlingSettingService#getSlingHomePath()}.
+     */
+    @Test
+    public void testGetSlingHomePath() {
+        MockSlingSettingService underTest = new MockSlingSettingService();
+        assertThrows(UnsupportedOperationException.class, () -> underTest.getSlingHomePath());
+    }
+
+    /**
+     * Test method for {@link org.apache.sling.testing.mock.sling.services.MockSlingSettingService#getSlingHome()}.
+     */
+    @Test
+    public void testGetSlingHome() {
+        MockSlingSettingService underTest = new MockSlingSettingService();
+        assertThrows(UnsupportedOperationException.class, () -> underTest.getSlingHome());
+    }
+
+    /**
+     * Test method for {@link org.apache.sling.testing.mock.sling.services.MockSlingSettingService#getSlingName()}.
+     */
+    @Test
+    public void testGetSlingName() {
+        MockSlingSettingService underTest = new MockSlingSettingService();
+        assertThrows(UnsupportedOperationException.class, () -> underTest.getSlingName());
+    }
+
+    /**
+     * Test method for {@link org.apache.sling.testing.mock.sling.services.MockSlingSettingService#getSlingDescription()}.
+     */
+    @Test
+    public void testGetSlingDescription() {
+        MockSlingSettingService underTest = new MockSlingSettingService();
+        assertThrows(UnsupportedOperationException.class, () -> underTest.getSlingDescription());
+    }
+
+    /**
+     * Test method for {@link org.apache.sling.testing.mock.sling.services.MockSlingSettingService#getBestRunModeMatchCountFromSpec(java.lang.String)}.
+     */
+    @Test
+    public void testGetBestRunModeMatchCountFromSpec() {
+        MockSlingSettingService underTest = new MockSlingSettingService();
+        assertThrows(UnsupportedOperationException.class, () -> underTest.getBestRunModeMatchCountFromSpec("test"));
     }
 }

@@ -18,64 +18,40 @@
  */
 package org.apache.sling.testing.mock.sling.servlet;
 
-import java.util.Locale;
-import java.util.ResourceBundle;
-
-import org.apache.sling.api.resource.ResourceResolver;
-import org.apache.sling.i18n.ResourceBundleProvider;
 import org.apache.sling.testing.mock.sling.MockSling;
 import org.jetbrains.annotations.NotNull;
 import org.osgi.framework.BundleContext;
-import org.osgi.framework.ServiceReference;
 
 /**
  * Mock {@link org.apache.sling.api.SlingHttpServletRequest} implementation.
+ *
+ * @deprecated Use {@link MockSlingJakartaHttpServletRequest} instead.
  */
+@Deprecated(since = "3.2.0")
 public class MockSlingHttpServletRequest extends org.apache.sling.servlethelpers.MockSlingHttpServletRequest {
-
-    private final BundleContext bundleContext;
 
     /**
      * Instantiate with default resource resolver
      * @param bundleContext Bundle context
      */
     public MockSlingHttpServletRequest(@NotNull BundleContext bundleContext) {
-        this(MockSling.newResourceResolver(bundleContext), bundleContext);
+        this(new MockSlingJakartaHttpServletRequest(MockSling.newResourceResolver(bundleContext), bundleContext));
     }
 
     /**
-     * @param resourceResolver Resource resolver
-     * @param bundleContext Bundle context
+     * @param jakartaRequest the jakarta request to wrap
      */
-    public MockSlingHttpServletRequest(
-            @NotNull ResourceResolver resourceResolver, @NotNull BundleContext bundleContext) {
-        super(resourceResolver);
-        this.bundleContext = bundleContext;
+    public MockSlingHttpServletRequest(@NotNull MockSlingJakartaHttpServletRequest jakartaRequest) {
+        super(jakartaRequest);
     }
 
+    @Override
     protected @NotNull MockRequestPathInfo newMockRequestPathInfo() {
         return new MockRequestPathInfo(getResourceResolver());
     }
 
-    protected @NotNull MockHttpSession newMockHttpSession() {
-        return new MockHttpSession();
-    }
-
     @Override
-    @SuppressWarnings("null")
-    public ResourceBundle getResourceBundle(String baseName, Locale locale) {
-        // check of ResourceBundleProvider is registered in mock OSGI context
-        ResourceBundle resourceBundle = null;
-        ServiceReference<ResourceBundleProvider> serviceReference =
-                bundleContext.getServiceReference(ResourceBundleProvider.class);
-        if (serviceReference != null) {
-            ResourceBundleProvider provider = (ResourceBundleProvider) bundleContext.getService(serviceReference);
-            resourceBundle = provider.getResourceBundle(baseName, locale);
-        }
-        // if no ResourceBundleProvider exists return empty bundle
-        if (resourceBundle == null) {
-            resourceBundle = EMPTY_RESOURCE_BUNDLE;
-        }
-        return resourceBundle;
+    protected @NotNull MockHttpSession newMockHttpSession() {
+        return new MockHttpSession(new MockJakartaHttpSession());
     }
 }

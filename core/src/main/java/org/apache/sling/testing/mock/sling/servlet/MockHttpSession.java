@@ -18,12 +18,22 @@
  */
 package org.apache.sling.testing.mock.sling.servlet;
 
+import org.apache.sling.servlethelpers.MockJakartaServletContext;
+
 /**
  * Mock {@link javax.servlet.http.HttpSession} implementation.
+ *
+ * @deprecated Use {@link MockJakartaHttpSession} instead.
  */
+@Deprecated(since = "3.2.0")
 public final class MockHttpSession extends org.apache.sling.servlethelpers.MockHttpSession {
 
+    public MockHttpSession(org.apache.sling.servlethelpers.MockJakartaHttpSession wrappedSession) {
+        super(wrappedSession);
+    }
+
+    @Override
     protected MockServletContext newMockServletContext() {
-        return new MockServletContext();
+        return new MockServletContext(new MockJakartaServletContext());
     }
 }

@@ -87,8 +87,7 @@ public class MockAdapterManagerImpl implements AdapterManager {
      * the manager has been activated. These bound services will be accessed as
      * soon as the manager is being activated.
      */
-    private final List<ServiceReference<AdapterFactory>> boundAdapterFactories =
-            new LinkedList<ServiceReference<AdapterFactory>>();
+    private final List<ServiceReference<AdapterFactory>> boundAdapterFactories = new LinkedList<>();
 
     /**
      * A map of {@link AdapterFactoryDescriptorMap} instances. The map is
@@ -98,8 +97,7 @@ public class MockAdapterManagerImpl implements AdapterManager {
      *
      * @see AdapterFactoryDescriptorMap
      */
-    private final Map<String, AdapterFactoryDescriptorMap> descriptors =
-            new HashMap<String, AdapterFactoryDescriptorMap>();
+    private final Map<String, AdapterFactoryDescriptorMap> descriptors = new HashMap<>();
 
     /**
      * Matrix of {@link AdapterFactoryDescriptor} instances primarily indexed by the fully
@@ -111,7 +109,7 @@ public class MockAdapterManagerImpl implements AdapterManager {
      * whenever an adapter factory is registered on unregistered.
      */
     private final ConcurrentMap<String, Map<String, List<AdapterFactoryDescriptor>>> factoryCache =
-            new ConcurrentHashMap<String, Map<String, List<AdapterFactoryDescriptor>>>();
+            new ConcurrentHashMap<>();
 
     // DISABLED IN THIS COPY OF CLASS
     /*
@@ -138,7 +136,7 @@ public class MockAdapterManagerImpl implements AdapterManager {
         // get the factory for the target type
         final List<AdapterFactoryDescriptor> descList = factories.get(type.getName());
 
-        if (descList != null && descList.size() > 0) {
+        if (descList != null && !descList.isEmpty()) {
             for (AdapterFactoryDescriptor desc : descList) {
                 final AdapterFactory factory = desc == null ? null : desc.getFactory();
 
@@ -174,7 +172,7 @@ public class MockAdapterManagerImpl implements AdapterManager {
         // register all adapter factories bound before activation
         final List<ServiceReference<AdapterFactory>> refs;
         synchronized (this.boundAdapterFactories) {
-            refs = new ArrayList<ServiceReference<AdapterFactory>>(this.boundAdapterFactories);
+            refs = new ArrayList<>(this.boundAdapterFactories);
             boundAdapterFactories.clear();
         }
         for (final ServiceReference<AdapterFactory> reference : refs) {
@@ -219,7 +217,7 @@ public class MockAdapterManagerImpl implements AdapterManager {
      * Unbind a adapter factory.
      * @param reference Service reference
      */
-    protected void unbindAdapterFactory(final ServiceReference reference) {
+    protected void unbindAdapterFactory(final ServiceReference<AdapterFactory> reference) {
         unregisterAdapterFactory(reference);
     }
 
@@ -249,7 +247,7 @@ public class MockAdapterManagerImpl implements AdapterManager {
      * Unregisters the {@link AdapterFactory} referred to by the service
      * <code>reference</code> from the registry.
      */
-    @SuppressWarnings("null")
+    @SuppressWarnings({"null", "deprecation"})
     private void registerAdapterFactory(
             final ComponentContext context, final ServiceReference<AdapterFactory> reference) {
         final String[] adaptables = PropertiesUtil.toStringArray(reference.getProperty(ADAPTABLE_CLASSES));
@@ -294,7 +292,7 @@ public class MockAdapterManagerImpl implements AdapterManager {
         this.factoryCache.clear();
 
         // register adaption
-        final Dictionary<String, Object> props = new Hashtable<String, Object>();
+        final Dictionary<String, Object> props = new Hashtable<>();
         props.put(SlingConstants.PROPERTY_ADAPTABLE_CLASSES, adaptables);
         props.put(SlingConstants.PROPERTY_ADAPTER_CLASSES, adapters);
 
@@ -340,7 +338,8 @@ public class MockAdapterManagerImpl implements AdapterManager {
      * Unregisters the {@link AdapterFactory} referred to by the service
      * <code>reference</code> from the registry.
      */
-    private void unregisterAdapterFactory(final ServiceReference reference) {
+    @SuppressWarnings("deprecation")
+    private void unregisterAdapterFactory(final ServiceReference<AdapterFactory> reference) {
         synchronized (this.boundAdapterFactories) {
             boundAdapterFactories.remove(reference);
         }
@@ -434,7 +433,7 @@ public class MockAdapterManagerImpl implements AdapterManager {
      *         <code>clazz</code>.
      */
     private Map<String, List<AdapterFactoryDescriptor>> createAdapterFactoryMap(final Class<?> clazz) {
-        final Map<String, List<AdapterFactoryDescriptor>> afm = new HashMap<String, List<AdapterFactoryDescriptor>>();
+        final Map<String, List<AdapterFactoryDescriptor>> afm = new HashMap<>();
 
         // AdapterFactories for this class
         AdapterFactoryDescriptorMap afdMap = null;
@@ -444,7 +443,7 @@ public class MockAdapterManagerImpl implements AdapterManager {
         if (afdMap != null) {
             final List<AdapterFactoryDescriptor> afdSet;
             synchronized (afdMap) {
-                afdSet = new ArrayList<AdapterFactoryDescriptor>(afdMap.values());
+                afdSet = new ArrayList<>(afdMap.values());
             }
             for (final AdapterFactoryDescriptor afd : afdSet) {
                 final String[] adapters = afd.getAdapters();
@@ -452,7 +451,7 @@ public class MockAdapterManagerImpl implements AdapterManager {
                     // to handle service ranking, we add to the end of the list or create a new list
                     List<AdapterFactoryDescriptor> factoryDescriptors = afm.get(adapter);
                     if (factoryDescriptors == null) {
-                        factoryDescriptors = new ArrayList<AdapterFactoryDescriptor>();
+                        factoryDescriptors = new ArrayList<>();
                         afm.put(adapter, factoryDescriptors);
                     }
                     factoryDescriptors.add(afd);
@@ -498,7 +497,7 @@ public class MockAdapterManagerImpl implements AdapterManager {
             List<AdapterFactoryDescriptor> factoryDescriptors = dest.get(entry.getKey());
 
             if (factoryDescriptors == null) {
-                factoryDescriptors = new ArrayList<AdapterFactoryDescriptor>();
+                factoryDescriptors = new ArrayList<>();
                 dest.put(entry.getKey(), factoryDescriptors);
             }
             for (AdapterFactoryDescriptor descriptor : entry.getValue()) {

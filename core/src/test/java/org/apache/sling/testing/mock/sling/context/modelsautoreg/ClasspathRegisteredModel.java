@@ -20,14 +20,14 @@ package org.apache.sling.testing.mock.sling.context.modelsautoreg;
 
 import javax.inject.Inject;
 
-import org.apache.sling.api.SlingHttpServletRequest;
+import org.apache.sling.api.SlingJakartaHttpServletRequest;
 import org.apache.sling.models.annotations.Model;
 
 /**
  * For testing Sling Models support.
  * This model is registered automatically via OSGi metadata (MANIFEST) in the classpath.
  */
-@Model(adaptables = SlingHttpServletRequest.class)
+@Model(adaptables = SlingJakartaHttpServletRequest.class)
 public interface ClasspathRegisteredModel {
 
     @Inject

@@ -128,8 +128,8 @@ public final class NodeTypeDefinitionScanner {
                     continue;
                 }
                 Reader reader = new InputStreamReader(is);
-                CompactNodeTypeDefReader<NodeTypeTemplate, NamespaceRegistry> cndReader = new CompactNodeTypeDefReader<
-                        NodeTypeTemplate, NamespaceRegistry>(reader, nodeTypeResource, factory);
+                CompactNodeTypeDefReader<NodeTypeTemplate, NamespaceRegistry> cndReader =
+                        new CompactNodeTypeDefReader<>(reader, nodeTypeResource, factory);
                 NamespaceRegistry mapping = cndReader.getNamespaceMapping();
                 for (int i = 0; i < mapping.getURIs().length; i++) {
                     String uri = mapping.getURIs()[i];
@@ -204,7 +204,7 @@ public final class NodeTypeDefinitionScanner {
      * @return List of node type definition class paths
      */
     private static List<String> findeNodeTypeDefinitions() {
-        return new ArrayList<String>(ManifestScanner.getValues("Sling-Nodetypes"));
+        return new ArrayList<>(ManifestScanner.getValues("Sling-Nodetypes"));
     }
 
     /**

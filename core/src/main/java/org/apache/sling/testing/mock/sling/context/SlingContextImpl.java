@@ -21,6 +21,7 @@ package org.apache.sling.testing.mock.sling.context;
 import javax.jcr.RepositoryException;
 import javax.jcr.Session;
 
+import java.lang.reflect.InvocationTargetException;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashMap;
@@ -29,7 +30,7 @@ import java.util.Map;
 import java.util.Set;
 import java.util.function.Function;
 
-import org.apache.sling.api.SlingHttpServletRequest;
+import org.apache.sling.api.SlingJakartaHttpServletRequest;
 import org.apache.sling.api.adapter.AdapterFactory;
 import org.apache.sling.api.resource.LoginException;
 import org.apache.sling.api.resource.Resource;
@@ -57,8 +58,8 @@ import org.apache.sling.testing.mock.sling.loader.ContentLoader;
 import org.apache.sling.testing.mock.sling.services.MockMimeTypeService;
 import org.apache.sling.testing.mock.sling.services.MockSlingSettingService;
 import org.apache.sling.testing.mock.sling.servlet.MockRequestPathInfo;
-import org.apache.sling.testing.mock.sling.servlet.MockSlingHttpServletRequest;
-import org.apache.sling.testing.mock.sling.servlet.MockSlingHttpServletResponse;
+import org.apache.sling.testing.mock.sling.servlet.MockSlingJakartaHttpServletRequest;
+import org.apache.sling.testing.mock.sling.servlet.MockSlingJakartaHttpServletResponse;
 import org.apache.sling.xss.impl.XSSAPIImpl;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -105,13 +106,29 @@ public class SlingContextImpl extends OsgiContextImpl {
 
     /**
      * Sling request
+     *
+     * @deprecated Use jakartaRequest instead.
      */
-    protected MockSlingHttpServletRequest request;
+    @Deprecated(since = "4.1.0")
+    protected org.apache.sling.testing.mock.sling.servlet.MockSlingHttpServletRequest request;
+
+    /**
+     * Sling response
+     *
+     * @deprecated Use jakartaResponse instead.
+     */
+    @Deprecated(since = "4.1.0")
+    protected org.apache.sling.testing.mock.sling.servlet.MockSlingHttpServletResponse response;
+
+    /**
+     * Sling jakarta request
+     */
+    protected MockSlingJakartaHttpServletRequest jakartaRequest;
 
     /**
      * Sling response
      */
-    protected MockSlingHttpServletResponse response;
+    protected MockSlingJakartaHttpServletResponse jakartaResponse;
 
     /**
      * Sling script helper
@@ -261,8 +278,14 @@ public class SlingContextImpl extends OsgiContextImpl {
         for (String className : classNames) {
             try {
                 Class<?> clazz = Class.forName(className);
-                registerInjectActivateService(clazz.newInstance());
-            } catch (ClassNotFoundException | InstantiationException | IllegalAccessException e) {
+                registerInjectActivateService(clazz.getDeclaredConstructor().newInstance());
+            } catch (ClassNotFoundException
+                    | InstantiationException
+                    | IllegalAccessException
+                    | IllegalArgumentException
+                    | InvocationTargetException
+                    | NoSuchMethodException
+                    | SecurityException e) {
                 // ignore - probably not the latest sling models impl version
             }
         }
@@ -276,8 +299,15 @@ public class SlingContextImpl extends OsgiContextImpl {
 
         if (this.request != null) {
             SlingBindings slingBindings = (SlingBindings) this.request.getAttribute(SlingBindings.class.getName());
-            if (slingBindings instanceof MockSlingBindings) {
-                ((MockSlingBindings) slingBindings).tearDown();
+            if (slingBindings instanceof MockSlingBindings mockSlingBindings) {
+                mockSlingBindings.tearDown();
+            }
+        }
+        if (this.jakartaRequest != null) {
+            SlingBindings slingBindings =
+                    (SlingBindings) this.jakartaRequest.getAttribute(SlingBindings.class.getName());
+            if (slingBindings instanceof MockSlingBindings mockSlingBindings) {
+                mockSlingBindings.tearDown();
             }
         }
 
@@ -311,7 +341,9 @@ public class SlingContextImpl extends OsgiContextImpl {
 
         this.resourceResolver = null;
         this.request = null;
+        this.jakartaRequest = null;
         this.response = null;
+        this.jakartaResponse = null;
         this.slingScriptHelper = null;
         this.contentLoader = null;
         this.contentLoaderAutoCommit = null;
@@ -351,10 +383,14 @@ public class SlingContextImpl extends OsgiContextImpl {
 
     /**
      * @return Sling request
+     *
+     * @deprecated Use {@link #jakartaRequest()} instead.
      */
-    public final @NotNull MockSlingHttpServletRequest request() {
+    @Deprecated(since = "4.1.0")
+    public final @NotNull org.apache.sling.testing.mock.sling.servlet.MockSlingHttpServletRequest request() {
         if (this.request == null) {
-            this.request = new MockSlingHttpServletRequest(this.resourceResolver(), this.bundleContext());
+            this.request =
+                    new org.apache.sling.testing.mock.sling.servlet.MockSlingHttpServletRequest(jakartaRequest());
 
             // initialize sling bindings
             MockSlingBindings bindings = new MockSlingBindings(this);
@@ -372,13 +408,48 @@ public class SlingContextImpl extends OsgiContextImpl {
     }
 
     /**
+     * @return Sling request
+     */
+    public final @NotNull MockSlingJakartaHttpServletRequest jakartaRequest() {
+        if (this.jakartaRequest == null) {
+            this.jakartaRequest = new MockSlingJakartaHttpServletRequest(this.resourceResolver(), this.bundleContext());
+
+            // initialize sling bindings
+            MockSlingBindings bindings = new MockSlingBindings(this);
+
+            // register as OSGi event handler to get notified on events fired by BindingsValuesProvidersByContextImpl
+            this.registerService(
+                    EventHandler.class,
+                    bindings,
+                    EVENT_TOPIC,
+                    "org/apache/sling/scripting/core/BindingsValuesProvider/*");
+
+            this.jakartaRequest.setAttribute(SlingBindings.class.getName(), bindings);
+        }
+        return this.jakartaRequest;
+    }
+
+    /**
+     * Dynamically resolve property request for current request {@link SlingBindings}.
+     * @param property Property key
+     * @param request Context request
+     * @return Resolved object or null if no result found
+     * @deprecated use {@link #resolveSlingBindingProperty(String, SlingJakartaHttpServletRequest)} instead
+     */
+    @Deprecated(since = "4.0.0")
+    protected @Nullable Object resolveSlingBindingProperty(
+            @NotNull String property, @NotNull org.apache.sling.api.SlingHttpServletRequest request) {
+        return MockSlingBindings.resolveSlingBindingProperty(this, property);
+    }
+
+    /**
      * Dynamically resolve property request for current request {@link SlingBindings}.
      * @param property Property key
      * @param request Context request
      * @return Resolved object or null if no result found
      */
     protected @Nullable Object resolveSlingBindingProperty(
-            @NotNull String property, @NotNull SlingHttpServletRequest request) {
+            @NotNull String property, @NotNull SlingJakartaHttpServletRequest request) {
         return MockSlingBindings.resolveSlingBindingProperty(this, property);
     }
 
@@ -386,7 +457,7 @@ public class SlingContextImpl extends OsgiContextImpl {
      * Dynamically resolve property request for current request {@link SlingBindings}.
      * @param property Property key
      * @return Resolved object or null if no result found
-     * @deprecated Please use {@link #resolveSlingBindingProperty(String, SlingHttpServletRequest)}
+     * @deprecated Please use {@link #resolveSlingBindingProperty(String, SlingJakartaHttpServletRequest)}
      */
     @Deprecated
     protected @Nullable Object resolveSlingBindingProperty(@NotNull String property) {
@@ -397,17 +468,31 @@ public class SlingContextImpl extends OsgiContextImpl {
      * @return Request path info
      */
     public final @NotNull MockRequestPathInfo requestPathInfo() {
-        return (MockRequestPathInfo) request().getRequestPathInfo();
+        return (MockRequestPathInfo) jakartaRequest().getRequestPathInfo();
+    }
+
+    /**
+     * @return Sling response
+     *
+     * @deprecated Use {@link #jakartaResponse()} instead.
+     */
+    @Deprecated(since = "4.0.0")
+    public final @NotNull org.apache.sling.testing.mock.sling.servlet.MockSlingHttpServletResponse response() {
+        if (this.response == null) {
+            this.response =
+                    new org.apache.sling.testing.mock.sling.servlet.MockSlingHttpServletResponse(jakartaResponse());
+        }
+        return this.response;
     }
 
     /**
      * @return Sling response
      */
-    public final @NotNull MockSlingHttpServletResponse response() {
-        if (this.response == null) {
-            this.response = new MockSlingHttpServletResponse();
+    public final @NotNull MockSlingJakartaHttpServletResponse jakartaResponse() {
+        if (this.jakartaResponse == null) {
+            this.jakartaResponse = new MockSlingJakartaHttpServletResponse();
         }
-        return this.response;
+        return this.jakartaResponse;
     }
 
     /**
@@ -416,7 +501,7 @@ public class SlingContextImpl extends OsgiContextImpl {
     public final @NotNull SlingScriptHelper slingScriptHelper() {
         if (this.slingScriptHelper == null) {
             this.slingScriptHelper =
-                    MockSling.newSlingScriptHelper(this.request(), this.response(), this.bundleContext());
+                    MockSling.newSlingScriptHelper(this.jakartaRequest(), this.jakartaResponse(), this.bundleContext());
         }
         return this.slingScriptHelper;
     }
@@ -479,7 +564,7 @@ public class SlingContextImpl extends OsgiContextImpl {
      * @return Current resource
      */
     public final @Nullable Resource currentResource() {
-        return request().getResource();
+        return jakartaRequest().getResource();
     }
 
     /**
@@ -505,7 +590,7 @@ public class SlingContextImpl extends OsgiContextImpl {
      * @return Current resource
      */
     public @Nullable Resource currentResource(@Nullable Resource resource) {
-        request().setResource(resource);
+        jakartaRequest().setResource(resource);
         return resource;
     }
 
@@ -539,7 +624,7 @@ public class SlingContextImpl extends OsgiContextImpl {
      * Search classpath for given class names to scan for and register all classes with @Model annotation.
      * @param classes Java classes
      */
-    public final void addModelsForClasses(@NotNull Class @NotNull ... classes) {
+    public final void addModelsForClasses(@NotNull Class<?> @NotNull ... classes) {
         ModelAdapterFactoryUtil.addModelsForClasses(bundleContext(), classes);
     }
 
@@ -580,12 +665,7 @@ public class SlingContextImpl extends OsgiContextImpl {
      */
     public final <T1, T2> void registerAdapter(
             @NotNull final Class<T1> adaptableClass, @NotNull final Class<T2> adapterClass, @NotNull final T2 adapter) {
-        registerAdapter(adaptableClass, adapterClass, new Function<T1, T2>() {
-            @Override
-            public T2 apply(@Nullable T1 input) {
-                return adapter;
-            }
-        });
+        registerAdapter(adaptableClass, adapterClass, (Function<T1, T2>) input -> adapter);
     }
 
     /**

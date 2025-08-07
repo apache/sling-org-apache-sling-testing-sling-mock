@@ -60,10 +60,20 @@ class SlingContextPluginTest {
         verify(contextBeforeSetup).execute(context);
     }
 
+    /**
+     * @deprecated use {@link #testJakartaRequest()} instead
+     */
+    @Deprecated(since = "4.0.0")
     @Test
     public void testRequest() throws Exception {
         verify(contextAfterSetup).execute(context);
         assertNotNull(context.request());
+    }
+
+    @Test
+    public void testJakartaRequest() throws Exception {
+        verify(contextAfterSetup).execute(context);
+        assertNotNull(context.jakartaRequest());
     }
 
     @Test
@@ -97,8 +107,8 @@ class SlingContextPluginTest {
 
     @Test
     public void testSlingModelClasspathRegistered() {
-        context.request().setAttribute("prop1", "myValue");
-        ClasspathRegisteredModel model = context.request().adaptTo(ClasspathRegisteredModel.class);
+        context.jakartaRequest().setAttribute("prop1", "myValue");
+        ClasspathRegisteredModel model = context.jakartaRequest().adaptTo(ClasspathRegisteredModel.class);
         assertEquals("myValue", model.getProp1());
     }
 

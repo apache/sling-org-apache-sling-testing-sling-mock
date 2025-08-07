@@ -21,15 +21,15 @@ package org.apache.sling.testing.mock.sling.context.models;
 import javax.jcr.Node;
 import javax.jcr.Session;
 
-import org.apache.sling.api.SlingHttpServletRequest;
-import org.apache.sling.api.SlingHttpServletResponse;
+import org.apache.sling.api.SlingJakartaHttpServletRequest;
+import org.apache.sling.api.SlingJakartaHttpServletResponse;
 import org.apache.sling.api.resource.Resource;
 import org.apache.sling.api.resource.ResourceResolver;
 import org.apache.sling.models.annotations.Model;
 import org.apache.sling.models.annotations.injectorspecific.InjectionStrategy;
 import org.apache.sling.models.annotations.injectorspecific.ScriptVariable;
 
-@Model(adaptables = SlingHttpServletRequest.class)
+@Model(adaptables = SlingJakartaHttpServletRequest.class)
 public interface SlingBindingsModel {
 
     // -- Sling --
@@ -39,11 +39,25 @@ public interface SlingBindingsModel {
     @ScriptVariable(injectionStrategy = InjectionStrategy.OPTIONAL)
     Resource getResource();
 
+    /**
+     * @deprecated use {@link #getJakartaRequest()} instead
+     */
+    @Deprecated(since = "4.0.0")
     @ScriptVariable(injectionStrategy = InjectionStrategy.OPTIONAL)
-    SlingHttpServletRequest getRequest();
+    org.apache.sling.api.SlingHttpServletRequest getRequest();
+
+    /**
+     * @deprecated use {@link #getJakartaResponse()} instead
+     */
+    @Deprecated(since = "4.0.0")
+    @ScriptVariable(injectionStrategy = InjectionStrategy.OPTIONAL)
+    org.apache.sling.api.SlingHttpServletResponse getResponse();
 
     @ScriptVariable(injectionStrategy = InjectionStrategy.OPTIONAL)
-    SlingHttpServletResponse getResponse();
+    SlingJakartaHttpServletRequest getJakartaRequest();
+
+    @ScriptVariable(injectionStrategy = InjectionStrategy.OPTIONAL)
+    SlingJakartaHttpServletResponse getJakartaResponse();
 
     // -- JCR --
     @ScriptVariable(injectionStrategy = InjectionStrategy.OPTIONAL)

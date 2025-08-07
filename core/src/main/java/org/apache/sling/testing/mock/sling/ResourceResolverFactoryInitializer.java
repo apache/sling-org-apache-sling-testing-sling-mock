@@ -22,6 +22,7 @@ import javax.jcr.RepositoryException;
 import javax.jcr.Session;
 
 import java.lang.reflect.Field;
+import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Proxy;
 import java.util.HashMap;
 import java.util.Map;
@@ -111,8 +112,9 @@ class ResourceResolverFactoryInitializer {
         }
 
         try {
+            @SuppressWarnings("rawtypes")
             Class pathMapperClass = Class.forName("org.apache.sling.jcr.resource.internal.helper.jcr.PathMapper");
-            Object pathMapper = pathMapperClass.newInstance();
+            Object pathMapper = pathMapperClass.getDeclaredConstructor().newInstance();
             // eliminate logger in class to suppress deprecation warnings
             try {
                 Field pathMapperLoggerField = pathMapperClass.getDeclaredField("log");
@@ -122,14 +124,18 @@ class ResourceResolverFactoryInitializer {
                         Proxy.newProxyInstance(
                                 Logger.class.getClassLoader(),
                                 new Class[] {Logger.class},
-                                (proxy, method, methodArgs) -> {
-                                    return null;
-                                }));
+                                (proxy, method, methodArgs) -> null));
             } catch (Exception ex) {
                 // ignore
             }
             registerServiceIfNotPresent(bundleContext, pathMapperClass, pathMapper);
-        } catch (ClassNotFoundException | InstantiationException | IllegalAccessException ex) {
+        } catch (ClassNotFoundException
+                | InstantiationException
+                | IllegalAccessException
+                | IllegalArgumentException
+                | InvocationTargetException
+                | NoSuchMethodException
+                | SecurityException ex) {
             // ignore - service was removed in org.apache.sling.jcr.resource 3.0.0
         }
     }
@@ -189,14 +195,23 @@ class ResourceResolverFactoryInitializer {
         }
     }
 
-    @SuppressWarnings({"unchecked", "null"})
+    @SuppressWarnings({"unchecked", "null", "rawtypes"})
     private static void registerServiceIfNotPresentByName(
             @NotNull BundleContext bundleContext, @NotNull String interfaceClassName, @NotNull String implClassName) {
         try {
             Class<?> interfaceClass = Class.forName(interfaceClassName);
             Class<?> implClass = Class.forName(implClassName);
-            registerServiceIfNotPresent(bundleContext, (Class) interfaceClass, implClass.newInstance());
-        } catch (ClassNotFoundException | InstantiationException | IllegalAccessException ex) {
+            registerServiceIfNotPresent(
+                    bundleContext,
+                    (Class) interfaceClass,
+                    implClass.getDeclaredConstructor().newInstance());
+        } catch (ClassNotFoundException
+                | InstantiationException
+                | IllegalAccessException
+                | IllegalArgumentException
+                | InvocationTargetException
+                | NoSuchMethodException
+                | SecurityException ex) {
             // ignore - probably not the latest sling models impl version
             log.debug(
                     "registerServiceIfNotPresentByName: Skip registering {} ({}), bundleContext={}",

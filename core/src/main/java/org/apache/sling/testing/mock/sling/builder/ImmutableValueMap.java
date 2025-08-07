@@ -323,8 +323,8 @@ public final class ImmutableValueMap implements ValueMap {
      * @throws NullPointerException if any key or value in {@code map} is null
      */
     public static @NotNull ImmutableValueMap copyOf(@NotNull Map<String, Object> map) {
-        if (map instanceof ValueMap) {
-            return new ImmutableValueMap((ValueMap) map);
+        if (map instanceof ValueMap valueMap) {
+            return new ImmutableValueMap(valueMap);
         } else {
             return new ImmutableValueMap(map);
         }

@@ -37,8 +37,8 @@ class NoSlingModelsRegistrationTest {
     @Test
     @SuppressWarnings("null")
     public void testSlingModelClasspathRegistered() {
-        context.request().setAttribute("prop1", "myValue");
-        ClasspathRegisteredModel model = context.request().adaptTo(ClasspathRegisteredModel.class);
+        context.jakartaRequest().setAttribute("prop1", "myValue");
+        ClasspathRegisteredModel model = context.jakartaRequest().adaptTo(ClasspathRegisteredModel.class);
         // expect null because ClasspathRegisteredModel should not be registered
         // automatically from classpath
         assertNull(model);
