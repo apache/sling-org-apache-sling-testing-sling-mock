@@ -29,7 +29,7 @@ public class MockJakartaHttpSessionTest {
     private MockJakartaHttpSession httpSession;
 
     @Before
-    public void setUp() throws Exception {
+    public void setUp() {
         httpSession = new MockJakartaHttpSession();
     }
 

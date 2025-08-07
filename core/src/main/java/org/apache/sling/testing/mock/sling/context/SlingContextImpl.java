@@ -109,6 +109,7 @@ public class SlingContextImpl extends OsgiContextImpl {
      *
      * @deprecated Use jakartaRequest instead.
      */
+    @SuppressWarnings("deprecation")
     @Deprecated(since = "4.1.0")
     protected org.apache.sling.testing.mock.sling.servlet.MockSlingHttpServletRequest request;
 
@@ -117,6 +118,7 @@ public class SlingContextImpl extends OsgiContextImpl {
      *
      * @deprecated Use jakartaResponse instead.
      */
+    @SuppressWarnings("deprecation")
     @Deprecated(since = "4.1.0")
     protected org.apache.sling.testing.mock.sling.servlet.MockSlingHttpServletResponse response;
 
@@ -294,6 +296,7 @@ public class SlingContextImpl extends OsgiContextImpl {
     /**
      * Teardown actions after test method execution
      */
+    @SuppressWarnings("deprecation")
     @Override
     protected void tearDown() {
 

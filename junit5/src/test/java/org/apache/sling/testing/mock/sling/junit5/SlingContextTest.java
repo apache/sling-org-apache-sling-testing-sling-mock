@@ -48,12 +48,12 @@ class SlingContextTest {
      */
     @Deprecated(since = "4.0.0")
     @Test
-    public void testRequest(SlingContext context) {
+    void testRequest(SlingContext context) {
         assertNotNull(context.request());
     }
 
     @Test
-    public void testJakartaRequest(SlingContext context) {
+    void testJakartaRequest(SlingContext context) {
         assertNotNull(context.jakartaRequest());
     }
 

@@ -71,7 +71,7 @@ public class MockSlingSettingServiceTest {
     @Test
     public void testGetSlingHomePath() {
         MockSlingSettingService underTest = new MockSlingSettingService();
-        assertThrows(UnsupportedOperationException.class, () -> underTest.getSlingHomePath());
+        assertThrows(UnsupportedOperationException.class, underTest::getSlingHomePath);
     }
 
     /**
@@ -80,7 +80,7 @@ public class MockSlingSettingServiceTest {
     @Test
     public void testGetSlingHome() {
         MockSlingSettingService underTest = new MockSlingSettingService();
-        assertThrows(UnsupportedOperationException.class, () -> underTest.getSlingHome());
+        assertThrows(UnsupportedOperationException.class, underTest::getSlingHome);
     }
 
     /**
@@ -89,7 +89,7 @@ public class MockSlingSettingServiceTest {
     @Test
     public void testGetSlingName() {
         MockSlingSettingService underTest = new MockSlingSettingService();
-        assertThrows(UnsupportedOperationException.class, () -> underTest.getSlingName());
+        assertThrows(UnsupportedOperationException.class, underTest::getSlingName);
     }
 
     /**
@@ -98,7 +98,7 @@ public class MockSlingSettingServiceTest {
     @Test
     public void testGetSlingDescription() {
         MockSlingSettingService underTest = new MockSlingSettingService();
-        assertThrows(UnsupportedOperationException.class, () -> underTest.getSlingDescription());
+        assertThrows(UnsupportedOperationException.class, underTest::getSlingDescription);
     }
 
     /**

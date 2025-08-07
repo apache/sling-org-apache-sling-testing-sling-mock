@@ -60,7 +60,7 @@ public class MockSlingJakartaHttpServletRequestTest {
     private MockSlingJakartaHttpServletRequest request;
 
     @Before
-    public void setUp() throws Exception {
+    public void setUp() {
         request = new MockSlingJakartaHttpServletRequest(resourceResolver, bundleContext);
     }
 
@@ -124,10 +124,10 @@ public class MockSlingJakartaHttpServletRequestTest {
         assertNull(request.getRequestPathInfo().getSuffixResource());
 
         ((MockRequestPathInfo) request.getRequestPathInfo()).setSuffix("/suffix");
-        Resource resource = mock(Resource.class);
-        when(resourceResolver.getResource("/suffix")).thenReturn(resource);
+        Resource mockResource = mock(Resource.class);
+        when(resourceResolver.getResource("/suffix")).thenReturn(mockResource);
 
-        assertSame(resource, request.getRequestPathInfo().getSuffixResource());
+        assertSame(mockResource, request.getRequestPathInfo().getSuffixResource());
     }
 
     @Test

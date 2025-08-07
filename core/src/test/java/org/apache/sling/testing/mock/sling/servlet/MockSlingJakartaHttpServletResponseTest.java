@@ -28,12 +28,12 @@ public class MockSlingJakartaHttpServletResponseTest {
     private MockSlingJakartaHttpServletResponse response;
 
     @Before
-    public void setUp() throws Exception {
+    public void setUp() {
         this.response = new MockSlingJakartaHttpServletResponse();
     }
 
     @Test
-    public void testContentTypeCharset() throws Exception {
+    public void testContentTypeCharset() {
         assertNull(response.getContentType());
         assertNull(response.getCharacterEncoding());
     }

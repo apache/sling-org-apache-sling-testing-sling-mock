@@ -49,12 +49,14 @@ public final class MockSlingScriptHelper implements SlingScriptHelper {
     /**
      * @deprecated Use jakartaRequest instead.
      */
+    @SuppressWarnings("deprecation")
     @Deprecated(since = "4.1.0")
     private final @NotNull org.apache.sling.api.SlingHttpServletRequest request;
 
     /**
      * @deprecated Use jakartaResponse instead.
      */
+    @SuppressWarnings("deprecation")
     @Deprecated(since = "4.1.0")
     private final @NotNull org.apache.sling.api.SlingHttpServletResponse response;
 
