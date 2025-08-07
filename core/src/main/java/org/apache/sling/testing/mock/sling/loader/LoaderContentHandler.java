@@ -25,6 +25,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 import org.apache.commons.lang3.StringUtils;
+import org.apache.commons.lang3.Strings;
 import org.apache.jackrabbit.JcrConstants;
 import org.apache.sling.api.resource.ModifiableValueMap;
 import org.apache.sling.api.resource.PersistenceException;
@@ -51,7 +52,7 @@ final class LoaderContentHandler implements ContentHandler {
     @Override
     public void resource(String path, Map<String, Object> properties) {
         String fullPath = rootPath;
-        if (!StringUtils.equals(path, "/")) {
+        if (!Strings.CS.equals(path, "/")) {
             fullPath += path;
         }
         String parentPath = ResourceUtil.getParent(fullPath);
@@ -79,13 +80,13 @@ final class LoaderContentHandler implements ContentHandler {
         // collect all properties first
         boolean hasJcrData = false;
         String referencedNodePath = null;
-        Map<String, Object> props = new HashMap<String, Object>();
+        Map<String, Object> props = new HashMap<>();
         if (content != null) {
             for (Map.Entry<String, Object> entry : content.entrySet()) {
                 final String name = entry.getKey();
-                if (StringUtils.equals(name, JCR_DATA_PLACEHOLDER)) {
+                if (Strings.CS.equals(name, JCR_DATA_PLACEHOLDER)) {
                     hasJcrData = true;
-                } else if (StringUtils.equals(name, JCR_REFERENCE_PLACEHOLDER)) {
+                } else if (Strings.CS.equals(name, JCR_REFERENCE_PLACEHOLDER)) {
                     referencedNodePath = (String) entry.getValue();
                 } else {
                     props.put(name, entry.getValue());

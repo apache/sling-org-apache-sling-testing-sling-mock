@@ -37,7 +37,6 @@ import static org.mockito.Mockito.verify;
  * Test with {@link SlingContext} with context plugins.
  */
 @ExtendWith(SlingContextExtension.class)
-@SuppressWarnings("null")
 class SlingContextPluginTest {
 
     private final SlingContextCallback contextBeforeSetup = mock(SlingContextCallback.class);
@@ -60,14 +59,24 @@ class SlingContextPluginTest {
         verify(contextBeforeSetup).execute(context);
     }
 
+    /**
+     * @deprecated use {@link #testJakartaRequest()} instead
+     */
+    @Deprecated(since = "4.0.0")
     @Test
-    public void testRequest() throws Exception {
+    void testRequest() throws Exception {
         verify(contextAfterSetup).execute(context);
         assertNotNull(context.request());
     }
 
     @Test
-    public void testResourceResolverFactoryActivatorProps() throws Exception {
+    void testJakartaRequest() throws Exception {
+        verify(contextAfterSetup).execute(context);
+        assertNotNull(context.jakartaRequest());
+    }
+
+    @Test
+    void testResourceResolverFactoryActivatorProps() throws Exception {
         verify(contextAfterSetup).execute(context);
 
         // skip this test for resource resolver mock, because it does not
@@ -96,9 +105,9 @@ class SlingContextPluginTest {
     }
 
     @Test
-    public void testSlingModelClasspathRegistered() {
-        context.request().setAttribute("prop1", "myValue");
-        ClasspathRegisteredModel model = context.request().adaptTo(ClasspathRegisteredModel.class);
+    void testSlingModelClasspathRegistered() {
+        context.jakartaRequest().setAttribute("prop1", "myValue");
+        ClasspathRegisteredModel model = context.jakartaRequest().adaptTo(ClasspathRegisteredModel.class);
         assertEquals("myValue", model.getProp1());
     }
 

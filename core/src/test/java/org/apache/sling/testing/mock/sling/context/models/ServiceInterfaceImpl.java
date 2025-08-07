@@ -20,13 +20,13 @@ package org.apache.sling.testing.mock.sling.context.models;
 
 import javax.inject.Inject;
 
-import org.apache.sling.api.SlingHttpServletRequest;
+import org.apache.sling.api.SlingJakartaHttpServletRequest;
 import org.apache.sling.models.annotations.Model;
 
 /**
  * For testing Sling Models support.
  */
-@Model(adaptables = SlingHttpServletRequest.class, adapters = ServiceInterface.class)
+@Model(adaptables = SlingJakartaHttpServletRequest.class, adapters = ServiceInterface.class)
 public class ServiceInterfaceImpl implements ServiceInterface {
 
     @Inject

@@ -63,10 +63,8 @@ final class ModelAdapterFactoryUtil {
     private static final @NotNull String @NotNull [] MODELS_PACKAGES_FROM_MANIFEST;
     private static final @NotNull String @NotNull [] MODELS_CLASSES_FROM_MANIFEST;
 
-    private static final @NotNull ConcurrentMap<String, List<URL>> MODEL_URLS_FOR_PACKAGES =
-            new ConcurrentHashMap<String, List<URL>>();
-    private static final @NotNull ConcurrentMap<String, List<URL>> MODEL_URLS_FOR_CLASSES =
-            new ConcurrentHashMap<String, List<URL>>();
+    private static final @NotNull ConcurrentMap<String, List<URL>> MODEL_URLS_FOR_PACKAGES = new ConcurrentHashMap<>();
+    private static final @NotNull ConcurrentMap<String, List<URL>> MODEL_URLS_FOR_CLASSES = new ConcurrentHashMap<>();
 
     static {
         // scan classpath for models bundle header entries only once
@@ -112,7 +110,7 @@ final class ModelAdapterFactoryUtil {
      * @param bundleContext Bundle context
      * @param classNames Java class names
      */
-    public static void addModelsForClasses(@NotNull BundleContext bundleContext, @NotNull Class @NotNull ... classes) {
+    public static void addModelsForClasses(@NotNull BundleContext bundleContext, @NotNull Class<?>... classes) {
         String[] classNames = new String[classes.length];
         for (int i = 0; i < classes.length; i++) {
             classNames[i] = classes[i].getName();
@@ -141,7 +139,7 @@ final class ModelAdapterFactoryUtil {
     private static Collection<URL> getModelClassUrlsForPackages(String packageNames) {
         List<URL> urls = MODEL_URLS_FOR_PACKAGES.get(packageNames);
         if (urls == null) {
-            urls = new ArrayList<URL>();
+            urls = new ArrayList<>();
             // add "." to each package name because it's a prefix, not a package name
             ConfigurationBuilder reflectionsConfig = new ConfigurationBuilder();
             Stream.of(StringUtils.split(packageNames, ","))
@@ -164,7 +162,7 @@ final class ModelAdapterFactoryUtil {
     private static Collection<URL> getModelClassUrlsForClasses(String classNames) {
         List<URL> urls = MODEL_URLS_FOR_CLASSES.get(classNames);
         if (urls == null) {
-            urls = new ArrayList<URL>();
+            urls = new ArrayList<>();
             String[] packageNameArray = StringUtils.split(classNames, ",");
             for (String className : packageNameArray) {
                 try {
@@ -181,7 +179,7 @@ final class ModelAdapterFactoryUtil {
         return urls;
     }
 
-    private static URL classToUrl(Class clazz) {
+    private static URL classToUrl(Class<?> clazz) {
         try {
             return new URL("file:/" + clazz.getName().replace('.', '/') + ".class");
         } catch (MalformedURLException ex) {
@@ -220,14 +218,14 @@ final class ModelAdapterFactoryUtil {
 
         @Override
         public Dictionary<String, String> getHeaders() {
-            Dictionary<String, String> headers = new Hashtable<String, String>();
+            Dictionary<String, String> headers = new Hashtable<>();
             headers.put(PACKAGE_HEADER, MAGIC_STRING);
             return headers;
         }
 
         @Override
         public Enumeration<URL> findEntries(String path, String filePattern, boolean recurse) {
-            Vector<URL> urls = new Vector<URL>(); // NOPMD
+            Vector<URL> urls = new Vector<>(); // NOPMD
             if (packageNames != null) {
                 urls.addAll(getModelClassUrlsForPackages(packageNames));
             }

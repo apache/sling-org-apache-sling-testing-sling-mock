@@ -81,7 +81,7 @@ class ThreadsafeMockAdapterManagerWrapper implements AdapterManager {
 
             // register adapter manager
             MockAdapterManagerImpl adapterManagerImpl = new MockAdapterManagerImpl();
-            Dictionary<String, Object> properties = new Hashtable<String, Object>();
+            Dictionary<String, Object> properties = new Hashtable<>();
             MockOsgi.injectServices(adapterManagerImpl, bundleContext);
             MockOsgi.activate(adapterManagerImpl, bundleContext, properties);
             bundleContext.registerService(AdapterManager.class.getName(), adapterManagerImpl, properties);

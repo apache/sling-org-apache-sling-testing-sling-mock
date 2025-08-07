@@ -97,8 +97,7 @@ public final class MockResourceBundleProvider implements ResourceBundleProvider 
         public boolean equals(Object obj) {
             if (obj == this) {
                 return true;
-            } else if (obj instanceof Key) {
-                Key other = (Key) obj;
+            } else if (obj instanceof Key other) {
                 return equals(this.baseName, other.baseName) && equals(this.locale, other.locale);
             }
 

@@ -19,16 +19,11 @@
 package org.apache.sling.testing.mock.sling.servlet;
 
 /**
- * Mock {@link javax.servlet.ServletContext} implementation.
- *
- * @deprecated Use {@link MockJakartaServletContext} instead.
+ * Interface to create a mock {@link jakarta.servlet.RequestDispatcher} when calling the getRequestDispatcher methods
+ * on {@link MockSlingJakartaHttpServletRequest} instances.
  */
-@Deprecated(since = "3.2.0")
-public final class MockServletContext extends org.apache.sling.servlethelpers.MockServletContext {
-
-    public MockServletContext(org.apache.sling.servlethelpers.MockJakartaServletContext wrappedServletContext) {
-        super(wrappedServletContext);
-    }
+public interface MockJakartaRequestDispatcherFactory
+        extends org.apache.sling.servlethelpers.MockJakartaRequestDispatcherFactory {
 
     // inherit from superclass
 

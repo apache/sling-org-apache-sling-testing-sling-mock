@@ -37,8 +37,8 @@ public abstract class AbstractModelAdapterFactoryUtilTest {
 
     @Test
     public void testRequestAttribute() {
-        context().request().setAttribute("prop1", "myValue");
-        RequestAttributeModel model = context().request().adaptTo(RequestAttributeModel.class);
+        context().jakartaRequest().setAttribute("prop1", "myValue");
+        RequestAttributeModel model = context().jakartaRequest().adaptTo(RequestAttributeModel.class);
         assertNotNull(model);
         assertEquals("myValue", model.getProp1());
     }
@@ -55,14 +55,14 @@ public abstract class AbstractModelAdapterFactoryUtilTest {
 
     @Test
     public void testInvalidAdapt() {
-        OsgiServiceModel model = context().request().adaptTo(OsgiServiceModel.class);
+        OsgiServiceModel model = context().jakartaRequest().adaptTo(OsgiServiceModel.class);
         assertNull(model);
     }
 
     @Test
     public void testAdaptToInterface() {
-        context().request().setAttribute("prop1", "myValue");
-        ServiceInterface model = context().request().adaptTo(ServiceInterface.class);
+        context().jakartaRequest().setAttribute("prop1", "myValue");
+        ServiceInterface model = context().jakartaRequest().adaptTo(ServiceInterface.class);
         assertNotNull(model);
         assertEquals("myValue", model.getPropValue());
     }
