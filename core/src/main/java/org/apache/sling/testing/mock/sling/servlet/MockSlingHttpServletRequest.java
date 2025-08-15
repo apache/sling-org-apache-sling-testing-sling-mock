@@ -18,6 +18,7 @@
  */
 package org.apache.sling.testing.mock.sling.servlet;
 
+import org.apache.sling.api.resource.ResourceResolver;
 import org.apache.sling.testing.mock.sling.MockSling;
 import org.jetbrains.annotations.NotNull;
 import org.osgi.framework.BundleContext;
@@ -36,6 +37,15 @@ public class MockSlingHttpServletRequest extends org.apache.sling.servlethelpers
      */
     public MockSlingHttpServletRequest(@NotNull BundleContext bundleContext) {
         this(new MockSlingJakartaHttpServletRequest(MockSling.newResourceResolver(bundleContext), bundleContext));
+    }
+
+    /**
+     * @param resourceResolver Resource resolver
+     * @param bundleContext Bundle context
+     */
+    public MockSlingHttpServletRequest(
+            @NotNull ResourceResolver resourceResolver, @NotNull BundleContext bundleContext) {
+        this(new MockSlingJakartaHttpServletRequest(resourceResolver, bundleContext));
     }
 
     /**
