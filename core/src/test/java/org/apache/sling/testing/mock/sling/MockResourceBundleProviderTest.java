@@ -39,14 +39,14 @@ public class MockResourceBundleProviderTest {
 
     @Test
     public void testGetResourceBundleFromRequest() {
-        ResourceBundle bundle = context.request().getResourceBundle(Locale.CANADA_FRENCH);
+        ResourceBundle bundle = context.jakartaRequest().getResourceBundle(Locale.CANADA_FRENCH);
         assertEquals(Locale.CANADA_FRENCH, bundle.getLocale());
         assertNull(((MockResourceBundle) bundle).getBaseName());
     }
 
     @Test
     public void testGetResourceBundleFromRequestWithBaseName() {
-        ResourceBundle bundle = context.request().getResourceBundle(MY_NAME, Locale.CANADA_FRENCH);
+        ResourceBundle bundle = context.jakartaRequest().getResourceBundle(MY_NAME, Locale.CANADA_FRENCH);
         assertEquals(Locale.CANADA_FRENCH, bundle.getLocale());
         assertEquals(MY_NAME, ((MockResourceBundle) bundle).getBaseName());
     }
@@ -58,25 +58,25 @@ public class MockResourceBundleProviderTest {
         assertNotNull(bundleProvider);
         bundleProvider.setDefaultLocale(Locale.KOREA);
 
-        ResourceBundle bundle = context.request().getResourceBundle(null);
+        ResourceBundle bundle = context.jakartaRequest().getResourceBundle(null);
         assertEquals(Locale.KOREA, bundle.getLocale());
         assertNull(((MockResourceBundle) bundle).getBaseName());
     }
 
     @Test
     public void testCaching() {
-        ResourceBundle bundle = context.request().getResourceBundle(Locale.GERMAN);
+        ResourceBundle bundle = context.jakartaRequest().getResourceBundle(Locale.GERMAN);
 
         ((MockResourceBundle) bundle).put("key1", "value1");
         assertEquals("value1", bundle.getString("key1"));
 
-        ResourceBundle bundle_cached = context.request().getResourceBundle(Locale.GERMAN);
+        ResourceBundle bundle_cached = context.jakartaRequest().getResourceBundle(Locale.GERMAN);
         assertEquals("value1", bundle_cached.getString("key1"));
 
-        ResourceBundle bundle_otherlocale = context.request().getResourceBundle(Locale.FRANCE);
+        ResourceBundle bundle_otherlocale = context.jakartaRequest().getResourceBundle(Locale.FRANCE);
         assertEquals("key1", bundle_otherlocale.getString("key1"));
 
-        ResourceBundle bundle_otherbasename = context.request().getResourceBundle(MY_NAME, Locale.GERMAN);
+        ResourceBundle bundle_otherbasename = context.jakartaRequest().getResourceBundle(MY_NAME, Locale.GERMAN);
         assertEquals("key1", bundle_otherbasename.getString("key1"));
     }
 }

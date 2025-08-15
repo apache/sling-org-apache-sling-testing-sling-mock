@@ -41,9 +41,10 @@ public class SlingCrudResourceResolverTest extends AbstractSlingCrudResourceReso
         // ensure there is a method getSearchPaths in resource resolver factory, although it is not part of the API we
         // are compiling against (keeping backward compatibility)
         ResourceResolverFactory factory = context.getService(ResourceResolverFactory.class);
-        Class clazz = factory.getClass();
+        Class<? extends ResourceResolverFactory> clazz = factory.getClass();
         Method getSearchPathMethod = clazz.getMethod("getSearchPath");
         getSearchPathMethod.setAccessible(true);
+        @SuppressWarnings("rawtypes")
         List<String> searchPaths = (List) getSearchPathMethod.invoke(factory);
         assertNotNull(searchPaths);
     }

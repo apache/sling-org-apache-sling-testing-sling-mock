@@ -91,4 +91,9 @@ public final class MockResourceBundle extends ResourceBundle {
     public void putAll(@NotNull Map<? extends String, ? extends String> map) {
         mappings.putAll(map);
     }
+
+    @Override
+    public boolean containsKey(String key) {
+        return mappings.containsKey(key);
+    }
 }

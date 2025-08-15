@@ -21,7 +21,10 @@ package org.apache.sling.testing.mock.sling.servlet;
 /**
  * Interface to create a mock {@link javax.servlet.RequestDispatcher} when calling the getRequestDispatcher methods
  * on {@link MockSlingHttpServletRequest} instances.
+ *
+ * @deprecated Use {@link MockJakartaRequestDispatcherFactory} instead.
  */
+@Deprecated(since = "3.2.0")
 public interface MockRequestDispatcherFactory extends org.apache.sling.servlethelpers.MockRequestDispatcherFactory {
 
     // inherit from superclass

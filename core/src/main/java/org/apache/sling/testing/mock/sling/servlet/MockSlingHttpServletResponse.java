@@ -20,8 +20,15 @@ package org.apache.sling.testing.mock.sling.servlet;
 
 /**
  * Mock {@link org.apache.sling.api.SlingHttpServletResponse} implementation.
+ *
+ * @deprecated Use {@link MockSlingJakartaHttpServletResponse} instead.
  */
+@Deprecated(since = "3.2.0")
 public class MockSlingHttpServletResponse extends org.apache.sling.servlethelpers.MockSlingHttpServletResponse {
+
+    public MockSlingHttpServletResponse(MockSlingJakartaHttpServletResponse wrappedResponse) {
+        super(wrappedResponse);
+    }
 
     // inherit from superclass
 

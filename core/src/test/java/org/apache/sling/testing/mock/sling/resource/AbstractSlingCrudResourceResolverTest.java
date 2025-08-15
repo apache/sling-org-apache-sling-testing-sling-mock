@@ -32,7 +32,7 @@ import java.util.TreeMap;
 import org.apache.commons.collections4.IterableUtils;
 import org.apache.commons.collections4.IteratorUtils;
 import org.apache.commons.io.IOUtils;
-import org.apache.commons.lang3.StringUtils;
+import org.apache.commons.lang3.Strings;
 import org.apache.jackrabbit.JcrConstants;
 import org.apache.sling.api.resource.PersistenceException;
 import org.apache.sling.api.resource.Resource;
@@ -236,7 +236,7 @@ public abstract class AbstractSlingCrudResourceResolverTest {
 
     private boolean containsResource(List<Resource> children, Resource resource) {
         for (Resource child : children) {
-            if (StringUtils.equals(child.getPath(), resource.getPath())) {
+            if (Strings.CS.equals(child.getPath(), resource.getPath())) {
                 return true;
             }
         }

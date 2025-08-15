@@ -22,7 +22,7 @@ import javax.jcr.Node;
 import javax.jcr.Session;
 import javax.script.Bindings;
 
-import org.apache.commons.lang3.StringUtils;
+import org.apache.commons.lang3.Strings;
 import org.apache.sling.api.resource.Resource;
 import org.apache.sling.api.scripting.LazyBindings;
 import org.apache.sling.api.scripting.SlingBindings;
@@ -61,8 +61,8 @@ class MockSlingBindings extends SlingBindings implements EventHandler {
         if (this.context == null) {
             return null;
         }
-        if (key instanceof String) {
-            Object result = context.resolveSlingBindingProperty((String) key, context.request());
+        if (key instanceof String keyString) {
+            Object result = context.resolveSlingBindingProperty(keyString, context.jakartaRequest());
             if (result != null) {
                 return result;
             }
@@ -95,40 +95,47 @@ class MockSlingBindings extends SlingBindings implements EventHandler {
         populateFromBindingsValuesProvider();
     }
 
+    @SuppressWarnings("deprecation")
     static @Nullable Object resolveSlingBindingProperty(@NotNull SlingContextImpl context, @NotNull String property) {
 
         // -- Sling --
-        if (StringUtils.equals(property, RESOLVER)) {
+        if (Strings.CS.equals(property, RESOLVER)) {
             return context.resourceResolver();
         }
-        if (StringUtils.equals(property, RESOURCE)) {
+        if (Strings.CS.equals(property, RESOURCE)) {
             return context.currentResource();
         }
-        if (StringUtils.equals(property, REQUEST)) {
+        if (Strings.CS.equals(property, REQUEST)) {
             return context.request();
         }
-        if (StringUtils.equals(property, RESPONSE)) {
+        if (Strings.CS.equals(property, RESPONSE)) {
             return context.response();
         }
-        if (StringUtils.equals(property, SLING)) {
+        if (Strings.CS.equals(property, JAKARTA_REQUEST)) {
+            return context.jakartaRequest();
+        }
+        if (Strings.CS.equals(property, JAKARTA_RESPONSE)) {
+            return context.jakartaResponse();
+        }
+        if (Strings.CS.equals(property, SLING)) {
             return context.slingScriptHelper();
         }
-        if (StringUtils.equals(property, READER)) {
-            return context.request().getReader();
+        if (Strings.CS.equals(property, READER)) {
+            return context.jakartaRequest().getReader();
         }
-        if (StringUtils.equals(property, OUT)) {
-            return context.response().getWriter();
+        if (Strings.CS.equals(property, OUT)) {
+            return context.jakartaResponse().getWriter();
         }
 
         // -- JCR --
         // this emulates behavior of org.apache.sling.jcr.resource.internal.scripting.JcrObjectsBindingsValuesProvider
-        if (StringUtils.equals(property, PROP_CURRENT_NODE)) {
+        if (Strings.CS.equals(property, PROP_CURRENT_NODE)) {
             Resource resource = context.currentResource();
             if (resource != null) {
                 return resource.adaptTo(Node.class);
             }
         }
-        if (StringUtils.equals(property, PROP_CURRENT_SESSION)) {
+        if (Strings.CS.equals(property, PROP_CURRENT_SESSION)) {
             return context.resourceResolver().adaptTo(Session.class);
         }
 
