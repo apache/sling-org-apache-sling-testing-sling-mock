@@ -23,16 +23,16 @@ import java.lang.reflect.InvocationTargetException;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;
 
-import org.apache.sling.api.SlingHttpServletRequest;
-import org.apache.sling.api.SlingHttpServletResponse;
+import org.apache.sling.api.SlingJakartaHttpServletRequest;
+import org.apache.sling.api.SlingJakartaHttpServletResponse;
 import org.apache.sling.api.adapter.SlingAdaptable;
 import org.apache.sling.api.resource.LoginException;
 import org.apache.sling.api.resource.ResourceResolver;
 import org.apache.sling.api.resource.ResourceResolverFactory;
 import org.apache.sling.api.scripting.SlingScriptHelper;
 import org.apache.sling.jcr.api.SlingRepository;
-import org.apache.sling.testing.mock.sling.servlet.MockSlingHttpServletRequest;
-import org.apache.sling.testing.mock.sling.servlet.MockSlingHttpServletResponse;
+import org.apache.sling.testing.mock.sling.servlet.MockSlingJakartaHttpServletRequest;
+import org.apache.sling.testing.mock.sling.servlet.MockSlingJakartaHttpServletResponse;
 import org.apache.sling.testing.mock.sling.spi.ResourceResolverTypeAdapter;
 import org.jetbrains.annotations.NotNull;
 import org.osgi.framework.BundleContext;
@@ -127,6 +127,7 @@ public final class MockSling {
     private static ResourceResolverTypeAdapter getResourceResolverTypeAdapter(
             final ResourceResolverType type, @NotNull final BundleContext bundleContext) {
         try {
+            @SuppressWarnings("rawtypes")
             Class clazz = Class.forName(type.getResourceResolverTypeAdapterClass());
             try {
                 Constructor<ResourceResolverTypeAdapter> bundleContextConstructor =
@@ -135,11 +136,15 @@ public final class MockSling {
                 return bundleContextConstructor.newInstance(bundleContext);
             } catch (NoSuchMethodException ex) {
                 // fallback to default constructor
-                return (ResourceResolverTypeAdapter) clazz.newInstance();
+                return (ResourceResolverTypeAdapter)
+                        clazz.getDeclaredConstructor().newInstance();
             }
         } catch (ClassNotFoundException
                 | InstantiationException
                 | IllegalAccessException
+                | IllegalArgumentException
+                | NoSuchMethodException
+                | SecurityException
                 | InvocationTargetException ex) {
             throw new RuntimeException(
                     "Unable to instantiate resourcer resolver: "
@@ -184,10 +189,26 @@ public final class MockSling {
      * @param response Response
      * @param bundleContext Bundle context
      * @return Sling script helper instance
+     * @deprecated use {@link #newSlingScriptHelper(SlingJakartaHttpServletRequest, SlingJakartaHttpServletResponse, BundleContext)} instead
+     */
+    @Deprecated(since = "4.1.0")
+    public static @NotNull SlingScriptHelper newSlingScriptHelper(
+            @NotNull final org.apache.sling.api.SlingHttpServletRequest request,
+            @NotNull final org.apache.sling.api.SlingHttpServletResponse response,
+            @NotNull final BundleContext bundleContext) {
+        return new MockSlingScriptHelper(request, response, bundleContext);
+    }
+
+    /**
+     * Creates a new sling script helper instance.
+     * @param request Request
+     * @param response Response
+     * @param bundleContext Bundle context
+     * @return Sling script helper instance
      */
     public static @NotNull SlingScriptHelper newSlingScriptHelper(
-            @NotNull final SlingHttpServletRequest request,
-            @NotNull final SlingHttpServletResponse response,
+            @NotNull final SlingJakartaHttpServletRequest request,
+            @NotNull final SlingJakartaHttpServletResponse response,
             @NotNull final BundleContext bundleContext) {
         return new MockSlingScriptHelper(request, response, bundleContext);
     }
@@ -197,11 +218,30 @@ public final class MockSling {
      * {@link #DEFAULT_RESOURCERESOLVER_TYPE} for the resource resolver.
      * @param bundleContext Bundle context
      * @return Sling script helper instance
+     * @deprecated use {@link #newJakartaSlingScriptHelper(BundleContext)} instead
      */
+    @Deprecated(since = "4.1.0")
     public static @NotNull SlingScriptHelper newSlingScriptHelper(@NotNull BundleContext bundleContext) {
-        SlingHttpServletRequest request =
-                new MockSlingHttpServletRequest(newResourceResolver(bundleContext), bundleContext);
-        SlingHttpServletResponse response = new MockSlingHttpServletResponse();
+        MockSlingJakartaHttpServletRequest jakartaRequest =
+                new MockSlingJakartaHttpServletRequest(newResourceResolver(bundleContext), bundleContext);
+        org.apache.sling.api.SlingHttpServletRequest javaxRequest =
+                new org.apache.sling.testing.mock.sling.servlet.MockSlingHttpServletRequest(jakartaRequest);
+        MockSlingJakartaHttpServletResponse jakartaResponse = new MockSlingJakartaHttpServletResponse();
+        org.apache.sling.api.SlingHttpServletResponse javaxResponse =
+                new org.apache.sling.testing.mock.sling.servlet.MockSlingHttpServletResponse(jakartaResponse);
+        return newSlingScriptHelper(javaxRequest, javaxResponse, bundleContext);
+    }
+
+    /**
+     * Creates a new sling script helper instance using
+     * {@link #DEFAULT_RESOURCERESOLVER_TYPE} for the resource resolver.
+     * @param bundleContext Bundle context
+     * @return Sling script helper instance
+     */
+    public static @NotNull SlingScriptHelper newJakartaSlingScriptHelper(@NotNull BundleContext bundleContext) {
+        SlingJakartaHttpServletRequest request =
+                new MockSlingJakartaHttpServletRequest(newResourceResolver(bundleContext), bundleContext);
+        SlingJakartaHttpServletResponse response = new MockSlingJakartaHttpServletResponse();
         return newSlingScriptHelper(request, response, bundleContext);
     }
 

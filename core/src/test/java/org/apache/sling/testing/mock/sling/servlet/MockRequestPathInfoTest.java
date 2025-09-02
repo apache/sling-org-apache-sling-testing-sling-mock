@@ -18,29 +18,32 @@
  */
 package org.apache.sling.testing.mock.sling.servlet;
 
-import org.junit.Before;
+import org.apache.sling.api.resource.ResourceResolver;
 import org.junit.Test;
-
-import static org.junit.Assert.assertNull;
+import org.junit.Test.None;
+import org.mockito.Mockito;
 
 /**
- * Mock {@link org.apache.sling.api.SlingHttpServletResponse} tests.
  *
- * @deprecated Use {@link MockSlingJakartaHttpServletResponse} instead.
  */
-@Deprecated(since = "4.0.0")
-public class MockSlingHttpServletResponseTest {
+public class MockRequestPathInfoTest {
 
-    private MockSlingHttpServletResponse response;
-
-    @Before
-    public void setUp() throws Exception {
-        this.response = new MockSlingHttpServletResponse(new MockSlingJakartaHttpServletResponse());
+    /**
+     * Test method for {@link org.apache.sling.testing.mock.sling.servlet.MockRequestPathInfo#MockRequestPathInfo()}.
+     * @deprecated use {@link #testMockRequestPathInfoResourceResolver()} instead
+     */
+    @Deprecated
+    @Test(expected = None.class)
+    public void testMockRequestPathInfo() {
+        new MockRequestPathInfo();
     }
 
-    @Test
-    public void testContentTypeCharset() throws Exception {
-        assertNull(response.getContentType());
-        assertNull(response.getCharacterEncoding());
+    /**
+     * Test method for {@link org.apache.sling.testing.mock.sling.servlet.MockRequestPathInfo#MockRequestPathInfo(org.apache.sling.api.resource.ResourceResolver)}.
+     */
+    @Test(expected = None.class)
+    public void testMockRequestPathInfoResourceResolver() {
+        ResourceResolver mockResourceResolver = Mockito.mock(ResourceResolver.class);
+        new MockRequestPathInfo(mockResourceResolver);
     }
 }

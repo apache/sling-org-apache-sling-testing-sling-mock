@@ -1,0 +1,84 @@
+/*
+ * Licensed to the Apache Software Foundation (ASF) under one
+ * or more contributor license agreements.  See the NOTICE file
+ * distributed with this work for additional information
+ * regarding copyright ownership.  The ASF licenses this file
+ * to you under the Apache License, Version 2.0 (the
+ * "License"); you may not use this file except in compliance
+ * with the License.  You may obtain a copy of the License at
+ *
+ *   http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing,
+ * software distributed under the License is distributed on an
+ * "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+ * KIND, either express or implied.  See the License for the
+ * specific language governing permissions and limitations
+ * under the License.
+ */
+package org.apache.sling.testing.mock.sling.servlet;
+
+import java.util.Locale;
+import java.util.ResourceBundle;
+
+import org.apache.sling.api.resource.ResourceResolver;
+import org.apache.sling.i18n.ResourceBundleProvider;
+import org.apache.sling.testing.mock.sling.MockSling;
+import org.jetbrains.annotations.NotNull;
+import org.osgi.framework.BundleContext;
+import org.osgi.framework.ServiceReference;
+
+/**
+ * Mock {@link org.apache.sling.api.SlingJakartaHttpServletRequest} implementation.
+ */
+public class MockSlingJakartaHttpServletRequest
+        extends org.apache.sling.servlethelpers.MockSlingJakartaHttpServletRequest {
+
+    private final BundleContext bundleContext;
+
+    /**
+     * Instantiate with default resource resolver
+     * @param bundleContext Bundle context
+     */
+    public MockSlingJakartaHttpServletRequest(@NotNull BundleContext bundleContext) {
+        this(MockSling.newResourceResolver(bundleContext), bundleContext);
+    }
+
+    /**
+     * @param resourceResolver Resource resolver
+     * @param bundleContext Bundle context
+     */
+    public MockSlingJakartaHttpServletRequest(
+            @NotNull ResourceResolver resourceResolver, @NotNull BundleContext bundleContext) {
+        super(resourceResolver);
+        this.bundleContext = bundleContext;
+    }
+
+    @Override
+    protected @NotNull MockRequestPathInfo newMockRequestPathInfo() {
+        return new MockRequestPathInfo(getResourceResolver());
+    }
+
+    @Override
+    protected @NotNull MockJakartaHttpSession newMockHttpSession() {
+        return new MockJakartaHttpSession();
+    }
+
+    @Override
+    @SuppressWarnings("null")
+    public ResourceBundle getResourceBundle(String baseName, Locale locale) {
+        // check of ResourceBundleProvider is registered in mock OSGI context
+        ResourceBundle resourceBundle = null;
+        ServiceReference<ResourceBundleProvider> serviceReference =
+                bundleContext.getServiceReference(ResourceBundleProvider.class);
+        if (serviceReference != null) {
+            ResourceBundleProvider provider = bundleContext.getService(serviceReference);
+            resourceBundle = provider.getResourceBundle(baseName, locale);
+        }
+        // if no ResourceBundleProvider exists return empty bundle
+        if (resourceBundle == null) {
+            resourceBundle = EMPTY_RESOURCE_BUNDLE;
+        }
+        return resourceBundle;
+    }
+}

@@ -27,6 +27,7 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 
 /**
  * Test with {@link SlingContext} as test method parameter.
@@ -42,6 +43,20 @@ class SlingContextTest {
         context.create().resource("/content/test", "prop1", "value1");
     }
 
+    /**
+     * @deprecated use {@link #testJakartaRequest()} instead
+     */
+    @Deprecated(since = "4.0.0")
+    @Test
+    void testRequest(SlingContext context) {
+        assertNotNull(context.request());
+    }
+
+    @Test
+    void testJakartaRequest(SlingContext context) {
+        assertNotNull(context.jakartaRequest());
+    }
+
     @Test
     void testResource(SlingContext context) {
         Resource resource = context.resourceResolver().getResource("/content/test");
@@ -50,8 +65,8 @@ class SlingContextTest {
 
     @Test
     void testSlingModelClasspathRegistered(SlingContext context) {
-        context.request().setAttribute("prop1", "myValue");
-        ClasspathRegisteredModel model = context.request().adaptTo(ClasspathRegisteredModel.class);
+        context.jakartaRequest().setAttribute("prop1", "myValue");
+        ClasspathRegisteredModel model = context.jakartaRequest().adaptTo(ClasspathRegisteredModel.class);
         assertEquals("myValue", model.getProp1());
     }
 

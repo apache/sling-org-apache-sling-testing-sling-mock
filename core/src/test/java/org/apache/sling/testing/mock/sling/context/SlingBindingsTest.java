@@ -80,14 +80,17 @@ public class SlingBindingsTest {
         Thread.sleep(25);
     }
 
+    @SuppressWarnings("deprecation")
     @Test
     public void testModelBindings() {
-        SlingBindingsModel model = context.request().adaptTo(SlingBindingsModel.class);
+        SlingBindingsModel model = context.jakartaRequest().adaptTo(SlingBindingsModel.class);
 
         assertNotNull(model);
         assertNotNull(model.getResolver());
         assertNotNull(model.getResource());
         assertEquals(currentResource.getPath(), model.getResource().getPath());
+        assertNotNull(model.getJakartaRequest());
+        assertNotNull(model.getJakartaResponse());
         assertNotNull(model.getRequest());
         assertNotNull(model.getResponse());
         assertNotNull(model.getCurrentNode());
@@ -99,7 +102,7 @@ public class SlingBindingsTest {
 
     @Test
     public void testCustomBindingsValuesProvider() {
-        SlingBindings bindings = (SlingBindings) context.request().getAttribute(SlingBindings.class.getName());
+        SlingBindings bindings = (SlingBindings) context.jakartaRequest().getAttribute(SlingBindings.class.getName());
         assertNotNull(bindings);
         assertEquals(currentResource.getPath(), bindings.getResource().getPath());
         assertEquals("value-1", bindings.get("custom-param-1"));
