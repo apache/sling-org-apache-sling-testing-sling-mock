@@ -337,7 +337,7 @@ public final class ContentLoader {
         if (parentResource == null) {
             parentResource = createResourceHierarchy(parentPath);
         }
-        Map<String, Object> props = new HashMap<String, Object>();
+        Map<String, Object> props = new HashMap<>();
         props.put(JcrConstants.JCR_PRIMARYTYPE, JcrConstants.NT_UNSTRUCTURED);
         try {
             return resourceResolver.create(parentResource, ResourceUtil.getName(path), props);

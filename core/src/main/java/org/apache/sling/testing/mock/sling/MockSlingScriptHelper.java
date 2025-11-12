@@ -19,15 +19,19 @@
 package org.apache.sling.testing.mock.sling;
 
 import java.lang.reflect.Array;
+import java.util.Collection;
 
-import org.apache.commons.lang3.ArrayUtils;
-import org.apache.sling.api.SlingHttpServletRequest;
-import org.apache.sling.api.SlingHttpServletResponse;
+import org.apache.sling.api.SlingJakartaHttpServletRequest;
+import org.apache.sling.api.SlingJakartaHttpServletResponse;
 import org.apache.sling.api.request.RequestDispatcherOptions;
 import org.apache.sling.api.resource.Resource;
 import org.apache.sling.api.scripting.InvalidServiceFilterSyntaxException;
 import org.apache.sling.api.scripting.SlingScript;
 import org.apache.sling.api.scripting.SlingScriptHelper;
+import org.apache.sling.api.wrappers.JavaxToJakartaRequestWrapper;
+import org.apache.sling.api.wrappers.JavaxToJakartaResponseWrapper;
+import org.apache.sling.testing.mock.sling.servlet.MockSlingJakartaHttpServletRequest;
+import org.apache.sling.testing.mock.sling.servlet.MockSlingJakartaHttpServletResponse;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.osgi.framework.BundleContext;
@@ -39,8 +43,23 @@ import org.osgi.framework.ServiceReference;
  */
 public final class MockSlingScriptHelper implements SlingScriptHelper {
 
-    private final @NotNull SlingHttpServletRequest request;
-    private final @NotNull SlingHttpServletResponse response;
+    private final @NotNull SlingJakartaHttpServletRequest jakartaRequest;
+    private final @NotNull SlingJakartaHttpServletResponse jakartaResponse;
+
+    /**
+     * @deprecated Use jakartaRequest instead.
+     */
+    @SuppressWarnings("deprecation")
+    @Deprecated(since = "4.1.0")
+    private final @NotNull org.apache.sling.api.SlingHttpServletRequest request;
+
+    /**
+     * @deprecated Use jakartaResponse instead.
+     */
+    @SuppressWarnings("deprecation")
+    @Deprecated(since = "4.1.0")
+    private final @NotNull org.apache.sling.api.SlingHttpServletResponse response;
+
     private final @NotNull BundleContext bundleContext;
     private SlingScript script;
 
@@ -48,32 +67,91 @@ public final class MockSlingScriptHelper implements SlingScriptHelper {
      * @param request Sling HTTP servlet request
      * @param response Sling HTTP servlet response
      * @param bundleContext OSGi bundle context
+     *
+     * @deprecated Use {@link MockSlingScriptHelper#MockSlingScriptHelper(SlingJakartaHttpServletRequest, SlingJakartaHttpServletResponse, BundleContext)} instead.
      */
+    @Deprecated(since = "4.1.0")
     public MockSlingScriptHelper(
-            @NotNull final SlingHttpServletRequest request,
-            @NotNull final SlingHttpServletResponse response,
+            @NotNull final org.apache.sling.api.SlingHttpServletRequest request,
+            @NotNull final org.apache.sling.api.SlingHttpServletResponse response,
             @NotNull final BundleContext bundleContext) {
+        this.jakartaRequest = toJakartaRequest(request);
+        this.jakartaResponse = toJakartaResponse(response);
         this.request = request;
         this.response = response;
         this.bundleContext = bundleContext;
     }
 
-    @Override
-    public @NotNull SlingHttpServletRequest getRequest() {
-        return this.request;
+    @SuppressWarnings("deprecation")
+    private SlingJakartaHttpServletRequest toJakartaRequest(org.apache.sling.api.SlingHttpServletRequest request) {
+        if (request instanceof org.apache.sling.testing.mock.sling.servlet.MockSlingHttpServletRequest mshsr) {
+            return (SlingJakartaHttpServletRequest) mshsr.getRequest();
+        } else {
+            return JavaxToJakartaRequestWrapper.toJakartaRequest(request);
+        }
+    }
+
+    @SuppressWarnings("deprecation")
+    private SlingJakartaHttpServletResponse toJakartaResponse(org.apache.sling.api.SlingHttpServletResponse response) {
+        if (response instanceof org.apache.sling.testing.mock.sling.servlet.MockSlingHttpServletResponse mshsr) {
+            return (SlingJakartaHttpServletResponse) mshsr.getResponse();
+        } else {
+            return JavaxToJakartaResponseWrapper.toJakartaResponse(response);
+        }
+    }
+
+    /**
+     * @param request Sling HTTP servlet request
+     * @param response Sling HTTP servlet response
+     * @param bundleContext OSGi bundle context
+     */
+    @SuppressWarnings("deprecation")
+    public MockSlingScriptHelper(
+            @NotNull final SlingJakartaHttpServletRequest request,
+            @NotNull final SlingJakartaHttpServletResponse response,
+            @NotNull final BundleContext bundleContext) {
+        this.jakartaRequest = request;
+        this.jakartaResponse = response;
+        this.request = new org.apache.sling.testing.mock.sling.servlet.MockSlingHttpServletRequest(
+                (MockSlingJakartaHttpServletRequest) this.jakartaRequest);
+        this.response = new org.apache.sling.testing.mock.sling.servlet.MockSlingHttpServletResponse(
+                (MockSlingJakartaHttpServletResponse) this.jakartaResponse);
+        this.bundleContext = bundleContext;
     }
 
     @Override
-    public @NotNull SlingHttpServletResponse getResponse() {
+    public @NotNull SlingJakartaHttpServletRequest getJakartaRequest() {
+        return this.jakartaRequest;
+    }
+
+    @Override
+    public @NotNull SlingJakartaHttpServletResponse getJakartaResponse() {
+        return this.jakartaResponse;
+    }
+
+    /**
+     * @deprecated Use {@link #getJakartaRequest()} instead.
+     */
+    @Deprecated(since = "4.1.0")
+    @Override
+    public @NotNull org.apache.sling.api.SlingHttpServletRequest getRequest() {
+        return this.request;
+    }
+
+    /**
+     * @deprecated Use {@link #getJakartaResponse()} instead.
+     */
+    @Deprecated(since = "4.1.0")
+    @Override
+    public @NotNull org.apache.sling.api.SlingHttpServletResponse getResponse() {
         return this.response;
     }
 
     @Override
-    @SuppressWarnings("unchecked")
-    public @Nullable <ServiceType> ServiceType getService(@NotNull final Class<ServiceType> serviceType) {
-        ServiceReference serviceReference = this.bundleContext.getServiceReference(serviceType.getName());
+    public @Nullable <T> T getService(@NotNull final Class<T> serviceType) {
+        ServiceReference<T> serviceReference = this.bundleContext.getServiceReference(serviceType);
         if (serviceReference != null) {
-            return (ServiceType) this.bundleContext.getService(serviceReference);
+            return this.bundleContext.getService(serviceReference);
         } else {
             return null;
         }
@@ -81,20 +159,13 @@ public final class MockSlingScriptHelper implements SlingScriptHelper {
 
     @Override
     @SuppressWarnings("unchecked")
-    public @Nullable <ServiceType> ServiceType[] getServices(
-            @NotNull final Class<ServiceType> serviceType, final String filter) {
+    public @Nullable <T> T[] getServices(@NotNull final Class<T> serviceType, final String filter) {
         try {
-            ServiceReference[] serviceReferences =
-                    this.bundleContext.getServiceReferences(serviceType.getName(), filter);
-            if (serviceReferences != null) {
-                ServiceType[] services = (ServiceType[]) Array.newInstance(serviceType, serviceReferences.length);
-                for (int i = 0; i < serviceReferences.length; i++) {
-                    services[i] = (ServiceType) this.bundleContext.getService(serviceReferences[i]);
-                }
-                return services;
-            } else {
-                return (ServiceType[]) ArrayUtils.EMPTY_OBJECT_ARRAY;
-            }
+            Collection<ServiceReference<T>> serviceReferences =
+                    this.bundleContext.getServiceReferences(serviceType, filter);
+            return serviceReferences.stream()
+                    .map(this.bundleContext::getService)
+                    .toArray(size -> (T[]) Array.newInstance(serviceType, size));
         } catch (InvalidSyntaxException ex) {
             throw new InvalidServiceFilterSyntaxException(filter, ex.getMessage(), ex);
         }

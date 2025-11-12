@@ -23,6 +23,7 @@ import java.util.LinkedHashMap;
 import java.util.Map;
 
 import org.apache.commons.lang3.StringUtils;
+import org.apache.commons.lang3.Strings;
 import org.apache.jackrabbit.JcrConstants;
 import org.apache.sling.api.resource.PersistenceException;
 import org.apache.sling.api.resource.Resource;
@@ -111,8 +112,8 @@ public class ContentBuilder {
     private Map<String, Map<String, Object>> getChildMaps(Map<String, Object> properties) {
         Map<String, Map<String, Object>> result = new LinkedHashMap<>();
         for (Map.Entry<String, Object> entry : properties.entrySet()) {
-            if (entry.getValue() instanceof Map) {
-                result.put(entry.getKey(), (Map) entry.getValue());
+            if (entry.getValue() instanceof @SuppressWarnings("rawtypes") Map entryValue) {
+                result.put(entry.getKey(), entryValue);
             }
         }
         return result;
@@ -172,7 +173,7 @@ public class ContentBuilder {
      */
     @SuppressWarnings("null")
     protected final @NotNull Resource ensureResourceExists(@NotNull String path) {
-        if (StringUtils.isEmpty(path) || StringUtils.equals(path, "/")) {
+        if (StringUtils.isEmpty(path) || Strings.CS.equals(path, "/")) {
             return resourceResolver.getResource("/");
         }
         Resource resource = resourceResolver.getResource(path);

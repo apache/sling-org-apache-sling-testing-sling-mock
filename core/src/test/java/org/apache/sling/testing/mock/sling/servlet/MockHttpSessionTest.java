@@ -18,19 +18,26 @@
  */
 package org.apache.sling.testing.mock.sling.servlet;
 
+import org.apache.sling.servlethelpers.MockJakartaHttpSession;
 import org.junit.Before;
 import org.junit.Test;
 
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
 
+/**
+ * Mock {@link javax.servlet.http.HttpSession} tests.
+ *
+ * @deprecated Use {@link MockJakartaHttpSessionTest} instead.
+ */
+@Deprecated(since = "4.0.0")
 public class MockHttpSessionTest {
 
     private MockHttpSession httpSession;
 
     @Before
     public void setUp() throws Exception {
-        httpSession = new MockHttpSession();
+        httpSession = new MockHttpSession(new MockJakartaHttpSession());
     }
 
     @Test

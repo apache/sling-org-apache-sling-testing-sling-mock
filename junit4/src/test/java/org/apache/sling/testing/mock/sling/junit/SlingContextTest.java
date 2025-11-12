@@ -66,9 +66,18 @@ public class SlingContextTest {
         verify(contextAfterSetup).execute(context);
     }
 
+    /**
+     * @deprecated use {@link #testJakartaRequest()} instead
+     */
+    @Deprecated(since = "4.0.0")
     @Test
     public void testRequest() {
         assertNotNull(context.request());
+    }
+
+    @Test
+    public void testJakartaRequest() {
+        assertNotNull(context.jakartaRequest());
     }
 
     /**

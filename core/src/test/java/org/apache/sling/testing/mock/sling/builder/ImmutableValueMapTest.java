@@ -24,10 +24,12 @@ import org.apache.sling.api.resource.ValueMap;
 import org.apache.sling.api.wrappers.ValueMapDecorator;
 import org.junit.Before;
 import org.junit.Test;
+import org.junit.Test.None;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotEquals;
+import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
 
 public class ImmutableValueMapTest {
@@ -185,5 +187,23 @@ public class ImmutableValueMapTest {
         assertEquals(map2, map1);
         assertNotEquals(map1, map3);
         assertNotEquals(map2, map3);
+
+        assertNotEquals(map1, new Object());
+    }
+
+    /**
+     * Test method for {@link org.apache.sling.testing.mock.sling.builder.ImmutableValueMap#hashCode()}.
+     */
+    @Test(expected = None.class)
+    public void testHashCode() {
+        underTest.hashCode();
+    }
+
+    /**
+     * Test method for {@link org.apache.sling.testing.mock.sling.builder.ImmutableValueMap#toString()}.
+     */
+    @Test
+    public void testToString() {
+        assertNotNull(underTest.toString());
     }
 }
