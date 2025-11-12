@@ -38,7 +38,6 @@ import org.osgi.framework.Constants;
 import org.osgi.framework.ServiceReference;
 import org.osgi.framework.ServiceRegistration;
 import org.osgi.service.component.annotations.Component;
-import org.osgi.service.component.annotations.Deactivate;
 import org.osgi.service.component.annotations.Reference;
 import org.osgi.service.component.annotations.ReferenceCardinality;
 import org.osgi.service.component.annotations.ReferencePolicy;
@@ -153,13 +152,13 @@ public class MockAdapterManagerImpl implements AdapterManager {
     /**
      * Deactivate
      */
+    // DISABLED IN THIS COPY OF CLASS
+    /*
     @Deactivate
     protected void deactivate() {
-        // DISABLED IN THIS COPY OF CLASS
-        /*
         SlingAdaptable.unsetAdapterManager(this);
-        */
     }
+    */
 
     /**
      * Bind a new adapter factory.
