@@ -52,17 +52,17 @@
             <dependency>
                 <groupId>org.apache.sling</groupId>
                 <artifactId>org.apache.sling.testing.osgi-mock.core</artifactId>
-                <version>3.5.2</version>
+                <version>3.5.4</version>
             </dependency>
             <dependency>
                 <groupId>org.apache.sling</groupId>
                 <artifactId>org.apache.sling.testing.osgi-mock.junit4</artifactId>
-                <version>3.5.2</version>
+                <version>3.5.4</version>
             </dependency>
             <dependency>
                 <groupId>org.apache.sling</groupId>
                 <artifactId>org.apache.sling.testing.jcr-mock</artifactId>
-                <version>1.6.14</version>
+                <version>1.7.0</version>
             </dependency>
             <dependency>
                 <groupId>org.apache.sling</groupId>
