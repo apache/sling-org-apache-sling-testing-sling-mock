@@ -359,6 +359,7 @@
             </activation>
             <properties>
                 <oak.version>1.68.0</oak.version>
+                <jackrabbit.version>2.22.3</jackrabbit.version>
             </properties>
             <dependencyManagement>
                 <dependencies>
