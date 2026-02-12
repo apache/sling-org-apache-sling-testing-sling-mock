@@ -64,7 +64,7 @@
             <dependency>
                 <groupId>org.apache.sling</groupId>
                 <artifactId>org.apache.sling.testing.jcr-mock</artifactId>
-                <version>1.7.1-SNAPSHOT</version>
+                <version>1.8.0</version>
             </dependency>
             <dependency>
                 <groupId>org.apache.sling</groupId>
