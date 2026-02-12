@@ -44,6 +44,7 @@
     <properties>
         <project.build.outputTimestamp>2025-11-18T08:40:59Z</project.build.outputTimestamp>
         <sling.java.version>11</sling.java.version>
+        <oak.version>1.68.0</oak.version>
     </properties>
 
     <dependencyManagement>
@@ -203,21 +204,21 @@
             <dependency>
                 <groupId>org.apache.jackrabbit</groupId>
                 <artifactId>oak-jackrabbit-api</artifactId>
-                <version>1.22.15</version>
+                <version>${oak.version}</version>
                 <scope>compile</scope>
             </dependency>
             <dependency>
                 <groupId>org.apache.jackrabbit</groupId>
                 <artifactId>oak-jcr</artifactId>
-                <version>1.22.15</version>
+                <version>${oak.version}</version>
                 <exclusions>
                     <exclusion>
                         <groupId>org.osgi</groupId>
-                        <artifactId>org.osgi.service.metatype.annotations</artifactId>
+                        <artifactId>org.osgi.service.component.annotations</artifactId>
                     </exclusion>
                     <exclusion>
                         <groupId>org.osgi</groupId>
-                        <artifactId>org.osgi.annotation</artifactId>
+                        <artifactId>org.osgi.service.metatype.annotations</artifactId>
                     </exclusion>
                     <exclusion>
                         <groupId>org.slf4j</groupId>
@@ -351,6 +352,9 @@
             <activation>
                 <activeByDefault>false</activeByDefault>
             </activation>
+            <properties>
+                <oak.version>1.68.0</oak.version>
+            </properties>
             <dependencyManagement>
                 <dependencies>
                     <dependency>
@@ -432,16 +436,6 @@
                         <groupId>org.apache.sling</groupId>
                         <artifactId>org.apache.sling.featureflags</artifactId>
                         <version>1.2.2</version>
-                    </dependency>
-                    <dependency>
-                        <groupId>org.apache.jackrabbit</groupId>
-                        <artifactId>oak-jackrabbit-api</artifactId>
-                        <version>1.56.0</version>
-                    </dependency>
-                    <dependency>
-                        <groupId>org.apache.jackrabbit</groupId>
-                        <artifactId>oak-jcr</artifactId>
-                        <version>1.56.0</version>
                     </dependency>
                 </dependencies>
             </dependencyManagement>
