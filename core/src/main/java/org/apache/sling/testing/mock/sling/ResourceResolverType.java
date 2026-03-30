@@ -19,6 +19,7 @@
 package org.apache.sling.testing.mock.sling;
 
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 /**
  * The resource resolver mock implementation supports different underlying
@@ -90,12 +91,12 @@ public enum ResourceResolverType {
     NONE(MockNoneResourceResolverAdapter.class.getName(), null, NodeTypeMode.NOT_SUPPORTED);
 
     private final @NotNull String resourceResolverTypeAdapterClass;
-    private final @NotNull String artifactCoordinates;
+    private final @Nullable String artifactCoordinates;
     private final @NotNull NodeTypeMode nodeTypeMode;
 
     private ResourceResolverType(
             @NotNull final String resourceResolverTypeAdapterClass,
-            @NotNull final String artifactCoordinates,
+            @Nullable final String artifactCoordinates,
             @NotNull final NodeTypeMode nodeTypeMode) {
         this.resourceResolverTypeAdapterClass = resourceResolverTypeAdapterClass;
         this.artifactCoordinates = artifactCoordinates;
@@ -107,7 +108,7 @@ public enum ResourceResolverType {
         return this.resourceResolverTypeAdapterClass;
     }
 
-    @NotNull
+    @Nullable
     String getArtifactCoordinates() {
         return this.artifactCoordinates;
     }

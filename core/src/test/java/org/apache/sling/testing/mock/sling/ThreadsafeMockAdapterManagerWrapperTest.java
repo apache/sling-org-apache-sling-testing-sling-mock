@@ -36,8 +36,9 @@ import static org.junit.Assert.assertNotNull;
 
 public class ThreadsafeMockAdapterManagerWrapperTest {
     @Rule
-    public final SlingContext context =
-            new SlingContextBuilder().registerSlingModelsFromClassPath(false).build();
+    public final SlingContext context = new SlingContextBuilder(ResourceResolverType.RESOURCEPROVIDER_MOCK)
+            .registerSlingModelsFromClassPath(false)
+            .build();
 
     @Before
     public void setUp() {
