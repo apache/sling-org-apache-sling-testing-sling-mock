@@ -88,7 +88,7 @@ class ThreadsafeMockAdapterManagerWrapper implements AdapterManager {
         }
 
         AdapterManagerBundleContextFactory(AdapterManagerBundleContextFactory parent) {
-            // take over bundle context from parent thread if available
+            this.parent = parent;
             this.bundleContext = parent.bundleContext;
         }
 
