@@ -48,6 +48,7 @@ class ThreadsafeMockAdapterManagerWrapper implements AdapterManager {
                 @Override
                 protected AdapterManagerBundleContextFactory childValue(
                         AdapterManagerBundleContextFactory parentValue) {
+                    // create new factory for child thread, taking over bundle context from parent thread if available
                     return new AdapterManagerBundleContextFactory(parentValue);
                 }
             };

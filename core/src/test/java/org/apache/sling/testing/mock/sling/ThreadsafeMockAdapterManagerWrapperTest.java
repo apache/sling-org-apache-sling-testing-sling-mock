@@ -35,6 +35,7 @@ import static org.awaitility.Awaitility.await;
 import static org.junit.Assert.assertNotNull;
 
 public class ThreadsafeMockAdapterManagerWrapperTest {
+
     @Rule
     public final SlingContext context = new SlingContextBuilder(ResourceResolverType.RESOURCEPROVIDER_MOCK)
             .registerSlingModelsFromClassPath(false)
@@ -46,7 +47,7 @@ public class ThreadsafeMockAdapterManagerWrapperTest {
     }
 
     @Test
-    public void x() {
+    public void testAdaptionInChildThread() {
         assertNotNull(context.create().resource("/content/test").adaptTo(AdapterClass.class));
         final MyService myService = context.registerService(new MyService());
         final ScheduledExecutorService executor = Executors.newScheduledThreadPool(10);
@@ -64,14 +65,11 @@ public class ThreadsafeMockAdapterManagerWrapperTest {
         private AdapterClass value;
 
         public AdapterClass getValue() {
-            System.out.println("Returning value: " + this.value);
             return this.value;
         }
 
         public void onChange(@NotNull Resource list) {
-            System.out.println("ON CHANGE");
             final AdapterClass result = list.adaptTo(AdapterClass.class);
-            System.out.println("Result: " + result);
             value = result;
         }
     }
