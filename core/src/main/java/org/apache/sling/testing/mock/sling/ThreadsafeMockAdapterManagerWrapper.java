@@ -48,9 +48,8 @@ class ThreadsafeMockAdapterManagerWrapper implements AdapterManager {
                 @Override
                 protected AdapterManagerBundleContextFactory childValue(
                         AdapterManagerBundleContextFactory parentValue) {
-                    // Create a new instance for child threads instead of sharing the parent's instance
-                    // This prevents race conditions when parent and child threads have different lifecycles
-                    return new AdapterManagerBundleContextFactory();
+                    // create new factory for child thread, taking over bundle context from parent thread if available
+                    return new AdapterManagerBundleContextFactory(parentValue);
                 }
             };
 
@@ -81,21 +80,40 @@ class ThreadsafeMockAdapterManagerWrapper implements AdapterManager {
 
     private static class AdapterManagerBundleContextFactory {
 
+        private AdapterManagerBundleContextFactory parent;
         private BundleContext bundleContext;
 
+        AdapterManagerBundleContextFactory() {
+            // default constructor
+        }
+
+        AdapterManagerBundleContextFactory(AdapterManagerBundleContextFactory parent) {
+            this.parent = parent;
+            this.bundleContext = parent.bundleContext;
+        }
+
         public void setBundleContext(@NotNull final BundleContext bundleContext) {
-            log.debug("Set bundle context for AdapterManager, bundleContext={}", bundleContext);
+            log.debug(
+                    "Set bundle context for AdapterManager, bundleContext={}, factory={}, parent={}",
+                    bundleContext,
+                    this,
+                    parent);
             this.bundleContext = bundleContext;
 
             // register adapter manager
             MockAdapterManagerImpl adapterManagerImpl = new MockAdapterManagerImpl();
-            Dictionary<String, Object> properties = new Hashtable<String, Object>();
+            Dictionary<String, Object> properties = new Hashtable<>();
             MockOsgi.injectServices(adapterManagerImpl, bundleContext);
             MockOsgi.activate(adapterManagerImpl, bundleContext, properties);
             bundleContext.registerService(AdapterManager.class.getName(), adapterManagerImpl, properties);
         }
 
         public void clearBundleContext() {
+            log.debug(
+                    "Clear bundle context for AdapterManager, bundleContext={}, factory={}, parent={}",
+                    bundleContext,
+                    this,
+                    parent);
             this.bundleContext = null;
         }
 
@@ -104,12 +122,19 @@ class ThreadsafeMockAdapterManagerWrapper implements AdapterManager {
             if (bundleContext == null) {
                 BundleContext newBundleContext = MockOsgi.newBundleContext();
                 log.warn(
-                        "Create new bundle context for adapter manager because it was null, bundleContext={}",
-                        bundleContext);
+                        "Create new bundle context for adapter manager because it was null, bundleContext={}, factory={}, parent={}",
+                        bundleContext,
+                        this,
+                        parent);
                 setBundleContext(newBundleContext);
             }
             ServiceReference<AdapterManager> serviceReference = bundleContext.getServiceReference(AdapterManager.class);
             if (serviceReference != null) {
+                log.trace(
+                        "Get AdapterManager service from bundle context, bundleContext={}, factory={}, parent={}",
+                        bundleContext,
+                        this,
+                        parent);
                 return bundleContext.getService(serviceReference);
             } else {
                 throw new RuntimeException("AdapterManager not registered in bundle context.");
